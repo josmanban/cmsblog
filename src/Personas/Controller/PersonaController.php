@@ -19,14 +19,10 @@ use Librerias\MissingParametersException;
 use Librerias\InvalidFormDataException;
 use Librerias\FuncionesVarias;
 use Librerias\View;
+use Librerias\Conexion;
 use Personas\Model\Persona;
-use Personas\Model\PersonaAccesoDatos;
-use Personas\Model\TipoDocumentoAccesoDatos;
-use Personas\Model\SexoAccesoDatos;
 use Personas\Validator\PersonaValidator;
-use Administracion\FacadeAdministracion;
-use Administracion\Model\UsuarioAccesoDatos;
-use Administracion\Model\EstadoAccesoDatos;
+
 
 /*
  * To change this template, choose Tools | Templates
@@ -40,19 +36,10 @@ use Administracion\Model\EstadoAccesoDatos;
  */
 class PersonaController extends Controller {
 
-    private $personaAccesoDatos;
-    private $tipoDocumentoAccesoDatos;
-    private $sexoAccesoDatos;
-    private $savePathFoto;
-    private $pathPhoto;
+    private $em;
 
     function __construct() {
-
-        $this->personaAccesoDatos = new PersonaAccesoDatos();
-        $this->tipoDocumentoAccesoDatos = new TipoDocumentoAccesoDatos();
-        $this->sexoAccesoDatos = new SexoAccesoDatos();
-        $this->savePathPhoto = dirname(__DIR__) . '/../../img/Persona/foto/';
-        $this->pathPhoto = SITE_URL . '/img/Persona/foto/';
+        $this->em = Conexion::getEntityManager();
     }
 
     public function createAction() {
@@ -60,13 +47,14 @@ class PersonaController extends Controller {
             $loguedUser = $_SESSION['usuario'];
             if (is_null($loguedUser))
                 throw new NotLoggedException($ex);
-            $personaUsuario = $this->personaAccesoDatos->consultarPorIdUsuario($loguedUser->getId());
+            $personaUsuario = $this->em->getRepository('Persona\Model\Entity\Persona'
+                    )->findOneBy(array('usuario' => $loguedUser->getId()));
             if (!$loguedUser->esAdministrador() && !is_null($personaUsuario))
                 throw new NotAllowedException();
 
             $persona = $this->validate();
-            $this->personaAccesoDatos->insertar($persona);
-
+            $this->em->persist($persona);
+            $this->em->flush();
 
             if ($_REQUEST['ajax']) {
                 
@@ -74,16 +62,16 @@ class PersonaController extends Controller {
 
             View::render(PERSONA_EDIT, array(
                 'mensajesExito' => ["Datos actualizados con exito."],
-                'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                'sexos' => $this->sexoAccesoDatos->consultarActivos(),
+                'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
                 'persona' => $persona,
             ));
         } catch (InvalidFormDataException $ex) {
             View::render(PERSONA_EDIT, array(
-                'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                'sexos' => $this->sexoAccesoDatos->consultarActivos(),
+                'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
                 'errores' => $ex->getErrores(),
             ));
         } catch (\Exception $ex) {
@@ -103,7 +91,9 @@ class PersonaController extends Controller {
                 throw new MissingParametersException(['id']);
             $loguedUser = $_SESSION['usuario'];
             $id = $_GET['id'];
-            $persona = $this->personaAccesoDatos->consultarPorId($id);
+            $persona = $this->em->getRepository(
+                            'Persona\Model\Entity\Persona'
+                    )->find($id);
             if (is_null($persona))
                 throw new NotFoundEntityException('persona');
             if (!$loguedUser->esAdministrador() && !$persona->esMiUsuario($loguedUser))
@@ -114,9 +104,9 @@ class PersonaController extends Controller {
             } else {
 
                 View::render(PERSONA_EDIT, array(
-                    'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                    'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                    'sexos' => $this->sexoAccesoDatos->consultarActivos(),
+                    'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                    'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                    'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
                     'persona' => $persona
                 ));
             }
@@ -139,20 +129,19 @@ class PersonaController extends Controller {
             else
                 $page = 1;
 
-            $numItems = $this->personaAccesoDatos->contarTodos(null);
-            $parameters = [];
-            $paginator = new Paginator('persona', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = [ 'offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
-
-            //$personas = $this->personaAccesoDatos->consultarTodos($parameters);
+            $filters = [];
+            $numItems = $this->em->getRepository('Persona\Model\Entity\Persona')->contar($filters);                    
+            $paginator = new Paginator('usuario', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $filters);     
+            $personas = $this->em->getRepository('Persona\Model\Entity\Persona')->findBy(
+                    $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );            
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 // require_once dirname(__FILE__) . '/../Views/Persona/index.html.php';
                 View::render(PERSONA_INDEX, array(
-                    'personas' => $this->personaAccesoDatos->consultarTodos($parameters),
+                    'personas' => $personas,
                     'paginator' => $paginator,
                 ));
             }
@@ -167,18 +156,19 @@ class PersonaController extends Controller {
                 $usuario = $_SESSION['usuario'];
             else
                 throw new NotLoggedException();
-            $personaUsuario = $this->personaAccesoDatos->consultarPorId($usuario->getId());
+            $personaUsuario = $this->em->getRepository(
+                            'Persona\Model\Entity\Persona'
+                    )->findOneBy(array('usuario' => $usuario->getId()));
             if (!$usuario->esAdministrador() && !is_null($personaUsuario))
                 throw new NotAllowedException();
 
             if (isset($_GET['ajax']) || isset($_POST['ajayx'])) {
                 
             } else {
-
                 View::render(PERSONA_NEW, array(
-                    'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                    'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                    'sexos' => $this->sexoAccesoDatos->consultarActivos(),
+                    'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                    'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                    'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
                 ));
             }
         } catch (\Exception $ex) {
@@ -193,7 +183,9 @@ class PersonaController extends Controller {
             else
                 throw new NotLoggedException();
             $idPersona = isset($_REQUEST['id']) ? $_REQUEST['id'] : -1;
-            $persona = $idPersona != -1 ? $this->personaAccesoDatos->consultarPorId($idPersona) : $this->personaAccesoDatos->consultarPorIdUsuario($usuario->getId());
+            $persona = $idPersona != -1 ?
+                    $this->em->getRepository('Persona\Model\Entity\Persona')->find($idPersona) :
+                    $this->em->getRepository('Persona\Model\Entity\Persona')->findOneBy(array('usuario' => $usuario->getId()));
             /* if (is_null($persona))
               throw new NotFoundEntityException('persona'); */
             if (!$usuario->esAdministrador() && !$persona->esMiUsuario($usuario))
@@ -215,31 +207,32 @@ class PersonaController extends Controller {
             else
                 throw new NotLoggedException();
             $id = $_POST['id'];
-            $persona = $this->personaAccesoDatos->consultarPorId($id);
+            $persona = $this->em->getRepository('Persona\Model\Entity\Persona')->find($id);
             if (is_null($persona))
                 throw new \Librerias\NotFoundEntityException();
             if (!$loguedUser->esAdministrador() && $persona->esMiUsuario($loguedUser))
                 throw new NotAllowedException();
 
             $this->validate($persona);
-            $this->personaAccesoDatos->actualizar($persona);
+            $this->em->persist($persona);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             }
             View::render(PERSONA_EDIT, array(
                 'mensajesExito' => ["Datos actualizados con exito."],
-                'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                'sexos' => $this->sexoAccesoDatos->consultarActivos(),
+                'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
                 'persona' => $persona
             ));
         } catch (InvalidFormDataException $ex) {
             View::render(PERSONA_EDIT, array(
-                'tiposDocumento' => $this->tipoDocumentoAccesoDatos->consultarActivos(),
-                'usuarios' => FacadeAdministracion::getUsuariosActivos(),
-                'sexos' => $this->sexoAccesoDatos->consultarActivos(),
-                'persona' => $this->personaAccesoDatos->consultarPorId($_POST['id']),
+                'tiposDocumento' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findAll(),
+                'usuarios' => $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->findActivos(),
+                'sexos' => $this->em->getRepository('Persona\Model\Entity\Sexo')->findAll(),
+                'persona' => $this->em->getRepository('Persona\Model\Entity\Persona')->find($_POST['id']),
                 'errores' => $ex->getErrores(),
             ));
         } catch (\Exception $ex) {
@@ -252,50 +245,56 @@ class PersonaController extends Controller {
     /*     * *** valida los datos de una entidad persona para altas/modificaciones****** */
 
     public function validate($entity = null) {
+        try {
+            /*             * ********** obtengo los datos del formulario********* */
+            $id = $_POST['id'];
+            $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
+            $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : '';
+            $lugarNacimiento = isset($_POST['lugarNacimiento']) ? $_POST['lugarNacimiento'] : '';
+            $fechaNacimiento = isset($_POST['fechaNacimiento']) ? $_POST['fechaNacimiento'] : '';
+            $numDocumento = isset($_POST['numDocumento']) ? $_POST['numDocumento'] : '';
+            $idTipoDocumento = isset($_POST['tipoDocumento']) ? $_POST['tipoDocumento'] : '-1';
+            $idSexo = isset($_POST['sexo']) ? $_POST['sexo'] : '-1';
+            $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
 
-        /*         * ********** obtengo los datos del formulario********* */
-        $id = $_POST['id'];
-        $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
-        $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : '';
-        $lugarNacimiento = isset($_POST['lugarNacimiento']) ? $_POST['lugarNacimiento'] : '';
-        $fechaNacimiento = isset($_POST['fechaNacimiento']) ? $_POST['fechaNacimiento'] : '';
-        $numDocumento = isset($_POST['numDocumento']) ? $_POST['numDocumento'] : '';
-        $idTipoDocumento = isset($_POST['tipoDocumento']) ? $_POST['tipoDocumento'] : '-1';
-        $idSexo = isset($_POST['sexo']) ? $_POST['sexo'] : '-1';
-        $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
+            $tipoDocumento = $this->em->getRepository('Persona\Model\Entity\TipoDocumento')->find($idTipoDocumento);
+            $estado = ($idEstado == '-1') ?
+            $this->em->getRepository('Administracion\Model\Entity\Estado')->finOneBy(array('nombre' => 'ACTIVO')):
+            $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
+            $idUsuario = $_POST['usuario'];
+            $sexo = $this->em->getRepository('Persona\Model\Entity\Sexo')->find($idSexo);
+            $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idUsuario);                   
+            
+            if (is_null($usuario))
+                throw new \Librerias\NotFoundEntityException();
 
-        $tipoDocumento = $this->tipoDocumentoAccesoDatos->consultarPorId($idTipoDocumento);
-        $estado = ($idEstado == '-1') ? FacadeAdministracion::getEstadoPorNombre('activo') : FacadeAdministracion::getEstadoPorId($idEstado);
-        $idUsuario = $_POST['usuario'];
-        $sexo = $this->sexoAccesoDatos->consultarPorId($idSexo);
+            /*             * *********** creo la nueva entidad y le paso los datos************ */
+            if ($entity)
+                $persona = $entity;
+            else
+                $persona = new Persona();
 
-        $usuario = FacadeAdministracion::getUsuarioPorId($idUsuario);
-        if (is_null($usuario))
-            throw new \Librerias\NotFoundEntityException();
+            if ($id != '-1')
+                $persona->setId($id);
+            $persona->setNombre($nombre);
+            $persona->setApellido($apellido);
+            $persona->setLugarNacimiento($lugarNacimiento);
+            $persona->setFechaNacimiento($fechaNacimiento);
+            $persona->setNumDocumento($numDocumento);
+            //$persona->setFoto($foto);
+            $persona->setTipoDocumento($tipoDocumento);
+            $persona->setUsuario($usuario);
+            $persona->setEstado($estado);
+            $persona->setSexo($sexo);
 
-        /*         * *********** creo la nueva entidad y le paso los datos************ */
-        if ($entity)
-            $persona = $entity;
-        else
-            $persona = new Persona();
+            /*             * ***** Creo validador para la entidad, y valido los datos******** */
+            $validator = new PersonaValidator($persona);
+            $validator->validate();
 
-        $persona->setId($id);
-        $persona->setNombre($nombre);
-        $persona->setApellido($apellido);
-        $persona->setLugarNacimiento($lugarNacimiento);
-        $persona->setFechaNacimiento($fechaNacimiento);
-        $persona->setNumDocumento($numDocumento);
-        //$persona->setFoto($foto);
-        $persona->setTipoDocumento($tipoDocumento);
-        $persona->setUsuario($usuario);
-        $persona->setEstado($estado);
-        $persona->setSexo($sexo);
-
-        /*         * ***** Creo validador para la entidad, y valido los datos******** */
-        $validator = new PersonaValidator($persona);
-        $validator->validate();
-
-        return $persona;
+            return $persona;
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
     }
 
 }

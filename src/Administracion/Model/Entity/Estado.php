@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * 
- * @Entity 
+ * @Entity (repositoryClass="Administracion\Model\Entity\EstadoRepository")
  */
 
 class Estado {

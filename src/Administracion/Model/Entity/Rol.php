@@ -11,7 +11,7 @@ use \Doctrine\Common\Collections\ArrayCollection;
  * Description of Roles
  *
  * @author jose
- * @Entity 
+ * @Entity (repositoryClass="Administracion\Model\Entity\RolRepository")
  */
 class Rol {
 

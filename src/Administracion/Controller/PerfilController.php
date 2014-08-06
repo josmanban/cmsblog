@@ -7,13 +7,13 @@ use Librerias\View;
 use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
 use Librerias\InvalidEntityException;
+use Librerias\InvalidFormDataException;
 use Librerias\Paginator;
 use Librerias\Validator;
+use Librerias\Conexion;
 use Administracion\Model\Entity\Estado;
 use Administracion\Model\Entity\Rol;
 use Administracion\Model\Entity\Usuario;
-use Librerias\InvalidFormDataException;
-use Administracion\Model\Business\AdministracionBusiness;
 
 /*
  * To change this template, choose Tools | Templates
@@ -26,10 +26,11 @@ use Administracion\Model\Business\AdministracionBusiness;
 
 class PerfilController extends Controller {
 
-    private $administracionBusiness;
+    //entity manager
+    private $em;
 
     function __construct() {
-        $this->administracionBusiness= new AdministracionBusiness();
+        $this->em = Conexion::getEntityManager();
     }
 
     //put your code here
@@ -42,11 +43,13 @@ class PerfilController extends Controller {
             if (!$loguedUser->esAdministrador() && !is_null($perfil))
                 throw new NotAllowedException();
             $perfil = $this->validate();
-            $this->administracionBusiness->insertar($perfil);
+
+            $this->em->persist($perfil);
+            $this->em->flush();
         } catch (\Librerias\InvalidaFormDataException $ex) {
             View::render(PERFIL_NEW, array(
                 'errores' => $ex->getErrores(),
-                'usuarios' => $this->administracionBusiness->consultarActivos(),
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
@@ -79,7 +82,7 @@ class PerfilController extends Controller {
             else
                 $page = 1;
 
-            $numItems = $this->administracionBusiness->contarTodos(null);
+            $numItems = $this->em->contarTodos(null);
             $parameters = [];
             $paginator = new Paginator('persona', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
             $parameters[] = [ 'offset' => $paginator->getOffset()];
@@ -92,7 +95,7 @@ class PerfilController extends Controller {
             } else {
                 // require_once dirname(__FILE__) . '/../Views/Persona/index.html.php';
                 View::render(PERFIL_INDEX, array(
-                    'perfiles' => $this->administracionBusiness->consultarTodos($parameters),
+                    'perfiles' => $this->em->consultarTodos($parameters),
                     'paginator' => $paginator,
                 ));
             }
@@ -117,12 +120,12 @@ class PerfilController extends Controller {
         try {
             
         } catch (InvalidFormDataException $ex) {
-            View::render(USUARIO_EDIT, array(
+            View::render(PERFIL_EDIT, array(
                 'errores' => $ex->getErrores(),
-                'usuario' => $this->administracionBusiness->consultarPorId($_POST['id']),
-                'roles' => $this->rolAccesoDatos->consultarTodos(),
-                'estados' => $this->estadoAccesoDatos->consultarActivos(),
-            ));
+                'usuario' => $this->em->find($_POST['id']),
+                'roles' => $this->em->getRepository()->findActivos(),
+                'estados' => $this->em->getRepository()->findAll())
+            );
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
         }
@@ -131,6 +134,7 @@ class PerfilController extends Controller {
     //valida creacion y edicion
     public function bind($perfil = null) {
         try {
+            $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
 
             return $perfil;
         } catch (Exception $ex) {

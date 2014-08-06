@@ -68,19 +68,30 @@ class PersonaValidator extends Validator {
         $this->entity->setFechaNacimiento(new \DateTime($this->entity->getFechaNacimiento()));
     }
 
-    public function validateRepeatedPerson($fieldName = 'persona') {
-        $persona = $this->accesoDatos->consultarPersonaRepetida(
-                $this->entity->getNumDocumento(), $this->entity->getTipoDocumento(), $this->entity->getSexo());
-        if (!is_null($persona) && $persona->getId() != $this->entity->getId()) {
+    public static function validateRepeatedPerson($idPersona,$numDocumento,$idTipoDocumento,$idSexo,$fieldName = 'persona') {
+        
+        $em=  \Librerias\Conexion::getEntityManager();
+        $persona= $em->getRepository('Persona\Model\Entity\Persona')->findOneBy(
+                array('numDocumento'=>$numDocumento,
+                    'tipoDocumento'=>$idTipoDocumento,
+                    'sexo'=>$idSexo
+                    )
+                );
+        
+        if (!is_null($persona) && $persona->getId() != $idPersona) {
             return ucfirst($fieldName) . ' ya registrada.';
         }
         return false;
     }
 
-    public function validateAvailableUser($fieldName = 'usuario') {
-
-        $persona = $this->accesoDatos->consultarPorIdUsuario($this->entity->getUsuario()->getId());
-        if (!is_null($persona) && $persona->getId() != $this->entity->getId()) {
+    public static function validateAvailableUser($idPersona,$idUsuario,$fieldName = 'usuario') {
+        $em=  \Librerias\Conexion::getEntityManager();
+         $persona= $em->getRepository('Persona\Model\Entity\Persona')->findOneBy(
+                array(
+                    'usuario'=>$idUsuario
+                    )
+                );
+        if (!is_null($persona) && $persona->getId() != $idPersona()) {
             return ucfirst($fieldName) . ' ya tiene una persona asignada.';
         }
         return false;

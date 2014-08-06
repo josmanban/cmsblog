@@ -2,10 +2,8 @@
 
 namespace Administracion\Model\Validator;
 
-use Administracion\Model\Business\AdministracionBusiness;
 use Librerias\Validator;
-use Librerias\InvalidEntityException;
-use Librerias\InvalidFormDataException;
+use Librerias\Conexion;
 
 /*
  * To change this template, choose Tools | Templates
@@ -21,9 +19,13 @@ class UsuarioValidator extends Validator {
 
     //put your code here
 
-    function __construct($entity = null) {
-        $this->entity = $entity;
-        $this->business = new AdministracionBusiness();
+    private $repetirPassword;
+    private $password;
+
+    function __construct($entity = null, $password = "", $repetirPassword = "") {
+        $this->entity = $entity;      
+        $this->password = $password;
+        $this->repetirPassword = $repetirPassword;
     }
 
     public function validate() {
@@ -39,22 +41,23 @@ class UsuarioValidator extends Validator {
         $this->addError(self::validateEmptyField($this->entity->getNombre(), 'nombre'));
         $this->addError(self::validateEmptyField($this->entity->getEmail(), 'email'));
 
-        if ($this->entity->getId() == null || !empty($this->entity->getPassword())) {
-            $this->addError(self::validateEmptyField($this->entity->getPassword(), 'password'));
+        if (is_null($this->entity->getId()) || !empty($this->password)) {
+            $this->addError(self::validateEmptyField($this->password, 'password'));
+            $this->addError(self::validateEmptyField($this->repetirPassword, 'password repetido'));
         }
         $this->checkErrores();
     }
 
     protected function validateSpecialFields() {
-        if (!empty($this->entity->getPassword())){
-            $this->addError(self::validatePasswordFormat($this->entity->getPassword()));
-            if (isset($_REQUEST['repetirPassword']))
-                $this->addError(self::validatePasswords($this->entity->getPassword(), $_REQUEST['repetirPassword']));
+        if (!empty($this->password)) {
+            $this->addError(self::validatePasswordFormat($this->password));
+            $this->addError(self::validatePasswords($this->password, $this->repetirPassword));
         }
-        
-		$this->validateEmail($this->entity->getEmail(), 'email');
-        $this->addError($this->validateRepeatedName());
-        $this->addError($this->validateRepeatedEmail());
+        Validator::validateEmail($this->entity->getEmail(), 'email');
+        $this->addError(UsuarioValidator::validateRepeatedName(
+                        $this->entity->getId(), $this->entity->getNombre()));
+        $this->addError(UsuarioValidator::validateRepeatedEmail($this->entity->getId(), $this->entity->getEmail()
+        ));
 
         $this->checkErrores();
 
@@ -64,16 +67,20 @@ class UsuarioValidator extends Validator {
         $this->checkErrores();
     }
 
-    public function validateRepeatedEmail($fieldName = 'email') {
-        $usuario = $this->business->getUsuarioByEmail($this->entity->getEmail());
-        if ($usuario && $usuario->getId() != $this->entity->getId())
+    public static function validateRepeatedEmail($idUsuario, $email, $fieldName = 'email') {
+        $em = Conexion::getEntityManager();
+        $usuario = $em->getRepository('Administracion\Model\Entity\Usuario')
+                ->findOneBy(array('email' => $email));
+        if ($usuario && $usuario->getId() != $idUsuario)
             return ucfirst($fieldName) . ' ya registrado.';
         return false;
     }
 
-    public function validateRepeatedName($fieldName = 'nombre') {
-        $usuario = $this->business->getUsuarioByNombre($this->entity->getNombre());
-        if ($usuario && $usuario->getId() != $this->entity->getId())
+    public static function validateRepeatedName($idUsuario, $nombre, $fieldName = 'nombre') {
+        $em = Conexion::getEntityManager();
+        $usuario = $em->getRepository('Administracion\Model\Entity\Usuario')
+                ->findOneBy(array('nombre' => $nombre));
+        if ($usuario && $usuario->getId() != $id)
             return ucfirst($fieldName) . ' ya registrado.';
         return false;
     }

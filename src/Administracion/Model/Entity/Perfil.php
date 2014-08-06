@@ -10,7 +10,7 @@ namespace Administracion\Model\Entity;
  * Description of Perfil
  *
  * @author jose
- * @Entity 
+ * @Entity (repositoryClass="Administracion\Model\Entity\PerfilRepository")
  */
 class Perfil {
 

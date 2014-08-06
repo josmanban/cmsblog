@@ -14,7 +14,7 @@ use Articulos\Model\Entity\Comentario;
  *
  * @author jose
  *
- * @Entity 
+ * @Entity (repositoryClass="Administracion\Model\Entity\UsuarioRepository")
  *
  */
 class Usuario {    
