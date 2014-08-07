@@ -13,10 +13,8 @@ class RolRepository extends EntityRepository{
                 return $this->_em->findBy(array('estado' => $estadoActivo->getId()));
         } catch (\Exception $ex) {
             throw $ex;
-        }
-        
-    }
-    
+        }        
+    }    
 }
 
 ?>

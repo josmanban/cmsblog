@@ -42,7 +42,8 @@ class PerfilController extends Controller {
             $perfil = $loguedUser->getPerfil();
             if (!$loguedUser->esAdministrador() && !is_null($perfil))
                 throw new NotAllowedException();
-            $perfil = $this->validate();
+            
+            $perfil = $this->bind();
 
             $this->em->persist($perfil);
             $this->em->flush();
@@ -81,21 +82,25 @@ class PerfilController extends Controller {
                 $page = $_GET['page'];
             else
                 $page = 1;
-
+            
             $numItems = $this->em->contarTodos(null);
-            $parameters = [];
-            $paginator = new Paginator('persona', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = [ 'offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
+            $criteria = [];
+            $paginator = new Paginator('perfil', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+          
 
-            //$personas = $this->personaAccesoDatos->consultarTodos($parameters);
+            $perfiles = $this->em->getRepository()->findBy(
+                    $criteria,
+                    array('id'=>'ASC'),
+                    $paginator->getLimit(),
+                    $paginator->getOffset()
+                    );
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 // require_once dirname(__FILE__) . '/../Views/Persona/index.html.php';
                 View::render(PERFIL_INDEX, array(
-                    'perfiles' => $this->em->consultarTodos($parameters),
+                    'perfiles' => $perfiles,
                     'paginator' => $paginator,
                 ));
             }
@@ -122,9 +127,9 @@ class PerfilController extends Controller {
         } catch (InvalidFormDataException $ex) {
             View::render(PERFIL_EDIT, array(
                 'errores' => $ex->getErrores(),
-                'usuario' => $this->em->find($_POST['id']),
-                'roles' => $this->em->getRepository()->findActivos(),
-                'estados' => $this->em->getRepository()->findAll())
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
+                'perfil'=>$this->em->getRepository('Administracion\Model\Entity\Perfil')->find($_POST['id'])
+                    )                
             );
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
@@ -135,6 +140,7 @@ class PerfilController extends Controller {
     public function bind($perfil = null) {
         try {
             $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+                                    
 
             return $perfil;
         } catch (Exception $ex) {

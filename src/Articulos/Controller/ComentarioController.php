@@ -120,9 +120,7 @@ class ComentarioController extends Controller {
         
     }
 
-    /*     * ***********funcion recursiva que muestra el arbol de comentarios************************** */
-
-    public function validate($comentario = null) {
+    public function bind($comentario = null) {
         if (is_null($comentario))
             $comentario = new Comentario();
         $id = $_POST['id'];

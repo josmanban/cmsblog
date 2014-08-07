@@ -35,7 +35,7 @@ define('USER_DEFAULT_AVATAR', 'https://lh6.googleusercontent.com/-01gzVqTArx4/AA
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'perro292');
+define('DB_PASSWORD', 'Consul011209');
 define('DB_DRIVER','pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);

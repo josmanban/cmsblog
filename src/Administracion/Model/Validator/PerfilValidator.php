@@ -33,6 +33,9 @@ class PerfilValidator extends Validator {
     }
 
     protected function validateEmptyFields() { 
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['name'] != '')
+            $this->addError(self::validateImage('avatar', 'avatar', 90000));
+        $this->checkErrores();
     }
 
     protected function validateSpecialFields() {   

@@ -1,11 +1,10 @@
 <?php
 
-namespace PaquetePersonas\Validator;
+namespace Personas\Model\Validator;
 
 use Librerias\Validator;
-use PaquetePersonas\Model\PersonaAccesoDatos;
 use Librerias\InvalidFormDataException;
-use SubsistemaAdministracion\FacadeSubsistemaAdministracion;
+
 
 /*
  * To change this template, choose Tools | Templates

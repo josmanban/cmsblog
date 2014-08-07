@@ -16,6 +16,7 @@ use Librerias\NotFoundEntityException;
 use Librerias\InvalidFormDataException;
 use Librerias\MissingParametersException;
 use Librerias\FuncionesVarias;
+use Librerias\Conexion;
 use Administracion\Model\UsuarioAccesoDatos;
 use Administracion\Model\Estado;
 use Administracion\Model\EstadoAccesoDatos;
@@ -38,20 +39,12 @@ use Articulos\Model\PostNegocio;
  */
 class ArticuloController extends PostController {
 
-    private $comentarioAccesoDatos;
-    private $categoriaArticuloAccesoDatos;
-    private $articuloAccesoDatos;
     private $savePathPhoto;
     private $pathPhoto;
-    protected $showViewPath;
+    private $em;
 
     function __construct() {
-        $this->showViewPath = ARTICULO_SHOW;
-
-        $this->comentarioAccesoDatos = new ComentarioAccesoDatos();
-        $this->categoriaArticuloAccesoDatos = new CategoriaArticuloAccesoDatos();
-        $this->articuloAccesoDatos = new ArticuloAccesoDatos();
-
+        $this->em = Conexion::getEntityManager();
         $this->savePathPhoto = dirname(__DIR__) . '/../../img/Articulo/imagen/';
         $this->pathPhoto = SITE_URL . '/img/Articulo/imagen/';
     }
@@ -67,22 +60,23 @@ class ArticuloController extends PostController {
                 throw new NotAllowedException();
 
             $articulo = $this->validate();
-            $this->articuloAccesoDatos->insertar($articulo);
+            $this->em->persist($articulo);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(ARTICULO_NEW, array(
                     'mensajesExito' => array('Articulo creado con éxito.'),
-                    'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(ARTICULO_NEW, array(
                 'errores' => $ex->getErrores(),
-                'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
-                'estados' => FacadeAdministracion::getEstadosActivos(),
+                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array(
@@ -106,7 +100,7 @@ class ArticuloController extends PostController {
                 throw new MissingParametersException('id articulo');
 
             $id = $_GET['id'];
-            $articulo = $this->articuloAccesoDatos->consultarPorId($id);
+            $articulo = $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($id);
             if (is_null($articulo))
                 throw new NotFoundEntityException('articulo');
             if (!($usuario->esPublicador() && $articulo->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorArticulo())
@@ -116,8 +110,8 @@ class ArticuloController extends PostController {
                 
             } else {
                 View::render(ARTICULO_EDIT, array(
-                    'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'articulo' => $articulo,
                 ));
             }
@@ -144,17 +138,20 @@ class ArticuloController extends PostController {
             else
                 $page = 1;
 
-            $numItems = $this->articuloAccesoDatos->contarTodos(null);
-            $parameters = [];
-            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = [ 'offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
+            $numItems = $this->em->contarTodos(null);
+            $criteria = [];
+            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+            $articulos = $this->em->getRepository()->findBy(
+                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
+
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(ARTICULO_INDEX, array(
-                    'articulos' => $this->articuloAccesoDatos->consultarTodos($parameters),
+                    'articulos' => $articulos,
                     'paginator' => $paginator,
                 ));
             }
@@ -178,8 +175,8 @@ class ArticuloController extends PostController {
                 
             } else {
                 View::render(ARTICULO_NEW, array(
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
-                    'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (\Exception $ex) {
@@ -195,8 +192,8 @@ class ArticuloController extends PostController {
             if (!isset($_GET['id']))
                 throw new NotFoundEntityException();
             $idArticulo = $_GET['id'];
+            $articulo = $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($idArticulo);
 
-            $articulo = $this->articuloAccesoDatos->consultarPorId($idArticulo);
             if (is_null($articulo))
                 throw new NotFoundEntityException();
 
@@ -224,31 +221,33 @@ class ArticuloController extends PostController {
             if (!isset($_POST['id']))
                 throw new NotFoundEntityException();
             $idArticulo = $_POST['id'];
-            $articulo = $this->articuloAccesoDatos->consultarPorId($idArticulo);
+            $articulo = $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($idArticulo);
             if (is_null($articulo))
                 throw new NotFoundEntityException();
             if (!($usuario->esPublicador() && $articulo->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorArticulo())
                 throw new NotAllowedException();
 
             $this->validate($articulo);
-            $this->articuloAccesoDatos->actualizar($articulo);
+
+            $this->em->persist($articulo);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(ARTICULO_EDIT, array(
                     'mensajesExito' => array('Articulo editado con éxito.'),
-                    'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'articulo' => $articulo,
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(ARTICULO_EDIT, array(
                 'errores' => $ex->getErrores(),
-                'categorias' => $this->categoriaArticuloAccesoDatos->consultarActivas(),
-                'estados' => FacadeAdministracion::getEstadosActivos(),
-                'articulo' => $this->articuloAccesoDatos->consultarPorId($_POST['id']),
+                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                'articulo' => $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($_POST['id']),
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array(
@@ -267,13 +266,17 @@ class ArticuloController extends PostController {
                     $page = $_GET['page'];
                 else
                     $page = 1;
-                $numItems = $this->articuloAccesoDatos->contarTodos(null);
-                $parameters = [];
-                $paginator = new Paginator('articulo', 'portada', $page, Constantes::ITEMS_X_PAGE_VIEWS, $numItems, $parameters);
-                $parameters[] = [ 'offset' => $paginator->getOffset()];
-                $parameters[] = ['limit' => $paginator->getLimit()];
+
+                $numItems = $this->em->contarTodos(null);
+                $criteria = [];
+                $paginator = new Paginator('articulo', 'portada', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+                $articulos = $this->em->getRepository()->findBy(
+                        $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+                );
+
                 view::render(ARTICULO_PORTADA, array(
-                    'articulos' => $this->articuloAccesoDatos->consultarTodos($parameters),
+                    'articulos' => $articulos,
                     'paginator' => $paginator,
                 ));
             }
@@ -284,7 +287,7 @@ class ArticuloController extends PostController {
         }
     }
 
-    public function validate($articulo = null) {
+    public function bind($articulo = null) {
         if (is_null($articulo))
             $articulo = new Articulo();
 
@@ -293,12 +296,14 @@ class ArticuloController extends PostController {
         $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
 
         $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
-        $estado = ($idEstado == '-1') ? FacadeAdministracion::getEstadoPorNombre('activo') : FacadeAdministracion::getEstadoPorId($idEstado);
+        $estado = ($idEstado == '-1') ?
+                $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) :
+                $thils->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
         $idCategorias = (isset($_POST['categorias'])) ? $_POST['categorias'] : [];
 
         $categorias = [];
         foreach ($idCategorias as $idCategoria) {
-            $categoria = $this->categoriaArticuloAccesoDatos->consultarPorId($idCategoria);
+            $categoria = $this->em->getRepository('Administracion\Model\Entity\CategoriaArticulo')->find($idCategoria);
             $categorias[] = $categoria;
         }
 
@@ -312,11 +317,11 @@ class ArticuloController extends PostController {
             $articulo->setFechaHoraPublicacion(new \DateTime);
             $articulo->setPublicador($_SESSION['usuario']);
         }
-        
+
 
         $validator = new ArticuloValidator($articulo);
-
         $validator->validate();
+        
 
         /*         * *** actualizo la imagen de haberla********* */
         if (!empty($_FILES['imagen']['name'])) {
@@ -327,8 +332,6 @@ class ArticuloController extends PostController {
         }
         return $articulo;
     }
-
-    
 
 }
 

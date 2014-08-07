@@ -1,8 +1,7 @@
 <?php
 
-namespace Articulos\Validator;
+namespace Articulos\Model\Validator;
 
-use Articulos\Model\ComentarioAccesoDatos;
 use Librerias\Validator;
 use Librerias\InvalidEntityException;
 use Librerias\InvalidFormDataException;

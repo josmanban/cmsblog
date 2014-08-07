@@ -1,9 +1,8 @@
 <?php
 
-namespace Articulos\Validator;
+namespace Articulos\Model\Validator;
 
 use Articulos\Validator\PostValidator;
-use Articulos\Model\ArticuloAccesoDatos;
 use Librerias\InvalidFormDataException;
 
 /*

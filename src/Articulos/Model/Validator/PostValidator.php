@@ -1,10 +1,8 @@
 <?php
 
-namespace Articulos\Validator;
+namespace Articulos\Model\Validator;
 
 use Librerias\Validator;
-use Librerias\Validator;
-use Articulos\Model\PostAccesoDatos;
 use Librerias\InvalidFormDataException;
 
 /*
@@ -34,8 +32,7 @@ class PostValidator extends Validator {
     protected function validateSpecialFields() {
         if (isset($_FILES['imagen']) && $_FILES['imagen']['name'] != '')
             $this->addError(self::validateImage('imagen', 'imagen', 90000));
-        $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto'));
-        $this->addError($this->validateRepeatedTitle());
+        $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto'));    
         $this->checkErrores();
     }
 
@@ -48,13 +45,6 @@ class PostValidator extends Validator {
         }
     }
 
-    public function validateRepeatedTitle($fieldName = 'titulo') {
-        $post = $this->accesoDatos->consultarPorTitulo($this->entity->getTitulo());
-        if (!is_null($post) && $this->entity->getId() != $post->getId()) {
-            return ucfirst($fieldName) . ' ya registrado.';
-        }
-        return false;
-    }
 
 //put your code here
 }

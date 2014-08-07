@@ -44,10 +44,12 @@ abstract class Controller {
 
     public abstract function showAction();
 
-//    public abstract function bind();
-	public function isAjax(){
-	}
-  
+    public abstract function bind($entity=null);
+
+    public function isAjax() {
+        
+    }
+
 }
 
 ?>

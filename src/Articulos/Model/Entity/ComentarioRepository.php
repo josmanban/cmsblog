@@ -1,12 +1,12 @@
 <?php
 
-namespace Personas\Model\Entity;
+namespace Articulos\Model\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-class PersonaRepository extends EntityRepository {
+class ComentarioRepository extends EntityRepository {
 
-    public function findActivos() {
+    public function getActivos() {
 
         try {
             $estadoActivo = $this->_em->getRepository('Administracion\Model\Entity\Estado')
