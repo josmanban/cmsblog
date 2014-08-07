@@ -3,7 +3,7 @@
 namespace Proyectos\Validator;
 
 use Librerias\Validator;
-use Proyectos\Model\InscripcionProyectoAccesoDatos;
+use Librerias\Conexion;
 use Proyectos\Model\InscripcionProyecto;
 
 /*
@@ -19,7 +19,6 @@ use Proyectos\Model\InscripcionProyecto;
 class InscripcionProyectoValidator extends Validator {
 
     function __construct($entity) {
-        $this->accesoDatos = new InscripcionProyectoAccesoDatos();
         $this->entity = $entity;
     }
 
@@ -34,7 +33,9 @@ class InscripcionProyectoValidator extends Validator {
         $this->addError(parent::validateNullProperty($this->entity->getEstado(), 'estado'));
         $this->addError(parent::validateNullProperty($this->entity->getRol(), 'rol'));
         $this->checkErrores();
-        $this->addError($this->validateRepeatedInscripcionProyecto());
+        $this->addError(self::validateRepeatedInscripcionProyecto($this->entity->getId(),
+                $this->entity->getProyecto()->getId(),
+                $this->entity->getPersona()->getId()));
         $this->checkErrores();
     }
 
@@ -47,12 +48,16 @@ class InscripcionProyectoValidator extends Validator {
         }
     }
 
-    public function validateRepeatedInscripcionProyecto() {
-        $inscripcionProyecto = $this->accesoDatos->consultarPorIdProyectoIdPersona(
-                $this->entity->getProyecto()->getId(), $this->entity->getPersona()->getId()
-        );
+    public static function validateRepeatedInscripcionProyecto($idInscripcion, $idProyecto, $idPersona) {
+        
+        $em = Conexion::getEntityManager();
+        $inscripcionProyecto = $this->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findOneBy(
+                array(
+                    'proyecto' => $idProyecto,
+                    'persona' => $idPersona,
+                ));
 
-        if (!is_null($inscripcionProyecto) && $inscripcionProyecto->getId() != $this->entity->getId()) {
+        if (!is_null($inscripcionProyecto) && $inscripcionProyecto->getId() != $idInscripcion) {
             return 'Inscripci&oacute;n rechazada. La persona ya esta inscripta al proyecto.';
         }
         return false;

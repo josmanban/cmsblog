@@ -12,20 +12,15 @@ use Librerias\NotFoundEntityException;
 use Librerias\InvalidEntityException;
 use Librerias\InvalidFormDataException;
 use Librerias\MissingParametersException;
-use Administracion\Model\UsuarioAccesoDatos;
+use Librerias\Conexion;
 use Administracion\Model\Estado;
-use Administracion\Model\EstadoAccesoDatos;
 use Administracion\Model\Rol;
-use Administracion\Model\RolAccesoDatos;
 use Administracion\Model\Usuario;
 use Administracion\FacadeAdministracion;
-use Proyectos\Model\TipoProyectoAccesoDatos;
 use Proyectos\Model\Proyecto;
-use Proyectos\Model\ProyectoAccesoDatos;
-use Proyectos\Model\InscripcionProyectoAccesoDatos;
 use Proyectos\Model\InscripcionProyecto;
 use Proyectos\Validator\InscripcionProyectoValidator;
-use PaquetePersonas\FacadePaquetePersonas;
+
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,14 +34,10 @@ use PaquetePersonas\FacadePaquetePersonas;
  */
 class InscripcionProyectoController extends Controller {
 
-    private $proyectoAccesoDatos;
-    private $inscripcionProyectoAccesoDatos;
-    private $tipoProyectoAccesoDatos;
-
+    private $em;
+   
     function __construct() {
-        $this->proyectoAccesoDatos = new ProyectoAccesoDatos();
-        $this->tipoProyectoAccesoDatos = new TipoProyectoAccesoDatos();
-        $this->inscripcionProyectoAccesoDatos = new InscripcionProyectoAccesoDatos();
+        $this->em= Conexion::getEntityManager();
     }
 
 //put your code here
@@ -294,7 +285,7 @@ class InscripcionProyectoController extends Controller {
         }
     }
 
-    public function validate($inscripcionProyecto = null) {
+    public function bind($inscripcionProyecto = null) {
         try {
             if (is_null($inscripcionProyecto))
                 $inscripcionProyecto = new InscripcionProyecto();

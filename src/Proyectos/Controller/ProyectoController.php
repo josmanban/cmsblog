@@ -11,21 +11,16 @@ use Librerias\NotLoggedException;
 use Librerias\NotFoundEntityException;
 use Librerias\InvalidEntityException;
 use Librerias\MissingParametersException;
-use Administracion\Model\UsuarioAccesoDatos;
+use Librerias\Conexion;
 use Administracion\Model\Estado;
-use Administracion\Model\EstadoAccesoDatos;
 use Administracion\Model\Rol;
-use Administracion\Model\RolAccesoDatos;
 use Administracion\Model\Usuario;
-use Administracion\FacadeAdministracion;
-use Proyectos\Model\TipoProyectoAccesoDatos;
+
 use Proyectos\Model\Proyecto;
-use Proyectos\Model\ProyectoAccesoDatos;
 use Articulos\Controller\ArticuloController;
 use Articulos\FacadeArticulos;
 use Proyectos\Validator\ProyectoValidator;
 use Librerias\InvalidFormDataException;
-use Proyectos\Model\InscripcionProyectoAccesoDatos;
 use Articulos\Model\PostNegocio;
 use Articulos\Controller\PostController;
 
@@ -41,15 +36,10 @@ use Articulos\Controller\PostController;
  */
 class ProyectoController extends PostController {
 
-    private $proyectoAccesoDatos;
-    private $inscripcionProyectoAccesoDatos;
-    private $tipoProyectoAccesoDatos;
-
+    private $em;
+    
     function __construct() {
-        $this->proyectoAccesoDatos = new ProyectoAccesoDatos();
-        $this->tipoProyectoAccesoDatos = new TipoProyectoAccesoDatos();
-        $this->inscripcionProyectoAccesoDatos = new InscripcionProyectoAccesoDatos();
-        $this->showViewPath = PROYECTO_SHOW;
+        $this->em= Conexion::getEntityManager();
     }
 
 //put your code here
@@ -253,7 +243,7 @@ class ProyectoController extends PostController {
         }
     }
 
-    public function validate($proyecto = null) {
+    public function bind($proyecto = null) {
         try {
 
             if (is_null($proyecto))
@@ -344,15 +334,7 @@ class ProyectoController extends PostController {
         }
     }
 
-    public function getCommentsBoxAction($id = null) {
-        $usuario = isset($_SESSION['usuario']) ? $_SESSION['usuario'] : null;
-        if (!is_null($usuario)) {
-            $inscripcion = $this->inscripcionProyectoAccesoDatos->consultarPorIdProyectoIdUsuario($id, $usuario->getId());
-            if (!is_null($inscripcion) || $usuario->esAdmnistrador() || $usuario->esAdministradorProyectos())
-                parent::getCommentsBoxAction($id);
-        }
-    }
-
+   
 }
 
 ?>

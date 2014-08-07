@@ -3,7 +3,7 @@
 namespace Proyectos\Validator;
 
 use Articulos\Validator\PostValidator;
-use Proyectos\Model\ProyectoAccesoDatos;
+use Librerias\Conexion;
 
 /*
  * To change this template, choose Tools | Templates
@@ -36,14 +36,18 @@ class ProyectoValidator extends PostValidator {
         $this->addError(self::validateDateField($this->entity->getFechaInicio(), 'Fecha inicio'));
         if ($this->entity->getCupo != null)
             $this->addError(self::validateInteger($this->entity->getCupo(), 'cupo'));
-        $this->addError($this->validateRepeatedCodeName('codename'));
+        $this->addError(self::validateRepeatedCodeName($this->entiy->getId(),$this->entity->getCodename(),'codename'));
         $this->addError(parent::validateNullProperty($this->entity->getTipo(), 'tipo'));
         $this->checkErrores();
     }
 
-    protected function validateRepeatedCodeName($fieldname) {
-        $proyecto = $this->accesoDatos->consultarPorCodeName($this->entity->getCondename());
-        if (!is_null($proyecto) && $proyecto->getId() != $this->entity->getId())
+    public static function validateRepeatedCodeName($id, $codename, $fieldname='codename') {
+        $em = Conexion::getEntityManager();
+        $proyecto = $em->getRepository('Proyectos\Model\Entity\Proyecto')->findOnBy(array(
+            'codename' => $codename
+        ));
+
+        if (!is_null($proyecto) && $proyecto->getId() != $id)
             return ucfirst($fieldname) . ' ya registrado.';
         return false;
     }
