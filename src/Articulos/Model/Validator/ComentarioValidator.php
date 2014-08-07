@@ -22,7 +22,7 @@ class ComentarioValidator extends Validator {
 
     function __construct($entity = null) {
         $this->entity = $entity;
-        $this->accesoDatos = new ComentarioAccesoDatos();
+        
     }
 
     public function validate() {

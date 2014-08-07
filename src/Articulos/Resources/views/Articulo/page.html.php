@@ -42,13 +42,11 @@
             Comentarios:
         </h3>
     </header>
-
-    <?php
-
-    use SubsistemaArticulos\Controller\ArticuloController;
-
-$articuloController = new ArticuloController();
-    $articuloController->getCommentsBoxAction($articulo->getId());
-    ?>    
+    <?php require_once COMENTARIO_NEW_FORM; ?>
+    <ul>
+        <?php foreach ($articulo->getComentarios() as $comentario): ?>
+            <?php require COMENTARIO_SHOW; ?>
+        <?php endforeach; ?>
+    </ul>
 </article>
 

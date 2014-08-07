@@ -20,9 +20,7 @@ abstract class Validator {
     //put your code here
     //errores comunes referidos a datos de formularios
     protected $errores = [];
-    protected $accesoDatos;
     protected $entity;
-	protected $business;
 
     //agrego error
     protected function addError($error) {

@@ -77,6 +77,9 @@ class PaginaController extends Controller {
     public function contactoAction() {
         View::render(PAGINA_CONTACTO, null);
     }
+    
+    public function bind($entity=null){        
+    }
 
 }
 

@@ -6,10 +6,8 @@ use Librerias\Controller;
 use Librerias\View;
 use Librerias\Paginator;
 use Librerias\Constantes;
-use Articulos\Model\ArticuloAccesoDatos;
 use Articulos\Model\Articulo;
 use Articulos\Model\CategoriaArticulo;
-use Articulos\Model\CategoriaArticuloAccesoDatos;
 use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
 use Librerias\NotFoundEntityException;
@@ -17,16 +15,10 @@ use Librerias\InvalidFormDataException;
 use Librerias\MissingParametersException;
 use Librerias\FuncionesVarias;
 use Librerias\Conexion;
-use Administracion\Model\UsuarioAccesoDatos;
 use Administracion\Model\Estado;
-use Administracion\Model\EstadoAccesoDatos;
 use Administracion\Model\Rol;
-use Administracion\Model\RolAccesoDatos;
 use Administracion\Model\Usuario;
-use Administracion\FacadeAdministracion;
-use Articulos\Model\ComentarioAccesoDatos;
 use Articulos\Validator\ArticuloValidator;
-use Articulos\Model\PostNegocio;
 
 /* To change this template, choose Tools | Templates
  * and open the template in the editor.

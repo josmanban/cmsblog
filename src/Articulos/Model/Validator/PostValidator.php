@@ -17,8 +17,7 @@ use Librerias\InvalidFormDataException;
  */
 class PostValidator extends Validator {
 
-    function __construct($entity = null) {
-        $this->accesoDatos = new PostAccesoDatos();
+    function __construct($entity = null) {       
         $this->entity = $entity;
     }
 

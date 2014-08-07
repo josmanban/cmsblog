@@ -21,6 +21,5 @@
                     echo $comentario->getId();
                     ?>" class="btn btn-default">Responder</a></div>
                 <?php endif; ?><?php endif; ?>
-
     </div>
 </div>

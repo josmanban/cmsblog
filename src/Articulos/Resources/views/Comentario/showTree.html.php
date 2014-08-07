@@ -17,10 +17,9 @@
 
         <?php if (isset($_SESSION['usuario'])): ?>
             <?php if ($_SESSION['usuario']->esNormal()): ?>
-                <div><a style="float:right"href="index.php?controller=comentario&action=new&articulo=<?php echo $comentario->getArticulo()->getId() ?>&padre=<?php
+                <div><a style="float:right"href="index.php?controller=comentario&action=new&articulo=<?php echo $comentario->getPost()->getId() ?>&padre=<?php
                     echo $comentario->getId();
                     ?>" class="btn btn-default">Responder</a></div>
                 <?php endif; ?><?php endif; ?>
-
     </div>
 </div>

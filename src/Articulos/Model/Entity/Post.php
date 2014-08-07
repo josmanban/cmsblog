@@ -3,6 +3,7 @@
 namespace Articulos\Model\Entity;
 
 use Administracion\Model\Entity\Usuario;
+use Articulos\Model\Entity\Comentario;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -68,6 +69,18 @@ class Post {
         $this->comentarios= new ArrayCollection();
     }
 
+    public function getComentarios() {
+        return $this->comentarios;
+    }
+
+    public function setComentarios($comentarios) {
+        $this->comentarios = $comentarios;
+    }
+    
+    public function addComentario(Comentario $comentario){
+        $this->comentarios[]=$comentario;
+    }
+        
     public function getId() {
         return $this->id;
     }

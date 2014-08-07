@@ -11,38 +11,25 @@ use Librerias\Controller;
 use Librerias\View;
 use Librerias\Paginator;
 use Librerias\Constantes;
-use Articulos\Model\ArticuloAccesoDatos;
 use Articulos\Model\Articulo;
 use Articulos\Model\CategoriaArticulo;
-use Articulos\Model\CategoriaArticuloAccesoDatos;
 use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
 use Librerias\NotFoundEntityException;
 use Librerias\InvalidEntityException;
 use Librerias\MissingParametersException;
-use Administracion\Model\UsuarioAccesoDatos;
+use Librerias\Conexion;
 use Administracion\Model\Estado;
-use Administracion\Model\EstadoAccesoDatos;
 use Administracion\Model\Rol;
-use Administracion\Model\RolAccesoDatos;
 use Administracion\Model\Usuario;
-use Administracion\FacadeAdministracion;
 use Articulos\Model\Comentario;
-use Articulos\Model\ComentarioAccesoDatos;
 use Articulos\Validator\ComentarioValidator;
-use Articulos\Model\PostAccesoDatos;
 
 class ComentarioController extends Controller {
 
-    private $postAccesoDatos;
-    private $comentarioAccesoDatos;
-    private $categoriaArticuloAccesoDatos;
-
+    private $em;
     function __construct() {
-
-        $this->postAccesoDatos = new PostAccesoDatos();
-        $this->comentarioAccesoDatos = new ComentarioAccesoDatos();
-        $this->categoriaArticuloAccesoDatos = new CategoriaArticuloAccesoDatos();
+        $this->em= Conexion::getEntityManager();
     }
 
     public function createAction() {
@@ -52,12 +39,14 @@ class ComentarioController extends Controller {
             else
                 throw new NotLoggedException();
             $idPost = isset($_POST['post']) ? $_POST['post'] : -1;
-            $post = $this->postAccesoDatos->consultarPorId($idPost);
+            $post = $this->em->getRepository('Articulos\Model\Entity\Post')->find($idPost);
             if (is_null($post))
                 throw new NotFoundEntityException();
             $comentario = $this->validate();
-
-            $this->comentarioAccesoDatos->insertar($comentario);
+            
+            $this->em->persist($comentario);
+            $post->addComentario($comentario);
+            $this->em->flush();                  
 
             if (isset($_REQUEST['ajax'])) {
                 
@@ -94,11 +83,13 @@ class ComentarioController extends Controller {
                 throw new NotLoggedException();
             if (!isset($_GET['post']))
                 throw new \Librerias\MissingParametersException(['post']);
-            $post = $this->postAccesoDatos->consultarPorId($_GET['post']);
+            $post = $this->em->getRepository('Articulos\Model\Entity\Post')->find($_GET['post']);
 
             if (is_null($post))
                 throw new NotFoundEntityException();
-            $padre = isset($_GET['padre']) ? $this->comentarioAccesoDatos->consultarPorId($_GET['padre']) : null;
+            $padre = isset($_GET['padre']) ?
+                $this->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) : 
+                null;
 
             if (isset($_REQUEST['ajax'])) {
                 require_once dirname(__FILE__) . '/../Views/Comentario/newForm.html.php';
@@ -129,12 +120,12 @@ class ComentarioController extends Controller {
 
         $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
 
-        $post = $this->postAccesoDatos->consultarPorId($idPost);
-        $padre = $this->comentarioAccesoDatos->consultarPorId($idPadre);
+        $post = $this->em->getRepository('Articulos\Model\Entity\Post')->find($idPost);
+        $padre = $this->em->getRepository('Articulos\Model\Entity\Comentario')->find($idPadre);
 
-        $estadoActivo = FacadeAdministracion::getEstadoPorNombre('activo');
+        $estadoActivo = $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre'=>'ACTIVO'));
 
-        $comentario->setId($id);
+        //$comentario->setId($id);
         $comentario->setTexto($texto);
         $comentario->setPadre($padre);
         $comentario->setPost($post);

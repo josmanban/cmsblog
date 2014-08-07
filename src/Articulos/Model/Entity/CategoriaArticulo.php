@@ -6,7 +6,7 @@ namespace Articulos\Model\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity (repositoryClass="Articulos\Model\Entity\CategoriaArticuloRepository")
  **/
 
 class CategoriaArticulo {

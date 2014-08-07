@@ -19,8 +19,7 @@ class ArticuloValidator extends PostValidator {
 
     //put your code here
 
-    function __construct($entity = null) {
-        $this->accesoDatos = new ArticuloAccesoDatos();
+    function __construct($entity = null) {       
         $this->entity = $entity;
     }    
 

@@ -1,12 +1,12 @@
 <?php
 
 namespace Articulos\Model\Entity;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Description of Comentario
  *
  * @author jose
- * @Entity
+ * @Entity (repositoryClass="Articulos\Model\Entity\ComentarioRepository")
  */
 class Comentario {
 
@@ -24,10 +24,16 @@ class Comentario {
     private $post;
 
     /**
-     * @OneToOne(targetEntity="Comentario")
+     * @ManyToOne(targetEntity="Comentario",inversedBy="hijos")
      *
      */
     private $padre;
+    
+    /**
+     * @OneToMany(targetEntity="Comentario",mappedBy="padre")
+     * 
+     */
+    private $hijos;
 
     /**
      * @Column(length=900)
@@ -49,6 +55,10 @@ class Comentario {
      */
     private $estado;
 
+    public function __construct(){
+        $this->hijos= new ArrayCollection();
+    }
+    
     public function getId() {
         return $this->id;
     }
@@ -104,7 +114,19 @@ class Comentario {
     public function setEstado($estado) {
         $this->estado = $estado;
     }
+    
+    public function getHijos() {
+        return $this->hijos;
+    }
 
+    public function setHijos($hijos) {
+        $this->hijos = $hijos;
+    }
+
+    public function addComentario(Comentario $comentario){
+        $this->hijos[]=$comentario;
+    }
+    
     public function __toString() {
         
     }

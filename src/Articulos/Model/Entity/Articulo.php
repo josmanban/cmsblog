@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Description of Articulo
  *
  * @author jose
- * @Entity
+ * @Entity (repositoryClass="Articulos\Model\Entity\ArticuloRepository")
  */
 class Articulo extends Post {
 
