@@ -54,7 +54,7 @@ class Proyecto extends Post {
     }
 
     public function getInscripcionesProyecto(){
-        return $inscripcionesProyecto;
+        return $this->inscripcionesProyecto;
     }
     public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto){
         $this->InscricionProyecto=$inscripcionesProyecto;

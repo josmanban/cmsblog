@@ -58,8 +58,9 @@ class PersonaValidator extends Validator {
         $this->addError(self::validateNullProperty($this->entity->getSexo(), 'sexo'));
         $this->checkErrores();
 
-        $this->addError($this->validateRepeatedPerson());
-        $this->addError($this->validateAvailableUser());
+        $this->addError(self::validateRepeatedPerson($this->entity->getId(),  $this->entity->getNumDocumento(),
+        $this->entity->getTipoDocumento()->getId(),  $this->entity->getSexo()->getId()));
+        $this->addError(self::validateAvailableUser($this->entity->getId(),  $this->entity->getUsuario()->getId()));
         
         $this->checkErrores();
 

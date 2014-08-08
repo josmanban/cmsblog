@@ -15,7 +15,6 @@ use Librerias\Conexion;
 use Administracion\Model\Estado;
 use Administracion\Model\Rol;
 use Administracion\Model\Usuario;
-
 use Proyectos\Model\Proyecto;
 use Articulos\Controller\ArticuloController;
 use Articulos\FacadeArticulos;
@@ -37,9 +36,9 @@ use Articulos\Controller\PostController;
 class ProyectoController extends PostController {
 
     private $em;
-    
+
     function __construct() {
-        $this->em= Conexion::getEntityManager();
+        $this->em = Conexion::getEntityManager();
     }
 
 //put your code here
@@ -52,24 +51,23 @@ class ProyectoController extends PostController {
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorProyecto() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
             $proyecto = $this->validate();
-            $this->proyectoAccesoDatos->insertar($proyecto);
+            $this->em->persist($proyecto);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(PROYECTO_NEW, array(
                     'mensajesExito' => array('Proyecto creado con éxito.'),
-                    'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
-                  
+                    'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll()
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(PROYECTO_NEW, array(
                 'errores' => $ex->getErrores(),
-               
-                'estados' => FacadeAdministracion::getEstadosActivos(),
-                'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
+                'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll()
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array(
@@ -91,7 +89,7 @@ class ProyectoController extends PostController {
             if (!isset($_GET['id']))
                 throw new MissingParametersException(['id']);
             $id = $_GET['id'];
-            $proyecto = $this->proyectoAccesoDatos->consultarPorId($id);
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($id);
             if (is_null($proyecto))
                 throw new NotFoundEntityException('proyecto');
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorProyecto() &&
@@ -103,9 +101,8 @@ class ProyectoController extends PostController {
             } else {
                 View::render(PROYECTO_EDIT, array(
                     'proyecto' => $proyecto,
-                    'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
-                   
+                    'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll()
                 ));
             }
         } catch (\Exception $ex) {
@@ -129,18 +126,20 @@ class ProyectoController extends PostController {
             else
                 $page = 1;
 
-            $numItems = $this->proyectoAccesoDatos->contarTodos(null);
-            $parameters = [];
-            $paginator = new Paginator('proyecto', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = [ 'offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
+             $numItems = $this->em->contarTodos(null);
+            $criteria = [];
+            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+            $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
+                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
 
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(PROYECTO_INDEX, array(
-                    'proyectos' => $this->proyectoAccesoDatos->consultarTodos($parameters),
+                    'proyectos' => $proyectos,
                     'paginator' => $paginator,
                 ));
             }
@@ -164,9 +163,8 @@ class ProyectoController extends PostController {
                 
             } else {
                 View::render(PROYECTO_NEW, array(
-                    'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
-                   
+                    'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll()
                 ));
             }
         } catch (\Exception $ex) {
@@ -182,7 +180,7 @@ class ProyectoController extends PostController {
             if (!isset($_GET['id']))
                 throw new MissingParametersException('id proyecto');
             $id = $_GET['id'];
-            $proyecto = $this->proyectoAccesoDatos->consultarPorId($id);
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($id);
             if (is_null($proyecto))
                 throw new NotFoundEntityException();
             if (isset($_REQUEST['ajax'])) {
@@ -208,33 +206,32 @@ class ProyectoController extends PostController {
             if (!isset($_POST['id']))
                 throw new NotFoundEntityException();
             $id = $_POST['id'];
-            $proyecto = $this->proyectoAccesoDatos->consultarPorId($id);
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($id);
             if (is_null($proyecto))
                 throw new NotFoundEntityException('proyecto');
             if (!($usuario->esPublicadorProyecto() && $proyecto->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorProyecto())
                 throw new NotAllowedException();
 
             $this->validate($proyecto);
-            $this->proyectoAccesoDatos->actualizar($proyecto);
+            $this->em->persist($proyecto);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(PROYECTO_EDIT, array(
                     'mensajesExito' => array('Datos actualizados con éxito.'),
-                   
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
-                    'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
+                    'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'proyecto' => $proyecto,
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(PROYECTO_EDIT, array(
                 'errores' => $ex->getErrores(),
-       
-                'estados' => FacadeAdministracion::getEstadosActivos(),
-                'tipos' => $this->tipoProyectoAccesoDatos->consultarActivos(),
-                'proyecto' => $this->proyectoAccesoDatos->consultarPorId($_POST['id']),
+                'tipos' => $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                'proyecto' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($_POST['id']),
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array(
@@ -254,7 +251,7 @@ class ProyectoController extends PostController {
             $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
             $estado = ($idEstado == '-1') ? FacadeAdministracion::getEstadoPorNombre('activo') : FacadeAdministracion::getEstadoPorId($idEstado);
-            
+
 
 
             $idTipo = isset($_POST['tipo']) ? $_POST['titulo'] : '-1';
@@ -265,13 +262,13 @@ class ProyectoController extends PostController {
             $fechaInicio = isset($_POST['fechaInicio']) ? $_POST['fechaInicio'] : '';
             $duracionMeses = isset($_POST['duracionMeses']) ? $_POST['duracionMeses'] : '';
 
-         
+
 
             $proyecto->setId($id);
             $proyecto->setTitulo($titulo);
             $proyecto->setTexto($texto);
 
-            $proyecto->setEstado($estado);           
+            $proyecto->setEstado($estado);
             if ($proyecto->getId() == -1) {
                 $proyecto->setFechaHoraPublicacion(new \DateTime);
                 $proyecto->setPublicador($_SESSION['usuario']);
@@ -334,7 +331,6 @@ class ProyectoController extends PostController {
         }
     }
 
-   
 }
 
 ?>

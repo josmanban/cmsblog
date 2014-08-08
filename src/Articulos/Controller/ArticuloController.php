@@ -134,7 +134,7 @@ class ArticuloController extends PostController {
             $criteria = [];
             $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
-            $articulos = $this->em->getRepository()->findBy(
+            $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
@@ -290,7 +290,7 @@ class ArticuloController extends PostController {
         $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
         $estado = ($idEstado == '-1') ?
                 $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) :
-                $thils->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
+                $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
         $idCategorias = (isset($_POST['categorias'])) ? $_POST['categorias'] : [];
 
         $categorias = [];

@@ -21,7 +21,6 @@ use Proyectos\Model\Proyecto;
 use Proyectos\Model\InscripcionProyecto;
 use Proyectos\Validator\InscripcionProyectoValidator;
 
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -35,9 +34,9 @@ use Proyectos\Validator\InscripcionProyectoValidator;
 class InscripcionProyectoController extends Controller {
 
     private $em;
-   
+
     function __construct() {
-        $this->em= Conexion::getEntityManager();
+        $this->em = Conexion::getEntityManager();
     }
 
 //put your code here
@@ -51,25 +50,27 @@ class InscripcionProyectoController extends Controller {
                 throw new NotAllowedException();
 
             $inscripcionProyecto = $this->validate();
-            $this->inscripcionProyectoAccesoDatos->insertar($inscripcionProyecto);
+            $inscripcionProyecto->getProyecto()->addInscripcionProyecto($inscripcionProyecto);
+            $this->em->persist($inscripcionProyecto);
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
                     'mensajeExito' => array('Inscripcion registrada con éxito'),
-                    'roles' => FacadeAdministracion::getRolesProyecto(),
-                    'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                    'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                    'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(INSCRIPCION_PROYECTO_NEW, array(
-                'roles' => FacadeAdministracion::getRolesProyecto(),
-                'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                'estados' => FacadeAdministracion::getEstadosActivos(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 'errores' => $ex->getErrores(),
             ));
         } catch (\Exception $ex) {
@@ -92,8 +93,10 @@ class InscripcionProyectoController extends Controller {
             if (!isset($_GET['id']))
                 throw new MissingParametersException(['id']);
             $id = $_GET['id'];
-            $inscripcionProyecto = $this->inscripcionProyectoAccesoDatos->consultarPorId($id);
+
+            $inscripcionProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->find($id);
             $proyecto = $inscripcionProyecto->getProyecto();
+
             if (is_null($inscripcionProyecto))
                 throw new NotFoundEntityException('inscripcion');
             if (is_null($proyecto))
@@ -107,10 +110,10 @@ class InscripcionProyectoController extends Controller {
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
                     'inscripcionProyecto' => $inscripcionProyecto,
-                    'roles' => FacadeAdministracion::getRolesProyecto(),
-                    'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                    'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                    'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (\Exception $ex) {
@@ -134,17 +137,19 @@ class InscripcionProyectoController extends Controller {
             else
                 $page = 1;
 
-            $numItems = $this->inscripcionProyectoAccesoDatos->contarTodos(null);
-            $parameters = [];
-            $paginator = new Paginator('inscripcionProyecto', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = ['offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
+            $numItems = $this->em->contarTodos(null);
+            $criteria = [];
+            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+            $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
+                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_INDEX, array(
-                    'inscripcionesProyecto' => $this->inscripcionProyectoAccesoDatos->consultarTodos($parameters),
+                    'inscripcionesProyecto' => $inscripcionesProyecto,
                     'paginator' => $paginator,
                 ));
             }
@@ -167,10 +172,10 @@ class InscripcionProyectoController extends Controller {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
-                    'roles' => FacadeAdministracion::getRolesProyecto(),
-                    'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                    'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                    'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (\Exception $ex) {
@@ -188,7 +193,8 @@ class InscripcionProyectoController extends Controller {
             if (!isset($_REQUEST['id']))
                 throw new MissingParametersException(array('id'));
             $id = $_REQUEST['id'];
-            $inscripcionProyecto = $this->inscripcionProyectoAccesoDatos->consultarPorId($id);
+            $inscripcionProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')
+                    ->find($id);
             if (is_null($inscripcionProyecto))
                 throw new NotFoundEntityException('inscripcion proyecto');
             /*
@@ -218,9 +224,10 @@ class InscripcionProyectoController extends Controller {
     public function archiveAction() {
         try {
             if (isset($_REQUEST['id']))
-                $inscripcionesProyecto = $this->inscripcionProyectoAccesoDatos->consultarPorIdProyecto($_REQUEST['id']);
+                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findBy(
+                        array('proyecto' => $_REQUEST['id']));
             else
-                $inscripcionesProyecto = $this->inscripcionProyectoAccesoDatos->consultarTodos(null);
+                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findAll();
 
             if (isset($_REQUEST['ajax'])) {
                 
@@ -245,7 +252,7 @@ class InscripcionProyectoController extends Controller {
             if (!isset($_POST['id']))
                 throw new NotFoundEntityException();
             $id = $_POST['id'];
-            $inscripcionProyecto = $this->inscripcionProyectoAccesoDatos->consultarPorId($id);
+            $inscripcionProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->find($id);
             $proyecto = $inscripcionProyecto->getProyecto();
             if (is_null($inscripcionProyecto))
                 throw new NotFoundEntityException('inscripcion');
@@ -254,29 +261,32 @@ class InscripcionProyectoController extends Controller {
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorProyectos() &&
                     !($usuario->esPublicadorProyecto() && $proyecto->esAuthor($usuario)))
                 throw new NotAllowedException();
+
+
             $this->validate($inscripcionProyecto);
-            $this->inscripcionProyectoAccesoDatos->actualizar($inscripcionProyecto);
+            $this->persist($inscripcionProyecto);
+            $this->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
-                    'roles' => FacadeAdministracion::getRolesProyecto(),
-                    'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                    'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                    'estados' => FacadeAdministracion::getEstadosActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                    'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'mensajesExito' => array('Datos actualizada con exito.'),
                     'inscripcionProyecto' => $inscripcionProyecto,
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(INSCRIPCION_PROYECTO_EDIT, array(
-                'roles' => FacadeAdministracion::getRolesProyecto(),
-                'personas' => FacadePaquetePersonas::getPersonasActivas(),
-                'proyectos' => $this->proyectoAccesoDatos->consultarActivos(),
-                'estados' => FacadeAdministracion::getEstadosActivos(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
+                'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 'errores' => $ex->getErrores(),
-                'inscripcionProyecto' => $this->inscripcionProyectoAccesoDatos->consultarPorId($_POST['id']),
+                'inscripcionProyecto' => $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->find($_POST['id']),
             ));
         } catch (\Exception $ex) {
             View::render(ERROR, array(
@@ -299,11 +309,10 @@ class InscripcionProyectoController extends Controller {
             $idProyecto = isset($_POST['proyecto']) ? $_POST['proyecto'] : -1;
 
 
-            $rolProyecto = FacadeAdministracion::getRolProyectoPorId($idRolProyecto);
-            //$usuario = FacadeAdministracion::getUsuarioPorId($idUsuario);
-            $persona = FacadePaquetePersonas::getPersonaPorId($idPersona);
-            $proyecto = $this->proyectoAccesoDatos->consultarPorId($idProyecto);
-            $estado = FacadeAdministracion::getEstadoPorId($idEstado);
+            $rolProyecto = $this->em->getRepository('Administracion\Model\Entity\Rol')->find($idRolProyecto);
+            $persona = $this->em->getRepository('Personas\Model\Entity\Persona')->find($idPersona);
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($idProyecto);
+            $estado = $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
 
             $inscripcionProyecto->setId($id);
             $inscripcionProyecto->setProyecto($proyecto);

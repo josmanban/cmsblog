@@ -51,7 +51,7 @@ class InscripcionProyectoValidator extends Validator {
     public static function validateRepeatedInscripcionProyecto($idInscripcion, $idProyecto, $idPersona) {
         
         $em = Conexion::getEntityManager();
-        $inscripcionProyecto = $this->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findOneBy(
+        $inscripcionProyecto = $em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findOneBy(
                 array(
                     'proyecto' => $idProyecto,
                     'persona' => $idPersona,

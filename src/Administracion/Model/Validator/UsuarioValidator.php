@@ -54,9 +54,9 @@ class UsuarioValidator extends Validator {
             $this->addError(self::validatePasswords($this->password, $this->repetirPassword));
         }
         Validator::validateEmail($this->entity->getEmail(), 'email');
-        $this->addError(UsuarioValidator::validateRepeatedName(
+        $this->addError(self::validateRepeatedName(
                         $this->entity->getId(), $this->entity->getNombre()));
-        $this->addError(UsuarioValidator::validateRepeatedEmail($this->entity->getId(), $this->entity->getEmail()
+        $this->addError(self::validateRepeatedEmail($this->entity->getId(), $this->entity->getEmail()
         ));
 
         $this->checkErrores();

@@ -4,6 +4,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+/*
 define('SITE_NAME', 'Fundasoft');
 define('SITE_SLOGAN', 'barrilete barrilete');
 define('SITE_URL', 'http://localhost/sites/cmsblog');
@@ -11,16 +12,11 @@ define('SITE_URL', 'http://localhost/sites/cmsblog');
 define('USER_DEFAULT_AVATAR', 'https://lh6.googleusercontent.com/-01gzVqTArx4/AAAAAAAAAAI/AAAAAAAAAAA/DE4mx1iBmYg/s32-c/photo.jpg');
 
 
-define('DB_HOST', '');
-define('DB_NAME', '');
-define('DB_USER', '');
-define('DB_PASSWORD', '');
-
 define('ARTICULOS_LEVEL_COMMENTS', 3);
 
 
 /* * ********** PATH DE VISTAS************************** */
-
+/*
 define('USUARIO_NEW', dirname(__FILE__) . '/src/Administracion/Views/Usuario/new.html.php');
 define('USUARIO_NEW_FORM', dirname(__FILE__) . '/src/Administracion/Views/Usuario/newForm.html.php');
 define('USUARIO_EDIT', dirname(__FILE__) . '/src/Administracion/Views/Usuario/edit.html.php');
@@ -103,6 +99,8 @@ define('PAGINA_NOSOTROS', dirname(__FILE__) . '/src/Paginas/Resources/views/noso
 
 
 /* * ********PLANTILLA GLOBALES***************** */
+
+/*
 define('HEADER', dirname(__FILE__) . '/src/Templates/header.html.php');
 define('HEADER_ADMIN', dirname(__FILE__) . '/src/Templates/headerAdmin.html.php');
 define('CONTENT', dirname(__FILE__) . '/src/Templates/content.html.php');
