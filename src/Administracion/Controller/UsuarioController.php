@@ -49,14 +49,14 @@ class UsuarioController extends Controller {
                 View::render(USUARIO_NEW, array(
                     'mensajesExito' => ["Usuario creado con exito. Ya puedes iniciar sesión."],
                     'usuario' => $usuario,
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(USUARIO_NEW, array(
                 'errores' => $ex->getErrores(),
-                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                 'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
             ));
         } catch (\Exception $ex) {
@@ -87,7 +87,7 @@ class UsuarioController extends Controller {
             } else {
                 View::render(USUARIO_EDIT, array(
                     'usuario' => $usuario,
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
@@ -139,7 +139,7 @@ class UsuarioController extends Controller {
                 
             } else {
                 View::render(USUARIO_NEW, array(
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
@@ -177,7 +177,7 @@ class UsuarioController extends Controller {
                 View::render(USUARIO_EDIT, array(
                     'mensajesExito' => ["Usuario editado con exito."],
                     'usuario' => $usuario,
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
@@ -185,7 +185,7 @@ class UsuarioController extends Controller {
             View::render(USUARIO_EDIT, array(
                 'errores' => $ex->getErrores(),
                 'usuario' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($_POST['id']),
-                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                 'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
             ));
         } catch (\Exception $ex) {
@@ -200,7 +200,7 @@ class UsuarioController extends Controller {
             } else {
                 if (isset($_POST['nombre']) && isset($_POST['password'])) {
                     $nombre = $_POST['nombre'];
-                    $password = $_POST['password'];
+                    $password = md5($_POST['password']);
 
                     $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->findOneBy(array('nombre' => $nombre, 'password' => $password));
                     if ($usuario != null) {
@@ -261,7 +261,7 @@ class UsuarioController extends Controller {
                 }
             } else {
                 $rol = $this->em->getRepository('Administracion\Model\Entity\Rol')
-                        ->findOneBy(array('nombre' => 'NOMBRE'));
+                        ->findOneBy(array('nombre' => 'NORMAL'));
                 $roles[] = $rol;
             }
 

@@ -11,7 +11,7 @@ class PerfilRepository extends EntityRepository {
             $estadoActivo = $this->_em->getRepository('Administracion\Model\Entity\Estado')
                     ->findOneBy(array('nombre' => 'ACTIVO'));
             if (!is_null($estadoActivo))
-                return $this->_em->findBy(array('estado' => $estadoActivo->getId()));
+                return $this->_em->getRepository('Administracion\Model\Entity\Perfil')->findBy(array('estado' => $estadoActivo->getId()));
         } catch (\Exception $ex) {
             throw $ex;
         }
@@ -20,8 +20,8 @@ class PerfilRepository extends EntityRepository {
     public function contar($filters = null) {
         try {
             if (is_null($filters))
-                return count($this->_em->findAll());
-            return count($this->_em->findBy($filters));
+                return count($this->_em->getRepository('Administracion\Model\Entity\Perfil')->findAll());
+            return count($this->_em->getRepository('Administracion\Model\Entity\Perfil')->findBy($filters));
         } catch (\Exception $ex) {
             throw $ex;
         }

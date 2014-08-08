@@ -83,12 +83,12 @@ class PerfilController extends Controller {
             else
                 $page = 1;
 
-            $numItems = $this->em->contarTodos(null);
+            $numItems = $this->em->getRepository('Administracion\Model\Entity\Perfil')->contar(null);
             $criteria = [];
             $paginator = new Paginator('perfil', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
 
-            $perfiles = $this->em->getRepository()->findBy(
+            $perfiles = $this->em->getRepository('Administracion\Model\Entity\Perfil')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 

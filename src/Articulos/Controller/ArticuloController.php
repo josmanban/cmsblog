@@ -255,11 +255,11 @@ class ArticuloController extends Controller {
                 else
                     $page = 1;
 
-                $numItems = $this->em->contarTodos(null);
+                $numItems = $this->em->getRepository('Articulos\Model\Entity\Articulo')->contar(null);
                 $criteria = [];
                 $paginator = new Paginator('articulo', 'portada', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
-                $articulos = $this->em->getRepository()->findBy(
+                $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
                         $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
                 );
 

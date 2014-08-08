@@ -3,6 +3,7 @@
 namespace Administracion\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Proyectos\Model\Entity\InscripcionProyecto;
 
 /**
  * 
@@ -47,7 +48,7 @@ class Estado {
     private $comentarios;
 
     /**
-     * @OneToMany(targetEntity="\Proyectos\Model\Entity\InscripcionProyecto",mappedBy="persona")
+     * @OneToMany(targetEntity="\Proyectos\Model\Entity\InscripcionProyecto",mappedBy="estado")
      */
     private $inscripcionesProyecto;
 
@@ -61,14 +62,16 @@ class Estado {
     }
 
     public function getInscripcionesProyecto(){
-        return $inscripcionesProyecto;
+        return $this->inscripcionesProyecto;
     }
-    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto){
-        $this->InscricionProyecto=$inscripcionesProyecto;
+    public function setInscripcionesProyecto(ArrayCollection $inscripcionesProyecto){
+        $this->inscripcionesProyecto=$inscripcionesProyecto;
     }
-    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto){
-        $this->inscripcionProyecto= $inscripcionProyecto;
-    }
+    
+//    public function addInscripcionesProyecto(InscricionProyecto $inscripcionProyecto){
+//        $this->inscripcionesProyecto[]= $inscripcionProyecto;
+//        $inscripcionProyecto->setEstado($this);
+//    }
 
     public function getId() {
         return $this->id;
