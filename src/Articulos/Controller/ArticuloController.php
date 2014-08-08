@@ -29,16 +29,12 @@ use Articulos\Validator\ArticuloValidator;
  *
  * @author jose
  */
-class ArticuloController extends PostController {
+class ArticuloController extends Controller {
 
-    private $savePathPhoto;
-    private $pathPhoto;
     private $em;
 
     function __construct() {
         $this->em = Conexion::getEntityManager();
-        $this->savePathPhoto = dirname(__DIR__) . '/../../img/Articulo/imagen/';
-        $this->pathPhoto = SITE_URL . '/img/Articulo/imagen/';
     }
 
     //put your code here
@@ -299,7 +295,7 @@ class ArticuloController extends PostController {
             $categorias[] = $categoria;
         }
 
-        $articulo->setId($id);
+        //$articulo->setId($id);
         $articulo->setTitulo($titulo);
         $articulo->setTexto($texto);
 
@@ -313,15 +309,20 @@ class ArticuloController extends PostController {
 
         $validator = new ArticuloValidator($articulo);
         $validator->validate();
-        
+
 
         /*         * *** actualizo la imagen de haberla********* */
         if (!empty($_FILES['imagen']['name'])) {
             $temp = explode(".", $_FILES['imagen']["name"]);
             $extension = end($temp);
-            FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . PostNegocio::buildPostImageName($articulo->getId(), $extension), 'imagen');
-            $articulo->setImagen(POST_IMAGE_URL . PostNegocio::buildPostImageName($articulo->getId(), $extension));
+            if ($id == '-1')
+                $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->finNextId();
+            else
+                $nextId = $proyecto->getId();
+            FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . 'post' . $nextId . '.' . $extension, 'imagen');
+            $proyecto->setImagen(POST_IMAGE_URL . 'post' . $nextId . '.' . $extension);
         }
+        
         return $articulo;
     }
 

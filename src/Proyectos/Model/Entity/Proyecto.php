@@ -7,7 +7,7 @@ use Articulos\Model\Entity\Post;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @Entity
+ * @Entity (repositoryClass="Proyectos\Model\Entity\ProyectoRepository")
  */
 
 class Proyecto extends Post {

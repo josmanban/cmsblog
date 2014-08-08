@@ -11,7 +11,7 @@ namespace Proyectos\Model\Entity;
  * Description of InscripcionProyecto
  *
  * @author jose
- * @Entity
+ * @Entity (repositoryClass="Proyectos\Model\Entity\InscripcionProyectoRepository")
  */
 class InscripcionProyecto {
 

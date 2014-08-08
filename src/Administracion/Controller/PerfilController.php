@@ -42,7 +42,7 @@ class PerfilController extends Controller {
             $perfil = $loguedUser->getPerfil();
             if (!$loguedUser->esAdministrador() && !is_null($perfil))
                 throw new NotAllowedException();
-            
+
             $perfil = $this->bind();
 
             $this->em->persist($perfil);
@@ -82,18 +82,15 @@ class PerfilController extends Controller {
                 $page = $_GET['page'];
             else
                 $page = 1;
-            
+
             $numItems = $this->em->contarTodos(null);
             $criteria = [];
             $paginator = new Paginator('perfil', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
-          
+
 
             $perfiles = $this->em->getRepository()->findBy(
-                    $criteria,
-                    array('id'=>'ASC'),
-                    $paginator->getLimit(),
-                    $paginator->getOffset()
-                    );
+                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
 
             if (isset($_REQUEST['ajax'])) {
                 
@@ -128,8 +125,8 @@ class PerfilController extends Controller {
             View::render(PERFIL_EDIT, array(
                 'errores' => $ex->getErrores(),
                 'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
-                'perfil'=>$this->em->getRepository('Administracion\Model\Entity\Perfil')->find($_POST['id'])
-                    )                
+                'perfil' => $this->em->getRepository('Administracion\Model\Entity\Perfil')->find($_POST['id'])
+                    )
             );
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
@@ -140,8 +137,18 @@ class PerfilController extends Controller {
     public function bind($perfil = null) {
         try {
             $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
-                                    
 
+            /*             * *** actualizo la imagen de haberla********* */
+            if (!empty($_FILES['avatar']['name'])) {
+                $temp = explode(".", $_FILES['avatar']["name"]);
+                $extension = end($temp);
+                if ($id == '-1')
+                    $nextId = $this->em->getRepository('Administracion\Model\Entity\Perfil')->finNextId();
+                else
+                    $nextId = $perfil->getId();
+                FuncionesVarias::saveImage(PERFIL_IMAGE_SAVE_PATH . 'perfil' . $nextId . '.' . $extension, 'avatar');
+                $perfil->setAvatar(PERFIL_IMAGE_URL . 'perfil' . $nextId . '.' . $extension);
+            }
             return $perfil;
         } catch (Exception $ex) {
             throw $ex;

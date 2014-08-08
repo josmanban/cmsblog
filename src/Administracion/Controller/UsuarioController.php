@@ -53,7 +53,7 @@ class UsuarioController extends Controller {
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
-        } catch (\Librerias\InvalidaFormDataException $ex) {
+        } catch (InvalidFormDataException $ex) {
             View::render(USUARIO_NEW, array(
                 'errores' => $ex->getErrores(),
                 'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findActivos(),

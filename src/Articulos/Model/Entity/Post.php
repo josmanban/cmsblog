@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Description of Post
  *
  * @author jose
- * @Entity
+ * @Entity (repositoryClass="Articulos\Model\Entity\PostRepository")
  * @InheritanceType("JOINED")
  * @DiscriminatorColumn(name="discr",type="string")
  * @DiscriminatorMap({"articulo"="Articulo","proyecto"="\Proyectos\Model\Entity\Proyecto"})

@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityRepository;
 
 class RolRepository extends EntityRepository{
     
-    public function getActivos(){
+    public function findActivos(){
         try {
             $estadoActivo = $this->_em->getRepository('Administracion\Model\Entity\Estado')
                     ->findOneBy(array('nombre' => 'ACTIVO'));

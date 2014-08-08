@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Description of TipoProyecto
  *
  * @author jose
- * @Entity
+ * @Entity (repositoryClass="Proyectos\Model\Entity\TipoProyectoRepository")
  */
 class TipoProyecto {    
 

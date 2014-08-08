@@ -4,7 +4,7 @@ namespace Administracion\Model\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-class UsuarioRepository extends EntityRepository {
+class TipoProyectoRepository extends EntityRepository {
 
     public function findActivos() {
 

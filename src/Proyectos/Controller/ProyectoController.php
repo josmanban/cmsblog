@@ -21,7 +21,6 @@ use Articulos\FacadeArticulos;
 use Proyectos\Validator\ProyectoValidator;
 use Librerias\InvalidFormDataException;
 use Articulos\Model\PostNegocio;
-use Articulos\Controller\PostController;
 
 /*
  * To change this template, choose Tools | Templates
@@ -33,7 +32,7 @@ use Articulos\Controller\PostController;
  *
  * @author jose
  */
-class ProyectoController extends PostController {
+class ProyectoController extends Controller {
 
     private $em;
 
@@ -126,7 +125,7 @@ class ProyectoController extends PostController {
             else
                 $page = 1;
 
-             $numItems = $this->em->contarTodos(null);
+            $numItems = $this->em->contarTodos(null);
             $criteria = [];
             $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
@@ -240,6 +239,40 @@ class ProyectoController extends PostController {
         }
     }
 
+    public function archiveAction() {
+        try {
+            if (isset($_GET['page']))
+                $page = $_GET['page'];
+            else
+                $page = 1;
+
+
+            $criteria = [];
+            if (isset($_REQUEST['tipoProyecto'])) {
+                $criteria['tipoProyecto'] = $_REQUEST['tipoProyecto'];
+            }
+            $numItems = $this->em->contarTodos($criteria);
+            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+            $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
+                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
+
+            if (isset($_REQUEST['ajax'])) {
+                
+            } else {
+                View::render(PROYECTO_ARCHIVE, array(
+                    'proyectos' => $proyectos,
+                    'paginator' => $paginator,
+                ));
+            }
+        } catch (\Exception $ex) {
+            View::render(ERROR, array(
+                'errores' => array($ex->getMessage()),
+            ));
+        }
+    }
+
     public function bind($proyecto = null) {
         try {
 
@@ -250,12 +283,14 @@ class ProyectoController extends PostController {
             $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
             $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
-            $estado = ($idEstado == '-1') ? FacadeAdministracion::getEstadoPorNombre('activo') : FacadeAdministracion::getEstadoPorId($idEstado);
+            $estado = ($idEstado == '-1') ?
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) : $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
 
 
 
             $idTipo = isset($_POST['tipo']) ? $_POST['titulo'] : '-1';
-            $tipo = ($idTipo == '-1') ? $this->tipoProyectoAccesoDatos->consultarPorId($idTipo) : $this->tipoProyectoAccesoDatos->consultarNombre('desarrollo');
+            $tipo = ($idTipo == '-1') ?
+                    $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findOneBy(array('nombre' => 'DESARROLLO')) : $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->find($idTipo);
             $cupo = isset($_POST['cupo']) ? $_POST['cupo'] : 30;
             $version = isset($_POST['version']) ? $_POST['version'] : '0.0.1';
             $codename = isset($_POST['codename']) ? $_POST['codename'] : 'C.O.D.E.N.A.M.E';
@@ -263,8 +298,7 @@ class ProyectoController extends PostController {
             $duracionMeses = isset($_POST['duracionMeses']) ? $_POST['duracionMeses'] : '';
 
 
-
-            $proyecto->setId($id);
+            //$proyecto->setId($id);
             $proyecto->setTitulo($titulo);
             $proyecto->setTexto($texto);
 
@@ -290,44 +324,16 @@ class ProyectoController extends PostController {
             if (!empty($_FILES['imagen']['name'])) {
                 $temp = explode(".", $_FILES['imagen']["name"]);
                 $extension = end($temp);
-                FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . PostNegocio::buildPostImageName($proyecto->getId(), $extension), 'imagen');
-                $proyecto->setImagen(POST_IMAGE_URL . PostNegocio::buildPostImageName($proyecto->getId(), $extension));
+                if ($id == '-1')
+                    $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->finNextId();
+                else
+                    $nextId = $proyecto->getId();
+                FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . 'post' . $nextId . '.' . $extension, 'imagen');
+                $proyecto->setImagen(POST_IMAGE_URL . 'post' . $nextId . '.' . $extension);
             }
             return $proyecto;
         } catch (\Exception $ex) {
             throw $ex;
-        }
-    }
-
-    public function archiveAction() {
-        try {
-            if (isset($_GET['page']))
-                $page = $_GET['page'];
-            else
-                $page = 1;
-
-            $numItems = $this->proyectoAccesoDatos->contarTodos(null);
-            $parameters = [];
-            if (isset($_REQUEST['tipoProyecto'])) {
-                $parameters['tipoProyecto'] = $_REQUEST['tipoProyecto'];
-            }
-
-            $paginator = new Paginator('proyecto', 'archive', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $parameters);
-            $parameters[] = [ 'offset' => $paginator->getOffset()];
-            $parameters[] = ['limit' => $paginator->getLimit()];
-
-            if (isset($_REQUEST['ajax'])) {
-                
-            } else {
-                View::render(PROYECTO_ARCHIVE, array(
-                    'proyectos' => $this->proyectoAccesoDatos->consultarTodos($parameters),
-                    'paginator' => $paginator,
-                ));
-            }
-        } catch (\Exception $ex) {
-            View::render(ERROR, array(
-                'errores' => array($ex->getMessage()),
-            ));
         }
     }
 

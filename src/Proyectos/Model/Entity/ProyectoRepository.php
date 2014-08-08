@@ -4,7 +4,7 @@ namespace Administracion\Model\Entity;
 
 use Doctrine\ORM\EntityRepository;
 
-class UsuarioRepository extends EntityRepository {
+class ProyectoRepository extends EntityRepository {
 
     public function findActivos() {
 
@@ -26,7 +26,8 @@ class UsuarioRepository extends EntityRepository {
         } catch (\Exception $ex) {
             throw $ex;
         }
-    }
+    }   
+    
 
 }
 ?>

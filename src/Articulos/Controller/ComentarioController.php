@@ -28,8 +28,9 @@ use Articulos\Validator\ComentarioValidator;
 class ComentarioController extends Controller {
 
     private $em;
+
     function __construct() {
-        $this->em= Conexion::getEntityManager();
+        $this->em = Conexion::getEntityManager();
     }
 
     public function createAction() {
@@ -43,10 +44,10 @@ class ComentarioController extends Controller {
             if (is_null($post))
                 throw new NotFoundEntityException();
             $comentario = $this->validate();
-            
+
             $this->em->persist($comentario);
             $post->addComentario($comentario);
-            $this->em->flush();                  
+            $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
                 
@@ -88,8 +89,8 @@ class ComentarioController extends Controller {
             if (is_null($post))
                 throw new NotFoundEntityException();
             $padre = isset($_GET['padre']) ?
-                $this->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) : 
-                null;
+                    $this->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) :
+                    null;
 
             if (isset($_REQUEST['ajax'])) {
                 require_once dirname(__FILE__) . '/../Views/Comentario/newForm.html.php';
@@ -123,13 +124,13 @@ class ComentarioController extends Controller {
         $post = $this->em->getRepository('Articulos\Model\Entity\Post')->find($idPost);
         $padre = $this->em->getRepository('Articulos\Model\Entity\Comentario')->find($idPadre);
 
-        $estadoActivo = $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre'=>'ACTIVO'));
+        $estadoActivo = $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO'));
 
         //$comentario->setId($id);
         $comentario->setTexto($texto);
         $comentario->setPadre($padre);
         $comentario->setPost($post);
-        if ($comentario->getId() == -1) {
+        if ($id == '-1') {
             $comentario->setUsuario($_SESSION['usuario']);
             $comentario->setFechaHora(new \DateTime());
         }

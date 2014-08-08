@@ -314,7 +314,8 @@ class InscripcionProyectoController extends Controller {
             $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($idProyecto);
             $estado = $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
 
-            $inscripcionProyecto->setId($id);
+            /*if ($id != '-1')
+                $inscripcionProyecto->setId($id);*/
             $inscripcionProyecto->setProyecto($proyecto);
             if ($inscripcionProyecto->getId() == -1)
                 $inscripcionProyecto->setFechaInscripcion(new \DateTime());
