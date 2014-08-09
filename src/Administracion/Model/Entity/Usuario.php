@@ -1,9 +1,12 @@
 <?php
 
 namespace Administracion\Model\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Articulos\Model\Entity\Post;
 use Articulos\Model\Entity\Comentario;
+use Administracion\Model\Rol;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -17,100 +20,96 @@ use Articulos\Model\Entity\Comentario;
  * @Entity (repositoryClass="Administracion\Model\Entity\UsuarioRepository")
  *
  */
-class Usuario {    
+class Usuario {
 
     /**
-      * @Id
-      * @GeneratedValue(strategy="AUTO")
-      * @Column(type="integer") */      
-    private $id;
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer") */
+    protected $id;
 
     /** @Column(type="string",length=150,unique=true) */
-    private $nombre;
+    protected $nombre;
 
-    /** @Column(type="string",length=150)*/
-    private $password;
-
-    
-    /**
-      *
-      * @ManyToOne(targetEntity="Estado",inversedBy="usuarios")
-      *
-      *
-      **/
-    private $estado;
-    
+    /** @Column(type="string",length=150) */
+    protected $password;
 
     /**
-      * @ManyToMany(targetEntity="Rol", inversedBy="usuarios")
-      * @JoinTable(name="usuarios_roles")
-      **/    
-    private $roles;
-    
-    /** @Column(length=150,unique=true)*/
-    private $email;
+     *
+     * @ManyToOne(targetEntity="Estado",inversedBy="usuarios")
+     *
+     *
+     * */
+    protected $estado;
 
     /**
-      *
-      * @OneToOne(targetEntity="Perfil",mappedBy="usuario")
-      *
-      **/
-    private $perfil;
+     * @ManyToMany(targetEntity="Rol", inversedBy="usuarios")
+     * @JoinTable(name="usuarios_roles")
+     * */
+    protected $roles;
+
+    /** @Column(length=150,unique=true) */
+    protected $email;
 
     /**
-      * @OneToOne(targetEntity="\Personas\Model\Entity\Persona",mappedBy="usuario")
-      *
-      **/
-    private $persona;
+     *
+     * @OneToOne(targetEntity="Perfil",mappedBy="usuario")
+     *
+     * */
+    protected $perfil;
+
+    /**
+     * @OneToOne(targetEntity="\Personas\Model\Entity\Persona",mappedBy="usuario")
+     *
+     * */
+    protected $persona;
 
     /**
      * @OneToMany(targetEntity="\Articulos\Model\Entity\Articulo",mappedBy="autor")
      */
-    private $posts;
+    protected $posts;
 
     /**
      * @OneToMany(targetEntity="\Articulos\Model\Entity\Comentario",mappedBy="autor")
      */
-    private $comentarios;
+    protected $comentarios;
 
     function __construct() {
-        $this->roles= new ArrayCollection();
-        $this->posts= new ArrayCollection();
-        $this->comentarios= new ArrayCollection();
+        $this->roles = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+        $this->comentarios = new ArrayCollection();
     }
 
     public function getNombre() {
         return $this->nombre;
     }
 
-    public function getComentarios(){
+    public function getComentarios() {
         return $this->comentarios;
     }
 
-    public function setComentarios($comentarios){
-        $this->comentarios=$comentarios;
-
+    public function setComentarios($comentarios) {
+        $this->comentarios = $comentarios;
     }
 
-    public function addComentario(Comentaio $comentario){
-        $this->comentarios[]=$comentario;
+    public function addComentario(Comentaio $comentario) {
+        $this->comentarios[] = $comentario;
     }
 
-    public function getPosts(){
+    public function getPosts() {
         return $this->posts;
     }
 
-    public function setPost($posts){
-        $this->posts=$posts;
+    public function setPost($posts) {
+        $this->posts = $posts;
     }
 
-    public function addPost(Post $post){
-        $this->posts[]=$post;
-
+    public function addPost(Post $post) {
+        $this->posts[] = $post;
     }
 
-    public function getPersona(){
-		return $this->persona;
+    public function getPersona() {
+        return $this->persona;
     }
 
     public function setNombre($nombre) {
@@ -165,9 +164,9 @@ class Usuario {
         $this->perfil = $perfil;
     }
 
-    public function addRol(Rol $rol){
+    public function addRol(Rol $rol) {
         $this->roles->addUsuario($this);
-        $this->roles[]=$rol;
+        $this->roles[] = $rol;
     }
 
     public function __toString() {
@@ -206,15 +205,13 @@ class Usuario {
         return $this->esRol('publicadorProyecto');
     }
 
-    private function esRol($rol) {
-        foreach ($this->roles as $rolUsuario) {
+    protected function esRol($rol) {
+        foreach ($this->getRoles() as $rolUsuario) {
             if (strtolower($rolUsuario->getNombre()) == strtolower($rol))
                 return true;
         }
         return false;
     }
-
-
 
 }
 

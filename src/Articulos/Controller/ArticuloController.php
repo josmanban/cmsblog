@@ -128,7 +128,7 @@ class ArticuloController extends Controller {
 
             $numItems = $this->em->contarTodos(null);
             $criteria = [];
-            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('articulo', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
@@ -257,7 +257,7 @@ class ArticuloController extends Controller {
 
                 $numItems = $this->em->getRepository('Articulos\Model\Entity\Articulo')->contar(null);
                 $criteria = [];
-                $paginator = new Paginator('articulo', 'portada', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+                $paginator = new Paginator('articulo', 'portada', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
                 $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
                         $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()

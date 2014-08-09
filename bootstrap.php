@@ -39,6 +39,8 @@ define('DB_PASSWORD', 'perro292');
 define('DB_DRIVER','pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);
+define('ITEMS_X_PAGE_INDEX',10 );
+define('ITEMS_X_PAGE_VIEWS',10 );
 
 
 /* * ********** PATH DE VISTAS************************** */

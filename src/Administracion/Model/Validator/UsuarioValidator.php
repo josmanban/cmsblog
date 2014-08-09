@@ -80,7 +80,7 @@ class UsuarioValidator extends Validator {
         $em = Conexion::getEntityManager();
         $usuario = $em->getRepository('Administracion\Model\Entity\Usuario')
                 ->findOneBy(array('nombre' => $nombre));
-        if ($usuario && $usuario->getId() != $id)
+        if ($usuario && $usuario->getId() != $idUsuario)
             return ucfirst($fieldName) . ' ya registrado.';
         return false;
     }

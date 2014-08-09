@@ -59,7 +59,7 @@
                                         ?>">Editar datos de la cuenta</a>
                                     </li>
                                     <li><a href="index.php?controller=perfil&action=show&id=<?php
-                                        $_SESSION['usuario']->getPerfil()->getId();
+                                        //$_SESSION['usuario']->getPerfil()->getId();
                                         ;
                                         ?>">Perfil</a></li>
                                     <li><a href="index.php?controller=persona&action=show">Datos personales</a></li>

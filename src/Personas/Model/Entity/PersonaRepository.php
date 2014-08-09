@@ -22,7 +22,7 @@ class PersonaRepository extends EntityRepository {
         try {
             if (is_null($filters))
                 return count($this->_em->getRepository('Personas\Model\Entity\Persona')->findAll());
-            return count($this->_em->getRepository('Personas\Model\Entity\Persona')->indBy($filters));
+            return count($this->_em->getRepository('Personas\Model\Entity\Persona')->findBy($filters));
         } catch (\Exception $ex) {
             throw $ex;
         }

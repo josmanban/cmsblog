@@ -127,7 +127,7 @@ class ProyectoController extends Controller {
 
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->contar($criteria);
             $criteria = [];
-            $paginator = new Paginator('proyecto', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('proyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
@@ -252,7 +252,7 @@ class ProyectoController extends Controller {
                 $criteria['tipo'] = $_REQUEST['tipo'];
             }
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->contar($criteria);
-            $paginator = new Paginator('proyecto', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('proyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()

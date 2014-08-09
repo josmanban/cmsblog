@@ -43,9 +43,9 @@
                         <li>
                             <a href="index.php">Inicio</a>
                                         </li>
-                        <?php if (isset($_SESSION['usuario'])): ?>
+                        <?php if (isset($usuario)): ?>
 
-                            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
+                            <?php if ($usuario->esAdministrador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Usuarios<b class="caret"></b></a>
@@ -59,7 +59,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
+                            <?php if ($usuario->esAdministrador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Personas<b class="caret"></b></a>
@@ -73,7 +73,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esPublicador()): ?>
+                            <?php if ($usuario->esPublicador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Articulos<b class="caret"></b></a>
@@ -87,7 +87,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
+                            <?php if ($usuario->esAdministrador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Proyectos<b class="caret"></b></a>
@@ -111,17 +111,17 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                                    <?php echo $_SESSION['usuario']->getNombre() ?> <b class="caret"></b>
+                                    <?php echo $usuario->getNombre() ?> <b class="caret"></b>
 
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
                                         <a href="index.php?controller=usuario&action=edit&id=<?php
-                                        echo $_SESSION['usuario']->getId();
+                                        echo $usuario->getId();
                                         ?>">Editar datos de la cuenta</a>
                                     </li>
                                     <li><a href="index.php?controller=perfil&action=show&id=<?php
-                                        $_SESSION['usuario']->getPerfil()->getId();
+                                        //$usuario->getPerfil()->getId();
                                         ;
                                         ?>">Perfil</a></li>
                                     <li><a href="index.php?controller=persona&action=show">Datos personales</a></li>
@@ -137,8 +137,8 @@
                             </li>
                             <li>
                                 <img class="avatar-navMenu img-rounded " src="<?php
-                                if (!is_null($_SESSION['usuario']->getPerfil()))
-                                    echo $_SESSION['usuario']->getPerfil()->getAvatar();
+                                if (!is_null($usuario->getPerfil()))
+                                    echo $usuario->getPerfil()->getAvatar();
                                 ?>" alt="">
                             </li>                     
                         <?php endif; ?>

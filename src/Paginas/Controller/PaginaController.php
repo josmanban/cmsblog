@@ -12,6 +12,7 @@ use Librerias\Controller;
 use Librerias\View;
 use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
+use Librerias\Conexion;
 
 /*
  * To change this template, choose Tools | Templates
@@ -57,10 +58,20 @@ class PaginaController extends Controller {
         try {
             if (!isset($_SESSION['usuario']))
                 throw new NotLoggedException();
-            $usuario = $_SESSION['usuario'];
+            $usuario = $_SESSION['usuario'];      
+            //$usuario = Conexion::getEntityManager()->getRepository(
+              //              'Administracion\Model\Entity\Usuario')->find($_SESSION['usuario']->getId());
+            /* $b= $a->getRoles();
+              $c= 0;
+              foreach ($b as $rol){
+              $c++;
+              } */
+
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorArticulo() && !$usuario->esAdministradorProyecto() && !$usuario->esPublicador() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
-            View::render(PAGINA_ADMIN, NULL);
+            View::render(PAGINA_ADMIN, array(
+                'usuario'=>$usuario
+            ));
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
         }
@@ -77,8 +88,9 @@ class PaginaController extends Controller {
     public function contactoAction() {
         View::render(PAGINA_CONTACTO, null);
     }
-    
-    public function bind($entity=null){        
+
+    public function bind($entity = null) {
+        
     }
 
 }

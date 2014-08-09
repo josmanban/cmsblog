@@ -91,6 +91,15 @@ class Rol {
         $this->ambito = $ambito;
     }
 
+    public function getUsuarios() {
+        return $this->usuarios;
+    }
+
+    public function setUsuarios($usuarios) {
+        $this->usuarios = $usuarios;
+    }
+
+        
     public function addUsuario(Usuario $usuario){
         $this->usuarios[]=$usuario;
     }

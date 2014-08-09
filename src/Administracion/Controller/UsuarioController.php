@@ -112,7 +112,7 @@ class UsuarioController extends Controller {
 
             $filters = [];
             $numItems = $this->em->getRepository('Administracion\Model\Entity\Usuario')->contar($filters);
-            $paginator = new Paginator('usuario', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $filters);
+            $paginator = new Paginator('usuario', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $usuarios = $this->em->getRepository('Administracion\Model\Entity\Usuario')->findBy(
                     $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
@@ -166,7 +166,7 @@ class UsuarioController extends Controller {
             $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($id);
             $this->bind($usuario);
 
-            $this->em->persis($usuario);
+            $this->em->persist($usuario);
             $this->em->flush();
 
             $_SESSION['usuario'] = $this->em->getRepository('Administracion\Model\Entity\Usuario')

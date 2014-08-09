@@ -4,7 +4,7 @@ namespace Personas\Model\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 /**
  *
- * @Entity (repositoryClass="Administracion\Model\Entity\PersonaRepository")
+ * @Entity (repositoryClass="Personas\Model\Entity\PersonaRepository")
  */
 
 class Persona {

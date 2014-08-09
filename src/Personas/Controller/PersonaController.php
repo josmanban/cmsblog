@@ -20,8 +20,8 @@ use Librerias\InvalidFormDataException;
 use Librerias\FuncionesVarias;
 use Librerias\View;
 use Librerias\Conexion;
-use Personas\Model\Persona;
-use Personas\Validator\PersonaValidator;
+use Personas\Model\Entity\Persona;
+use Personas\Model\Validator\PersonaValidator;
 
 
 /*
@@ -63,14 +63,14 @@ class PersonaController extends Controller {
             View::render(PERSONA_EDIT, array(
                 'mensajesExito' => ["Datos actualizados con exito."],
                 'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                 'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                 'persona' => $persona,
             ));
         } catch (InvalidFormDataException $ex) {
             View::render(PERSONA_EDIT, array(
                 'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                 'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                 'errores' => $ex->getErrores(),
             ));
@@ -105,7 +105,7 @@ class PersonaController extends Controller {
 
                 View::render(PERSONA_EDIT, array(
                     'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                    'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                    'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                     'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                     'persona' => $persona
                 ));
@@ -131,7 +131,7 @@ class PersonaController extends Controller {
 
             $filters = [];
             $numItems = $this->em->getRepository('Personas\Model\Entity\Persona')->contar($filters);                    
-            $paginator = new Paginator('usuario', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $filters);     
+            $paginator = new Paginator('usuario', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);     
             $personas = $this->em->getRepository('Personas\Model\Entity\Persona')->findBy(
                     $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );            
@@ -167,7 +167,7 @@ class PersonaController extends Controller {
             } else {
                 View::render(PERSONA_NEW, array(
                     'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                    'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                    'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                     'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                 ));
             }
@@ -186,8 +186,8 @@ class PersonaController extends Controller {
             $persona = $idPersona != -1 ?
                     $this->em->getRepository('Personas\Model\Entity\Persona')->find($idPersona) :
                     $this->em->getRepository('Personas\Model\Entity\Persona')->findOneBy(array('usuario' => $usuario->getId()));
-            /* if (is_null($persona))
-              throw new NotFoundEntityException('persona'); */
+            if (is_null($persona))
+              throw new NotFoundEntityException('persona');
             if (!$usuario->esAdministrador() && !$persona->esMiUsuario($usuario))
                 throw new NotAllowedException();
             if (isset($_REQUEST['ajax'])) {
@@ -223,14 +223,14 @@ class PersonaController extends Controller {
             View::render(PERSONA_EDIT, array(
                 'mensajesExito' => ["Datos actualizados con exito."],
                 'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                 'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                 'persona' => $persona
             ));
         } catch (InvalidFormDataException $ex) {
             View::render(PERSONA_EDIT, array(
                 'tiposDocumento' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findAll(),
-                'usuarios' => $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->findActivos(),
+                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                 'sexos' => $this->em->getRepository('Personas\Model\Entity\Sexo')->findAll(),
                 'persona' => $this->em->getRepository('Personas\Model\Entity\Persona')->find($_POST['id']),
                 'errores' => $ex->getErrores(),
@@ -290,7 +290,7 @@ class PersonaController extends Controller {
             $persona->setSexo($sexo);
 
             /*             * ***** Creo validador para la entidad, y valido los datos******** */
-//            $validator = new PersonaValidator($persona);
+            $validator = new PersonaValidator($persona);
             $validator->validate();
 
             return $persona;
