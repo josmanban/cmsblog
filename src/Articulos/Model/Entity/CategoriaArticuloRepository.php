@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 
 class CategoriaArticuloRepository extends EntityRepository {
 
-    public function getActivos() {
+    public function findActivos() {
 
         try {
             $estadoActivo = $this->_em->getRepository('Administracion\Model\Entity\Estado')

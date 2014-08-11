@@ -73,7 +73,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($usuario->esPublicador()): ?>
+                            <?php if ($usuario->esAdministradorArticulo()||$usuario->esPublicador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Articulos<b class="caret"></b></a>
@@ -87,7 +87,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($usuario->esAdministrador()): ?>
+                            <?php if ($usuario->esAdministradorProyecto()||$usuario->esPublicadorProyecto()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Proyectos<b class="caret"></b></a>

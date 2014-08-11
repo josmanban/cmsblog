@@ -207,11 +207,14 @@ class UsuarioController extends Controller {
                         $_SESSION['usuario'] = $usuario;
                         if (isset($_REQUEST['ajax'])) {
                             
-                        } else
+                        }
+                        else
                             header('Location: index.php');
-                    } else
+                    }
+                    else
                         throw new \Exception('Nombre de usuario o contraseña incorrecta');
-                } else
+                }
+                else
                     throw new \Exception('Nombre de usuario o contraseña incorrecta');
             }
         } catch (\Exception $ex) {
@@ -225,7 +228,8 @@ class UsuarioController extends Controller {
         }
         if (isset($_REQUEST['ajax'])) {
             
-        } else
+        }
+        else
             header('Location: index.php');
     }
 
@@ -266,9 +270,10 @@ class UsuarioController extends Controller {
             }
 
             //$usuario->setId($id);
-            if ($id == -1 || isset($_POST['email']))
+            if (is_null($usuario->getId()) || !empty($email))
                 $usuario->setEmail($email);
-            $usuario->setPassword(md5($password));
+            if (is_null($usuario->getId() || !empty($password)))
+                $usuario->setPassword(md5($password));
             $usuario->setNombre($nombre);
             $usuario->setRoles($roles);
             $usuario->setEstado($estado);

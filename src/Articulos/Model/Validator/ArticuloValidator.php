@@ -2,7 +2,7 @@
 
 namespace Articulos\Model\Validator;
 
-use Articulos\Validator\PostValidator;
+use Articulos\Model\Validator\PostValidator;
 use Librerias\InvalidFormDataException;
 
 /*

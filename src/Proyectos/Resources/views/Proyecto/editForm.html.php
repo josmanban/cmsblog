@@ -1,4 +1,4 @@
-<form role="form" method="POST" action="index.php?controller=proyecto&action=update">
+<form role="form" method="POST" action="index.php?controller=proyecto&action=update" enctype="multipart/form-data">
     <input type="hidden" value="<?php echo $proyecto->getId(); ?>" name="id">         
 
     <div class="form-group">

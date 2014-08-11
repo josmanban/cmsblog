@@ -12,15 +12,10 @@ use Librerias\NotFoundEntityException;
 use Librerias\InvalidEntityException;
 use Librerias\MissingParametersException;
 use Librerias\Conexion;
-use Administracion\Model\Estado;
-use Administracion\Model\Rol;
-use Administracion\Model\Usuario;
-use Proyectos\Model\Proyecto;
-use Articulos\Controller\ArticuloController;
-use Articulos\FacadeArticulos;
-use Proyectos\Validator\ProyectoValidator;
+use Librerias\FuncionesVarias;
+use Proyectos\Model\Entity\Proyecto;
+use Proyectos\Model\Validator\ProyectoValidator;
 use Librerias\InvalidFormDataException;
-use Articulos\Model\PostNegocio;
 
 /*
  * To change this template, choose Tools | Templates
@@ -49,7 +44,7 @@ class ProyectoController extends Controller {
                 throw new NotLoggedException();
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorProyecto() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
-            $proyecto = $this->validate();
+            $proyecto = $this->bind();
             $this->em->persist($proyecto);
             $this->em->flush();
 
@@ -125,10 +120,9 @@ class ProyectoController extends Controller {
             else
                 $page = 1;
 
-            $numItems = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->contar($criteria);
             $criteria = [];
+            $numItems = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->contar($criteria);
             $paginator = new Paginator('proyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
-
             $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
@@ -211,7 +205,7 @@ class ProyectoController extends Controller {
             if (!($usuario->esPublicadorProyecto() && $proyecto->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorProyecto())
                 throw new NotAllowedException();
 
-            $this->validate($proyecto);
+            $this->bind($proyecto);
             $this->em->persist($proyecto);
             $this->em->flush();
 
@@ -277,7 +271,7 @@ class ProyectoController extends Controller {
         try {
 
             if (is_null($proyecto))
-                $proyecto = new Articulo();
+                $proyecto = new Proyecto();
 
             $id = $_POST['id'];
             $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
@@ -288,9 +282,10 @@ class ProyectoController extends Controller {
 
 
 
-            $idTipo = isset($_POST['tipo']) ? $_POST['titulo'] : '-1';
+            $idTipo = isset($_POST['tipo']) ? $_POST['tipo'] : '-1';
             $tipo = ($idTipo == '-1') ?
-                    $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findOneBy(array('nombre' => 'DESARROLLO')) : $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->find($idTipo);
+                    $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findOneBy(array('nombre' => 'DESARROLLO')) :
+                    $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->find($idTipo);
             $cupo = isset($_POST['cupo']) ? $_POST['cupo'] : 30;
             $version = isset($_POST['version']) ? $_POST['version'] : '0.0.1';
             $codename = isset($_POST['codename']) ? $_POST['codename'] : 'C.O.D.E.N.A.M.E';
@@ -303,9 +298,11 @@ class ProyectoController extends Controller {
             $proyecto->setTexto($texto);
 
             $proyecto->setEstado($estado);
-            if ($proyecto->getId() == -1) {
-                $proyecto->setFechaHoraPublicacion(new \DateTime);
-                $proyecto->setPublicador($_SESSION['usuario']);
+
+
+            if (is_null($proyecto->getId())) {
+                $proyecto->setFechaHoraPublicacion(new \DateTime());
+                $proyecto->setAutor($_SESSION['usuario']);
             }
 
             $proyecto->setTipo($tipo);
@@ -324,8 +321,8 @@ class ProyectoController extends Controller {
             if (!empty($_FILES['imagen']['name'])) {
                 $temp = explode(".", $_FILES['imagen']["name"]);
                 $extension = end($temp);
-                if ($id == '-1')
-                    $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->finNextId();
+                if (is_null($proyecto->getId()))
+                    $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->findNextId();
                 else
                     $nextId = $proyecto->getId();
                 FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . 'post' . $nextId . '.' . $extension, 'imagen');

@@ -19,11 +19,8 @@ use Librerias\NotFoundEntityException;
 use Librerias\InvalidEntityException;
 use Librerias\MissingParametersException;
 use Librerias\Conexion;
-use Administracion\Model\Estado;
-use Administracion\Model\Rol;
-use Administracion\Model\Usuario;
-use Articulos\Model\Comentario;
-use Articulos\Validator\ComentarioValidator;
+use Articulos\Model\Entity\Comentario;
+use Articulos\Model\Validator\ComentarioValidator;
 
 class ComentarioController extends Controller {
 
@@ -43,10 +40,12 @@ class ComentarioController extends Controller {
             $post = $this->em->getRepository('Articulos\Model\Entity\Post')->find($idPost);
             if (is_null($post))
                 throw new NotFoundEntityException();
-            $comentario = $this->validate();
+            $comentario = $this->bind();
 
             $this->em->persist($comentario);
+
             $post->addComentario($comentario);
+            $usuario->addComentario($comentario);
             $this->em->flush();
 
             if (isset($_REQUEST['ajax'])) {
@@ -89,14 +88,21 @@ class ComentarioController extends Controller {
             if (is_null($post))
                 throw new NotFoundEntityException();
             $padre = isset($_GET['padre']) ?
-                    $this->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) :
+                    $this->em->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) :
                     null;
 
             if (isset($_REQUEST['ajax'])) {
-                require_once dirname(__FILE__) . '/../Views/Comentario/newForm.html.php';
+                View::render(COMENTARIO_NEW_FORM, array(
+                    'autor' => $usuario,
+                    'post' => $post,
+                    'padre' => $padre,
+                ));
             } else {
-                require_once dirname(__FILE__) . '/../Views/Comentario/new.html.php';
-                ;
+                View::render(COMENTARIO_NEW, array(
+                    'autor' => $usuario,
+                    'post' => $post,
+                    'padre' => $padre,
+                ));
             }
         } catch (\Exception $ex) {
             $errores = [$ex->getMessage()];
@@ -131,8 +137,8 @@ class ComentarioController extends Controller {
         $comentario->setPadre($padre);
         $comentario->setPost($post);
         if ($id == '-1') {
-            $comentario->setUsuario($_SESSION['usuario']);
             $comentario->setFechaHora(new \DateTime());
+            $comentario->setAutor($_SESSION['usuario']);
         }
         $comentario->setEstado($estadoActivo);
 

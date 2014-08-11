@@ -6,8 +6,8 @@ use Librerias\Controller;
 use Librerias\View;
 use Librerias\Paginator;
 use Librerias\Constantes;
-use Articulos\Model\Articulo;
-use Articulos\Model\CategoriaArticulo;
+use Articulos\Model\Entity\Articulo;
+use Articulos\Model\Entity\CategoriaArticulo;
 use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
 use Librerias\NotFoundEntityException;
@@ -15,10 +15,7 @@ use Librerias\InvalidFormDataException;
 use Librerias\MissingParametersException;
 use Librerias\FuncionesVarias;
 use Librerias\Conexion;
-use Administracion\Model\Estado;
-use Administracion\Model\Rol;
-use Administracion\Model\Usuario;
-use Articulos\Validator\ArticuloValidator;
+use Articulos\Model\Validator\ArticuloValidator;
 
 /* To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -47,7 +44,7 @@ class ArticuloController extends Controller {
             if (!$usuario->esPublicador() && !$usuario->esAdministrador() && !$usuario->esAdministradorArticulo())
                 throw new NotAllowedException();
 
-            $articulo = $this->validate();
+            $articulo = $this->bind();
             $this->em->persist($articulo);
             $this->em->flush();
 
@@ -116,18 +113,16 @@ class ArticuloController extends Controller {
                 $usuario = $_SESSION['usuario'];
             else
                 throw new NotLoggedException();
-            if (!$usuario->esPublicador())
+            if (!$usuario->esAdministradorArticulo() && !$usuario->esPublicador())
                 throw new NotAllowedException();
-
-
-
             if (isset($_GET['page']))
                 $page = $_GET['page'];
             else
                 $page = 1;
 
-            $numItems = $this->em->contarTodos(null);
+
             $criteria = [];
+            $numItems = $this->em->getRepository('Articulos\Model\Entity\Articulo')->contar($criteria);
             $paginator = new Paginator('articulo', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
@@ -215,7 +210,7 @@ class ArticuloController extends Controller {
             if (!($usuario->esPublicador() && $articulo->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorArticulo())
                 throw new NotAllowedException();
 
-            $this->validate($articulo);
+            $this->bind($articulo);
 
             $this->em->persist($articulo);
             $this->em->flush();
@@ -276,54 +271,60 @@ class ArticuloController extends Controller {
     }
 
     public function bind($articulo = null) {
-        if (is_null($articulo))
-            $articulo = new Articulo();
+        try {
+            if (is_null($articulo))
+                $articulo = new Articulo();
 
-        $id = $_POST['id'];
-        $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
-        $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
+            $id = $_POST['id'];
+            $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
+            $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
 
-        $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
-        $estado = ($idEstado == '-1') ?
-                $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) :
-                $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
-        $idCategorias = (isset($_POST['categorias'])) ? $_POST['categorias'] : [];
+            $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';
+            $estado = ($idEstado == '-1') ?
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) :
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
+            $idCategorias = (isset($_POST['categorias'])) ? $_POST['categorias'] : [];
 
-        $categorias = [];
-        foreach ($idCategorias as $idCategoria) {
-            $categoria = $this->em->getRepository('Administracion\Model\Entity\CategoriaArticulo')->find($idCategoria);
-            $categorias[] = $categoria;
+            $categorias = [];
+            foreach ($idCategorias as $idCategoria) {
+                $categoria = $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->find($idCategoria);
+                $categorias[] = $categoria;
+            }
+
+            //$articulo->setId($id);
+            $articulo->setTitulo($titulo);
+            $articulo->setTexto($texto);
+
+            $articulo->setEstado($estado);
+            $articulo->setCategorias($categorias);
+
+
+
+            if (is_null($articulo->getId())) {
+                           
+                $articulo->setFechaHoraPublicacion(new \DateTime());
+                $articulo->setAutor($_SESSION['usuario']);
+            }
+
+            $validator = new ArticuloValidator($articulo);
+            $validator->validate();
+
+
+            /*             * *** actualizo la imagen de haberla********* */
+            if (!empty($_FILES['imagen']['name'])) {
+                $temp = explode(".", $_FILES['imagen']["name"]);
+                $extension = end($temp);
+                if ($id == '-1')
+                    $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->findNextId();
+                else
+                    $nextId = $articulo->getId();
+                FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . 'post' . $nextId . '.' . $extension, 'imagen');
+                $articulo->setImagen(POST_IMAGE_URL . 'post' . $nextId . '.' . $extension);
+            }
+            return $articulo;
+        } catch (\Exception $ex) {
+            throw $ex;
         }
-
-        //$articulo->setId($id);
-        $articulo->setTitulo($titulo);
-        $articulo->setTexto($texto);
-
-        $articulo->setEstado($estado);
-        $articulo->setCategorias($categorias);
-        if ($articulo->getId() == -1) {
-            $articulo->setFechaHoraPublicacion(new \DateTime);
-            $articulo->setPublicador($_SESSION['usuario']);
-        }
-
-
-        $validator = new ArticuloValidator($articulo);
-        $validator->validate();
-
-
-        /*         * *** actualizo la imagen de haberla********* */
-        if (!empty($_FILES['imagen']['name'])) {
-            $temp = explode(".", $_FILES['imagen']["name"]);
-            $extension = end($temp);
-            if ($id == '-1')
-                $nextId = $this->em->getRepository('Articulos\Model\Entity\Post')->finNextId();
-            else
-                $nextId = $proyecto->getId();
-            FuncionesVarias::saveImage(POST_IMAGE_SAVE_PATH . 'post' . $nextId . '.' . $extension, 'imagen');
-            $proyecto->setImagen(POST_IMAGE_URL . 'post' . $nextId . '.' . $extension);
-        }
-        
-        return $articulo;
     }
 
 }

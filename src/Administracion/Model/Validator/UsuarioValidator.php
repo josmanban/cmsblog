@@ -49,10 +49,10 @@ class UsuarioValidator extends Validator {
     }
 
     protected function validateSpecialFields() {
-        if (!empty($this->password)) {
+        /*if (!empty($this->password)) {
             $this->addError(self::validatePasswordFormat($this->password));
             $this->addError(self::validatePasswords($this->password, $this->repetirPassword));
-        }
+        }*/
         Validator::validateEmail($this->entity->getEmail(), 'email');
         $this->addError(self::validateRepeatedName(
                         $this->entity->getId(), $this->entity->getNombre()));

@@ -1,8 +1,8 @@
 <?php
 
-namespace Proyectos\Validator;
+namespace Proyectos\Model\Validator;
 
-use Articulos\Validator\PostValidator;
+use Articulos\Model\Validator\PostValidator;
 use Librerias\Conexion;
 
 /*
@@ -18,8 +18,7 @@ use Librerias\Conexion;
 class ProyectoValidator extends PostValidator {
 
     function __construct($entity = null) {
-        ;
-        $this->accesoDatos = new PostAccesoDatos();
+        ;    
         $this->entity = $entity;
     }
 
@@ -34,16 +33,16 @@ class ProyectoValidator extends PostValidator {
     protected function validateSpecialFields() {
         parent::validateSpecialFields();
         $this->addError(self::validateDateField($this->entity->getFechaInicio(), 'Fecha inicio'));
-        if ($this->entity->getCupo != null)
+        if ($this->entity->getCupo() != null)
             $this->addError(self::validateInteger($this->entity->getCupo(), 'cupo'));
-        $this->addError(self::validateRepeatedCodeName($this->entiy->getId(),$this->entity->getCodename(),'codename'));
+        $this->addError(self::validateRepeatedCodeName($this->entity->getId(),$this->entity->getCodename(),'codename'));
         $this->addError(parent::validateNullProperty($this->entity->getTipo(), 'tipo'));
         $this->checkErrores();
     }
 
     public static function validateRepeatedCodeName($id, $codename, $fieldname='codename') {
         $em = Conexion::getEntityManager();
-        $proyecto = $em->getRepository('Proyectos\Model\Entity\Proyecto')->findOnBy(array(
+        $proyecto = $em->getRepository('Proyectos\Model\Entity\Proyecto')->findOneBy(array(
             'codename' => $codename
         ));
 

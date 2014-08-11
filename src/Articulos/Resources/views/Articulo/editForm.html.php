@@ -24,7 +24,7 @@
         <label>Estado:</label>
         <select class="form-control" name="estado" >
 <?php foreach ($estados as $estado): ?>
-                <option value="<?php $estado->getId(); ?>"
+                <option value="<?php echo $estado->getId(); ?>"
                 <?php
                 if ($articulo->getEstado()->getId() == $estado->getId())
                     echo "selected";

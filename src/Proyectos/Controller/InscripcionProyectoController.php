@@ -13,12 +13,11 @@ use Librerias\InvalidEntityException;
 use Librerias\InvalidFormDataException;
 use Librerias\MissingParametersException;
 use Librerias\Conexion;
-use Administracion\Model\Estado;
-use Administracion\Model\Rol;
-use Administracion\Model\Usuario;
-use Administracion\FacadeAdministracion;
-use Proyectos\Model\Proyecto;
-use Proyectos\Model\InscripcionProyecto;
+use Administracion\Model\Entity\Estado;
+use Administracion\Model\Entity\Rol;
+use Administracion\Model\Entity\Usuario;
+use Proyectos\Model\Entity\Proyecto;
+use Proyectos\Model\Entity\InscripcionProyecto;
 use Proyectos\Validator\InscripcionProyectoValidator;
 
 /*
@@ -140,7 +139,7 @@ class InscripcionProyectoController extends Controller {
             
             $criteria = [];
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->contar($criteria);
-            $paginator = new Paginator('articulo', 'index', $page, Constantes::ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('articulo', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()

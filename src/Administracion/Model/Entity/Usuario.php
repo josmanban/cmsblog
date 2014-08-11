@@ -5,7 +5,7 @@ namespace Administracion\Model\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Articulos\Model\Entity\Post;
 use Articulos\Model\Entity\Comentario;
-use Administracion\Model\Rol;
+use Administracion\Model\Entity\Rol;
 
 /*
  * To change this template, choose Tools | Templates
@@ -92,7 +92,7 @@ class Usuario {
         $this->comentarios = $comentarios;
     }
 
-    public function addComentario(Comentaio $comentario) {
+    public function addComentario(Comentario $comentario) {
         $this->comentarios[] = $comentario;
     }
 
@@ -170,7 +170,7 @@ class Usuario {
     }
 
     public function __toString() {
-        
+        return $this->nombre;
     }
 
     public function esAdministrador() {
@@ -212,6 +212,7 @@ class Usuario {
         }
         return false;
     }
+    
 
 }
 

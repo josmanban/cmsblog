@@ -1,10 +1,9 @@
 <?php
 
-namespace Proyectos\Validator;
+namespace Proyectos\Model\Validator;
 
 use Librerias\Validator;
 use Librerias\Conexion;
-use Proyectos\Model\InscripcionProyecto;
 
 /*
  * To change this template, choose Tools | Templates

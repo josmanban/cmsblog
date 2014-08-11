@@ -42,11 +42,15 @@
             Comentarios:
         </h3>
     </header>
-    <?php require_once COMENTARIO_NEW_FORM; ?>
-    <ul>
+    <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $articulo)) ?>
+    <ul style="list-style: none" >
         <?php foreach ($articulo->getComentarios() as $comentario): ?>
-            <?php require COMENTARIO_SHOW; ?>
-        <?php endforeach; ?>
+
+            <?php
+            if (is_null($comentario->getPadre()))
+                require COMENTARIO_SHOW_TREE;
+            ?>
+<?php endforeach; ?>
     </ul>
 </article>
 
