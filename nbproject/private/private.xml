@@ -29,24 +29,23 @@
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Controller/ProyectoController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/config.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Entity/Persona.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/composer.json</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Validator/InscripcionProyectoValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Entity/InscripcionProyecto.php</file>
-            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/ProyectoAccesoDatos.php</file>
-            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Controller/PostController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Controller/PersonaController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/Comentario.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/FuncionesVarias.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Validator/ArticuloValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Business/PostNegocio.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/tree.html.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/index.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Entity/Sexo.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Model/Validator/UsuarioValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Validator/PostValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/CategoriaArticulo.php</file>
-            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/TipoProyectoAccesoDatos.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/Paginator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Controller/UsuarioController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Validator/ComentarioValidator.php</file>
-            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/InscripcionProyectoAccesoDatos.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/Post.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Validator/PersonaValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Controller/PerfilController.php</file>
