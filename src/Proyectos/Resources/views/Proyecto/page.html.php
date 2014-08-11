@@ -49,20 +49,27 @@
 </article>
 
 
-<style>
-    .coments-container>ul{
-        padding-left: 0px;
-    }
-</style>
-<article class="coments-container">
-    <header>
-        <h3>
-            Log:
-        </h3>
-    </header>
-    <?php
-    $proyectoController = new Proyectos\Controller\ProyectoController();
-    $proyectoController->getCommentsBoxAction($proyecto->getId());
-    ?>    
-</article>
+<?php if ($usuario->esAdministrador() || $usuario->esAdministradorProyecto() || $proyecto->pertenece($usuario)): ?>
+    <style>
+        .coments-container>ul{
+            padding-left: 0px;
+        }
+    </style>
+    <article class="coments-container">
+        <header>
+            <h3>
+                Logs:
+            </h3>
+        </header>    
+        <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $proyecto)) ?>
+        <ul style="list-style: none" >
+            <?php foreach ($proyecto->getComentarios() as $comentario): ?>
 
+                <?php
+                if (is_null($comentario->getPadre()))
+                    require COMENTARIO_SHOW_TREE;
+                ?>
+            <?php endforeach; ?>
+        </ul>
+    </article>
+<?php endif; ?>

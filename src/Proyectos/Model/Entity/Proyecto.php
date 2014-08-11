@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * @Entity (repositoryClass="Proyectos\Model\Entity\ProyectoRepository")
  */
-
 class Proyecto extends Post {
 
     /**
@@ -23,12 +22,12 @@ class Proyecto extends Post {
     private $fechaInicio;
 
     /**
-     * @Colum(type="integer",nullable=true)
-     */    
+     * @Column(type="integer",nullable=true)
+     */
     private $duracionMeses;
 
     /**
-     * @Colum(type="integer",nullable=true)
+     * @Column(type="integer",nullable=true)
      */
     private $cupo;
 
@@ -43,24 +42,25 @@ class Proyecto extends Post {
     private $codename;
 
     /**
-     * @OneToMany(targetEntity="InscripcionProyecto",mappedBy="proyectos")
+     * @OneToMany(targetEntity="InscripcionProyecto",mappedBy="proyecto")
      */
     private $inscripcionesProyecto;
 
-    public function __contruct(){
+    public function __contruct() {
         parent::__contruct();
-        $this->inscripcionesProyecto=new ArrayCollection();
-
+        $this->inscripcionesProyecto = new ArrayCollection();
     }
 
-    public function getInscripcionesProyecto(){
+    public function getInscripcionesProyecto() {
         return $this->inscripcionesProyecto;
     }
-    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto){
-        $this->InscricionProyecto=$inscripcionesProyecto;
+
+    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto) {
+        $this->InscricionProyecto = $inscripcionesProyecto;
     }
-    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto){
-        $this->inscripcionProyecto= $inscripcionProyecto;
+
+    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto) {
+        $this->inscripcionProyecto = $inscripcionProyecto;
     }
 
     public function getTipo() {
@@ -75,7 +75,7 @@ class Proyecto extends Post {
         $this->duracionMeses = $duracionMeses;
     }
 
-        public function setTipo($tipo) {
+    public function setTipo($tipo) {
         $this->tipo = $tipo;
     }
 
@@ -86,8 +86,6 @@ class Proyecto extends Post {
     public function setFechaInicio($fechaInicio) {
         $this->fechaInicio = $fechaInicio;
     }
-
-   
 
     public function getCupo() {
         return $this->cupo;
@@ -136,6 +134,14 @@ class Proyecto extends Post {
     public function esTipo($tipo) {
         if (strtoupper($this->tipo->getNombre()) == strtoupper($tipo)) {
             return true;
+        }
+        return false;
+    }
+
+    public function pertenece(\Administracion\Model\Entity\Usuario $u) {
+        foreach ($this->getInscripcionesProyecto() as $inscripcion) {
+            if ($inscripcion->getPersona()->getId() == $u->getPersona()->getId())
+                return true;
         }
         return false;
     }

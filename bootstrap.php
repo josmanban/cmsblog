@@ -30,8 +30,6 @@ define('SITE_NAME', 'Fundasoft');
 define('SITE_SLOGAN', 'barrilete barrilete');
 define('SITE_URL', 'http://localhost/sites/cmsblog');
 
-define('USER_DEFAULT_AVATAR', 'https://lh6.googleusercontent.com/-01gzVqTArx4/AAAAAAAAAAI/AAAAAAAAAAA/DE4mx1iBmYg/s32-c/photo.jpg');
-
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
@@ -42,6 +40,16 @@ define('ARTICULOS_LEVEL_COMMENTS', 3);
 define('ITEMS_X_PAGE_INDEX',10 );
 define('ITEMS_X_PAGE_VIEWS',10 );
 
+
+/**** Paths donde se guardan imagenes ***/
+
+define('POST_IMAGE_URL', SITE_URL . '/img/post/');
+define('POST_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/post/');
+define('PERFIL_IMAGE_URL', SITE_URL . '/img/perfil/');
+define('PERFIL_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/perfil/');
+define('USER_DEFAULT_AVATAR', SITE_URL . '/img/user-image-default.png');
+
+/*****************************************************/
 
 /* * ********** PATH DE VISTAS************************** */
 
@@ -71,14 +79,7 @@ define('PERFIL_PAGE', dirname(__FILE__) . '/src/Administracion/Resources/views/P
 
 
 
-/**** Paths donde se guardan imagenes ***/
 
-define('POST_IMAGE_URL', SITE_URL . '/img/post/');
-define('POST_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/post/');
-define('PERFIL_IMAGE_URL', SITE_URL . '/img/perfil/');
-define('PERFIL_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/perfil/');
-
-/*****************************************************/
 
 define('ARTICULO_NEW', dirname(__FILE__) . '/src/Articulos/Resources/views/Articulo/new.html.php');
 define('ARTICULO_NEW_FORM', dirname(__FILE__) . '/src/Articulos/Resources/views/Articulo/newForm.html.php');

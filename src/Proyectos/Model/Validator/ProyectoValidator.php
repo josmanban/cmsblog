@@ -18,7 +18,7 @@ use Librerias\Conexion;
 class ProyectoValidator extends PostValidator {
 
     function __construct($entity = null) {
-        ;    
+        ;
         $this->entity = $entity;
     }
 
@@ -31,16 +31,18 @@ class ProyectoValidator extends PostValidator {
     }
 
     protected function validateSpecialFields() {
-        parent::validateSpecialFields();
         $this->addError(self::validateDateField($this->entity->getFechaInicio(), 'Fecha inicio'));
         if ($this->entity->getCupo() != null)
             $this->addError(self::validateInteger($this->entity->getCupo(), 'cupo'));
-        $this->addError(self::validateRepeatedCodeName($this->entity->getId(),$this->entity->getCodename(),'codename'));
+        $this->addError(self::validateRepeatedCodeName($this->entity->getId(), $this->entity->getCodename(), 'codename'));
         $this->addError(parent::validateNullProperty($this->entity->getTipo(), 'tipo'));
         $this->checkErrores();
+
+        /*         * *** paso el string a datetime object ****** */
+        $this->entity->setFechaInicio(new \DateTime($this->entity->getFechaInicio()));
     }
 
-    public static function validateRepeatedCodeName($id, $codename, $fieldname='codename') {
+    public static function validateRepeatedCodeName($id, $codename, $fieldname = 'codename') {
         $em = Conexion::getEntityManager();
         $proyecto = $em->getRepository('Proyectos\Model\Entity\Proyecto')->findOneBy(array(
             'codename' => $codename
