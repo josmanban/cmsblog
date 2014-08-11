@@ -13,7 +13,7 @@
                 <small><i>el <?php echo $comentario->getFechaHora()->format('d/m/Y H:i'); ?> hs</i></small>
             </h4> 
             <br>
-            <?php echo $comentario->getTexto(); ?>
+            <?php echo $comentario->getHtml(); ?>
 
             <?php if (isset($_SESSION['usuario'])): ?>
                 <?php if ($_SESSION['usuario']->esNormal()): ?>

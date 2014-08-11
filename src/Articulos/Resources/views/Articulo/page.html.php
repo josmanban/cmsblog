@@ -10,7 +10,7 @@
     </div>
     <p>
 
-        <?php echo $articulo->getTexto(); ?>    </p>
+        <?php echo $articulo->getHtml(); ?>    </p>
     <footer>
 
         <?php if (isset($_SESSION['usuario'])): ?>

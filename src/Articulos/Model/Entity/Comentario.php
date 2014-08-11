@@ -1,7 +1,10 @@
 <?php
 
 namespace Articulos\Model\Entity;
+
 use Doctrine\Common\Collections\ArrayCollection;
+use Librerias\FuncionesVarias;
+
 /**
  * Description of Comentario
  *
@@ -9,13 +12,12 @@ use Doctrine\Common\Collections\ArrayCollection;
  * @Entity (repositoryClass="Articulos\Model\Entity\ComentarioRepository")
  */
 class Comentario {
-
     //put your code here
 
-    /** 
-      * @Id
-      * @GeneratedValue(strategy="AUTO")
-      * @Column(type="integer")*/
+    /**
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer") */
     private $id;
 
     /**
@@ -28,7 +30,7 @@ class Comentario {
      *
      */
     private $padre;
-    
+
     /**
      * @OneToMany(targetEntity="Comentario",mappedBy="padre")
      * 
@@ -55,10 +57,10 @@ class Comentario {
      */
     private $estado;
 
-    public function __construct(){
-        $this->hijos= new ArrayCollection();
+    public function __construct() {
+        $this->hijos = new ArrayCollection();
     }
-    
+
     public function getId() {
         return $this->id;
     }
@@ -114,7 +116,7 @@ class Comentario {
     public function setEstado($estado) {
         $this->estado = $estado;
     }
-    
+
     public function getHijos() {
         return $this->hijos;
     }
@@ -123,12 +125,16 @@ class Comentario {
         $this->hijos = $hijos;
     }
 
-    public function addComentario(Comentario $comentario){
-        $this->hijos[]=$comentario;
+    public function addComentario(Comentario $comentario) {
+        $this->hijos[] = $comentario;
     }
-    
+
     public function __toString() {
         
+    }
+
+    public function getHtml() {
+        return FuncionesVarias::getHtml($this->texto);
     }
 
 }

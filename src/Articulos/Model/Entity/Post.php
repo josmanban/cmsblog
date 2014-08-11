@@ -4,8 +4,8 @@ namespace Articulos\Model\Entity;
 
 use Administracion\Model\Entity\Usuario;
 use Articulos\Model\Entity\Comentario;
-
 use Doctrine\Common\Collections\ArrayCollection;
+use Librerias\FuncionesVarias;
 
 /**
  * Description of Post
@@ -18,10 +18,10 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Post {
 
-    /** 
-      * @Id
-      * @GeneratedValue(strategy="AUTO")
-      * @Column(type="integer")*/
+    /**
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer") */
     protected $id;
 
     /**
@@ -55,7 +55,7 @@ class Post {
      */
     protected $numVisitas;
 
-   /**
+    /**
      * @ManyToOne(targetEntity="\Administracion\Model\Entity\Estado",inversedBy="posts")
      */
     protected $estado;
@@ -65,8 +65,8 @@ class Post {
      */
     protected $comentarios;
 
-    public function __construc(){
-        $this->comentarios= new ArrayCollection();
+    public function __construc() {
+        $this->comentarios = new ArrayCollection();
     }
 
     public function getComentarios() {
@@ -76,11 +76,11 @@ class Post {
     public function setComentarios($comentarios) {
         $this->comentarios = $comentarios;
     }
-    
-    public function addComentario(Comentario $comentario){
-        $this->comentarios[]=$comentario;
+
+    public function addComentario(Comentario $comentario) {
+        $this->comentarios[] = $comentario;
     }
-        
+
     public function getId() {
         return $this->id;
     }
@@ -140,9 +140,9 @@ class Post {
     public function getResumen($numChar = 350) {
         if ($this->texto != null) {
             if (strlen($this->texto) > $numChar)
-                return substr($this->texto, 0, $numChar) . '...';
+                return FuncionesVarias::getHtml(substr($this->texto, 0, $numChar) . '...');
             else
-                return $this->texto;
+                return FuncionesVarias::getHtml($this->texto);
         }
         return null;
     }
@@ -163,6 +163,10 @@ class Post {
         if ($this->autor->getId() === $usuario->getId())
             return true;
         return false;
+    }
+
+    public function getHtml() {
+        return FuncionesVarias::getHtml($this->texto);
     }
 
 }

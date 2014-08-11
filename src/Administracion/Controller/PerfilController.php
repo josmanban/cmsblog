@@ -115,7 +115,7 @@ class PerfilController extends Controller {
     }
 
     public function showAction() {
-        
+        echo "hla";
     }
 
     public function updateAction() {
