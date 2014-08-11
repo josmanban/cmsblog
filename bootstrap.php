@@ -47,7 +47,7 @@ define('POST_IMAGE_URL', SITE_URL . '/img/post/');
 define('POST_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/post/');
 define('PERFIL_IMAGE_URL', SITE_URL . '/img/perfil/');
 define('PERFIL_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/perfil/');
-define('USER_DEFAULT_AVATAR', SITE_URL . '/img/user-image-default.png');
+define('USER_DEFAULT_AVATAR', SITE_URL . '/img/user-image-default.jpg');
 
 /*****************************************************/
 
@@ -76,6 +76,7 @@ define('PERFIL_EDIT_FORM', dirname(__FILE__) . '/src/Administracion/Resources/vi
 define('PERFIL_INDEX', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/index.html.php');
 define('PERFIL_SHOW', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/show.html.php');
 define('PERFIL_PAGE', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/page.html.php');
+define('MI_PERFIL', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/miPerfil.html.php');
 
 
 

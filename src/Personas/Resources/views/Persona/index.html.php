@@ -39,7 +39,8 @@ require_once CONTENT;
         <?php foreach ($personas as $persona) : ?>
             <tr>
                 <td>
-                    <img src="<?php echo $persona->getUsuario()->getPerfil()->getAvatar() ?>" class="img-rounded img-thumbnail img-responsive avatar-table" />
+                    <img src="<?php 
+                    //echo $persona->getUsuario()->getPerfil()->getAvatar() ?>" class="img-rounded img-thumbnail img-responsive avatar-table" />
                 </td>
                 <td>
                     <?php echo $persona->getId(); ?>

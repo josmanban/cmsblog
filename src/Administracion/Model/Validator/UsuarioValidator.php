@@ -23,7 +23,7 @@ class UsuarioValidator extends Validator {
     private $password;
 
     function __construct($entity = null, $password = "", $repetirPassword = "") {
-        $this->entity = $entity;      
+        $this->entity = $entity;
         $this->password = $password;
         $this->repetirPassword = $repetirPassword;
     }
@@ -32,6 +32,7 @@ class UsuarioValidator extends Validator {
         try {
             $this->validateEmptyFields();
             $this->validateSpecialFields();
+            $this->cleanFields();
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -49,10 +50,10 @@ class UsuarioValidator extends Validator {
     }
 
     protected function validateSpecialFields() {
-        /*if (!empty($this->password)) {
-            $this->addError(self::validatePasswordFormat($this->password));
-            $this->addError(self::validatePasswords($this->password, $this->repetirPassword));
-        }*/
+        /* if (!empty($this->password)) {
+          $this->addError(self::validatePasswordFormat($this->password));
+          $this->addError(self::validatePasswords($this->password, $this->repetirPassword));
+          } */
         Validator::validateEmail($this->entity->getEmail(), 'email');
         $this->addError(self::validateRepeatedName(
                         $this->entity->getId(), $this->entity->getNombre()));
@@ -83,6 +84,11 @@ class UsuarioValidator extends Validator {
         if ($usuario && $usuario->getId() != $idUsuario)
             return ucfirst($fieldName) . ' ya registrado.';
         return false;
+    }
+
+    public function cleanFields() {
+        $this->entity->setNombre(self::clean($this->entity->getNombre()));
+        $this->entity->setEmail(self::clean($this->entity->getEmail()));
     }
 
 }

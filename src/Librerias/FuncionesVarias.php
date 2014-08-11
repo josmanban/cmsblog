@@ -2,8 +2,7 @@
 
 namespace Librerias;
 
-use JBBCode\Parser;
-use JBBCode\DefaultCodeDefinitionSet;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -22,16 +21,7 @@ class FuncionesVarias {
         return $url;
     }
 
-    public static function getHtml($bbcode) {
-
-
-        $parser = new Parser();
-        $parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
-
-        $parser->parse($bbcode);
-
-        return $parser->getAsHtml();
-    }
+    
 
 }
 

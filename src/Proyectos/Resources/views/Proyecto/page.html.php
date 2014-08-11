@@ -35,8 +35,6 @@
         <li><b>Descripci&oacute;n:</b>
             <?php echo $proyecto->getTexto(); ?> </li>
     </ul>
-
-
 </p>
 
 <footer>
@@ -49,7 +47,7 @@
 </article>
 
 
-<?php if ($usuario->esAdministrador() || $usuario->esAdministradorProyecto() || $proyecto->pertenece($usuario)): ?>
+<?php if (isset($_SESSION['usuario']) && ($_SESSION['usuario']->esAdministrador() || $_SESSION['usuario']->esAdministradorProyecto() || $proyecto->pertenece($_SESSION['usuario']))): ?>
     <style>
         .coments-container>ul{
             padding-left: 0px;

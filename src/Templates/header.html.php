@@ -53,33 +53,31 @@
 
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <li><a href="index.php?controller=perfil&action=show&id=<?php
+                                        //echo $_SESSION['usuario']->getPerfil()->getId();
+                                        ;
+                                        ?>">Mi perfil</a></li>
                                     <li>
                                         <a href="index.php?controller=usuario&action=edit&id=<?php
                                         echo $_SESSION['usuario']->getId();
                                         ?>">Editar datos de la cuenta</a>
-                                    </li>
-                                    <li><a href="index.php?controller=perfil&action=show&id=<?php
-                                        //$_SESSION['usuario']->getPerfil()->getId();
-                                        ;
-                                        ?>">Perfil</a></li>
-                                    <li><a href="index.php?controller=persona&action=show">Datos personales</a></li>
-                                    
-                                     <li class="divider"></li>                                    
+                                    </li>                                    
+                                    <li><a href="index.php?controller=persona&action=edit&id=<?php
+                                       echo $_SESSION['usuario']->getPersona()->getId();
+                                    ?>">Editar datos personales</a></li>
+                                    <li><a href="index.php?controller=perfil&action=edit&id=<?php
+                                       echo $_SESSION['usuario']->getPerfil()->getId();
+                                    ?>">Editar perfil público</a></li>
+                                    <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=pagina&action=admin">Staff</a>
                                     </li>
                                     <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=usuario&action=logout">Cerrar session</a>
-                                    </li>                                  
+                                    </li>                                    
                                 </ul>
-                            </li>
-                            <li>
-                                <img class="avatar-navMenu img-rounded " src="<?php
-                                if (!is_null($_SESSION['usuario']->getPerfil()))
-                                    echo $_SESSION['usuario']->getPerfil()->getAvatar();
-                                ?>" alt="">
-                            </li>
+                            </li>                            
                         <?php else : ?>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Invitado<b class="caret"></b></a>
@@ -90,16 +88,20 @@
                                     <li>
                                         <a href="index.php?controller=usuario&action=new">Registrarse</a>
                                     </li>
-                                    
+
                                 </ul>
-                            </li>
-                            <li>
-                                <img class="avatar-navMenu img-rounded " src="<?php
-                                echo USER_DEFAULT_AVATAR;
-                                ?>" alt="">
                             </li>
 
                         <?php endif; ?>
+                        <li>
+                            <img class="avatar-navMenu img-rounded " src="<?php
+                            if (isset($_SESSION['usuario'])&&!is_null($_SESSION['usuario']->getPerfil()))
+                                echo $_SESSION['usuario']->getPerfil()->getAvatar();
+                            else
+                                echo USER_DEFAULT_AVATAR;
+                            ?>" alt="">
+                        </li>
+
                     </ul>
 
                 </div><!-- /.navbar-collapse -->

@@ -52,6 +52,12 @@ class ProyectoValidator extends PostValidator {
             return ucfirst($fieldname) . ' ya registrado.';
         return false;
     }
+    
+    public function cleanFields() {
+        parent::cleanFields();
+        $this->entity->setCodename(self::clean($this->entity->getCodename()));
+        $this->entity->setVersion(self::clean($this->entity->getVersion()));
+    }
 
 //put your code here
 }

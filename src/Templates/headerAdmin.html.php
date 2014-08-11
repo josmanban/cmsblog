@@ -43,9 +43,9 @@
                         <li>
                             <a href="index.php">Inicio</a>
                                         </li>
-                        <?php if (isset($usuario)): ?>
+                        <?php if (isset($_SESSION['usuario'])): ?>
 
-                            <?php if ($usuario->esAdministrador()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Usuarios<b class="caret"></b></a>
@@ -59,7 +59,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($usuario->esAdministrador()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Personas<b class="caret"></b></a>
@@ -73,7 +73,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($usuario->esAdministradorArticulo()||$usuario->esPublicador()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministradorArticulo()||$_SESSION['usuario']->esPublicador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Articulos<b class="caret"></b></a>
@@ -87,7 +87,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($usuario->esAdministradorProyecto()||$usuario->esPublicadorProyecto()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministradorProyecto()||$_SESSION['usuario']->esPublicadorProyecto()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Proyectos<b class="caret"></b></a>
@@ -111,20 +111,21 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
-                                    <?php echo $usuario->getNombre() ?> <b class="caret"></b>
+                                    <?php echo $_SESSION['usuario']->getNombre() ?> <b class="caret"></b>
 
                                 </a>
                                 <ul class="dropdown-menu">
+                                    <li><a href="index.php?controller=perfil&action=show&id=<?php
+                                        //echo $_SESSION['usuario']->getPerfil()->getId();
+                                        ;
+                                        ?>">Mi perfil</a></li>
                                     <li>
                                         <a href="index.php?controller=usuario&action=edit&id=<?php
-                                        echo $usuario->getId();
+                                        echo $_SESSION['usuario']->getId();
                                         ?>">Editar datos de la cuenta</a>
-                                    </li>
-                                    <li><a href="index.php?controller=perfil&action=show&id=<?php
-                                        //$usuario->getPerfil()->getId();
-                                        ;
-                                        ?>">Perfil</a></li>
-                                    <li><a href="index.php?controller=persona&action=show">Datos personales</a></li>
+                                    </li>                                    
+                                    <li><a href="index.php?controller=persona&action=show">Editar datos personales</a></li>
+                                     <li><a href="index.php?controller=persona&action=show">Editar datos perfil público</a></li>
                                     <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=pagina&action=admin">Staff</a>
@@ -136,9 +137,13 @@
                                 </ul>
                             </li>
                             <li>
-                                <img class="avatar-navMenu img-rounded " src="<?php
-                                if (!is_null($usuario->getPerfil()))
-                                    echo $usuario->getPerfil()->getAvatar();
+                                <img class="avatar-navMenu img-rounded " src="<?php                                
+                                
+                                if (!is_null($_SESSION['usuario']->getPerfil()))
+                                    echo $_SESSION['usuario']->getPerfil()->getAvatar();
+                                else
+                                    echo USER_DEFAULT_AVATAR;
+                                    
                                 ?>" alt="">
                             </li>                     
                         <?php endif; ?>

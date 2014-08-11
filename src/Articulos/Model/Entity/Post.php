@@ -140,9 +140,9 @@ class Post {
     public function getResumen($numChar = 350) {
         if ($this->texto != null) {
             if (strlen($this->texto) > $numChar)
-                return FuncionesVarias::getHtml(substr($this->texto, 0, $numChar) . '...');
+                return substr($this->texto,0, $numChar) . '...';
             else
-                return FuncionesVarias::getHtml($this->texto);
+                $this->texto;
         }
         return null;
     }
@@ -163,10 +163,6 @@ class Post {
         if ($this->autor->getId() === $usuario->getId())
             return true;
         return false;
-    }
-
-    public function getHtml() {
-        return FuncionesVarias::getHtml($this->texto);
     }
 
 }

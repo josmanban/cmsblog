@@ -181,7 +181,6 @@ class ProyectoController extends Controller {
             } else {
                 View::render(PROYECTO_SHOW, array(
                 'proyecto' => $proyecto,
-                'usuario' => $_SESSION['usuario']
                 ));
             }
         } catch (\Exception $ex) {

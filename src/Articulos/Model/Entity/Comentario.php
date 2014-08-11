@@ -3,8 +3,6 @@
 namespace Articulos\Model\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Librerias\FuncionesVarias;
-
 /**
  * Description of Comentario
  *
@@ -132,10 +130,7 @@ class Comentario {
     public function __toString() {
         
     }
-
-    public function getHtml() {
-        return FuncionesVarias::getHtml($this->texto);
-    }
+ 
 
 }
 

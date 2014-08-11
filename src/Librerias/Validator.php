@@ -4,6 +4,9 @@ namespace Librerias;
 
 use Librerias\InvalidFormDataException;
 use Librerias\InvalidDBActionException;
+require_once dirname(__FILE__) . '/../../vendor/spekkionu/htmlpurifier/HTMLPurifier.auto.php';
+//use JBBCode\Parser;
+//use JBBCode\DefaultCodeDefinitionSet;
 
 /*
  * To change this template, choose Tools | Templates
@@ -159,6 +162,24 @@ abstract class Validator {
     public static function validateDate($date, $format = 'Y-m-d H:i:s') {
         $d = \DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
+    }
+    
+    public abstract function cleanFields();
+    
+    public static function clean($dirty_html) {
+
+        /*
+          $parser = new Parser();
+          $parser->addCodeDefinitionSet(new DefaultCodeDefinitionSet());
+          $parser->parse($bbcode);
+          return $parser->getAsHtml(); */
+        
+        
+        //$config = HTMLPurifier_Config::createDefault();
+        $config = \HTMLPurifier_Config::createDefault();
+        $purifier = new \HTMLPurifier($config);
+        //$clean_html = $purifier->purify($dirty_html);
+        return $purifier->purify($dirty_html);
     }
 
 }

@@ -8,6 +8,8 @@ use Librerias\NotAllowedException;
 use Librerias\NotLoggedException;
 use Librerias\InvalidEntityException;
 use Librerias\InvalidFormDataException;
+use Librerias\MissingParametersException;
+use Librerias\NotFoundEntityException;
 use Librerias\Paginator;
 use Librerias\Validator;
 use Librerias\Conexion;
@@ -35,26 +37,7 @@ class PerfilController extends Controller {
 
     //put your code here
     public function createAction() {
-        try {
-            $loguedUser = $_SESSION['usuario'];
-            if (is_null($loguedUser))
-                throw new NotLoggedException($ex);
-            $perfil = $loguedUser->getPerfil();
-            if (!$loguedUser->esAdministrador() && !is_null($perfil))
-                throw new NotAllowedException();
-
-            $perfil = $this->bind();
-
-            $this->em->persist($perfil);
-            $this->em->flush();
-        } catch (\Librerias\InvalidaFormDataException $ex) {
-            View::render(PERFIL_NEW, array(
-                'errores' => $ex->getErrores(),
-                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
-            ));
-        } catch (\Exception $ex) {
-            View::render(ERROR, array('errores' => array($ex->getMessage())));
-        }
+        
     }
 
     public function deleteAction() {
@@ -77,7 +60,6 @@ class PerfilController extends Controller {
                 throw new NotLoggedException();
             if (!$usuario->esAdministrador())
                 throw new NotAllowedException();
-
             if (isset($_GET['page']))
                 $page = $_GET['page'];
             else
@@ -107,15 +89,36 @@ class PerfilController extends Controller {
     }
 
     public function newAction() {
-        try {
-            
-        } catch (\Exception $ex) {
-            View::render(ERROR, array('errores' => array($ex->getMessage())));
-        }
+        
     }
 
     public function showAction() {
-        echo "hla";
+        
+    }
+
+    public function miPerfil() {
+        try {
+            if (isset($_SESSION['usuario']))
+                $usuarioLogueado = $_SESSION['usuario'];
+            else
+                throw new NotLoggedException();
+            if (!isset($_GET['id']))
+                throw new MissingParametersException('id');
+            $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($_GET['id']);
+            if (is_null($usuario))
+                throw new NotFoundEntityException('Usuario');
+            if ($usuarioLogueado->esAdministrador() || $usuario->getId() == $usuarioLogueado->getId())
+                $perfilCompleto = true;
+            else
+                $perfilCompleto = false;
+            if (isset($_REQUEST['ajax'])) {
+                
+            } else {
+                View::render(MI_PERFIL, array('usuario' => $usuario));
+            }
+        } catch (\Exception $ex) {
+            View::render(ERROR, array('errores' => array($ex->getMessage())));
+        }
     }
 
     public function updateAction() {
@@ -124,7 +127,6 @@ class PerfilController extends Controller {
         } catch (InvalidFormDataException $ex) {
             View::render(PERFIL_EDIT, array(
                 'errores' => $ex->getErrores(),
-                'usuarios' => $this->em->getRepository('Administracion\Model\Entity\Usuario')->findActivos(),
                 'perfil' => $this->em->getRepository('Administracion\Model\Entity\Perfil')->find($_POST['id'])
                     )
             );

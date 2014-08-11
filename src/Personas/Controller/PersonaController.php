@@ -23,7 +23,6 @@ use Librerias\Conexion;
 use Personas\Model\Entity\Persona;
 use Personas\Model\Validator\PersonaValidator;
 
-
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -52,11 +51,11 @@ class PersonaController extends Controller {
             if (!$loguedUser->esAdministrador() && !is_null($personaUsuario))
                 throw new NotAllowedException();
 
-            $persona = $this->validate();
+            $persona = $this->bind();
             $this->em->persist($persona);
             $this->em->flush();
 
-            if ($_REQUEST['ajax']) {
+            if (isset($_REQUEST['ajax'])) {
                 
             }
 
@@ -130,11 +129,11 @@ class PersonaController extends Controller {
                 $page = 1;
 
             $filters = [];
-            $numItems = $this->em->getRepository('Personas\Model\Entity\Persona')->contar($filters);                    
-            $paginator = new Paginator('usuario', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);     
+            $numItems = $this->em->getRepository('Personas\Model\Entity\Persona')->contar($filters);
+            $paginator = new Paginator('usuario', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $personas = $this->em->getRepository('Personas\Model\Entity\Persona')->findBy(
                     $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
-            );            
+            );
 
             if (isset($_REQUEST['ajax'])) {
                 
@@ -161,7 +160,6 @@ class PersonaController extends Controller {
                     )->findOneBy(array('usuario' => $usuario->getId()));
             if (!$usuario->esAdministrador() && !is_null($personaUsuario))
                 throw new NotAllowedException();
-
             if (isset($_GET['ajax']) || isset($_POST['ajayx'])) {
                 
             } else {
@@ -187,7 +185,7 @@ class PersonaController extends Controller {
                     $this->em->getRepository('Personas\Model\Entity\Persona')->find($idPersona) :
                     $this->em->getRepository('Personas\Model\Entity\Persona')->findOneBy(array('usuario' => $usuario->getId()));
             if (is_null($persona))
-              throw new NotFoundEntityException('persona');
+                throw new NotFoundEntityException('persona');
             if (!$usuario->esAdministrador() && !$persona->esMiUsuario($usuario))
                 throw new NotAllowedException();
             if (isset($_REQUEST['ajax'])) {
@@ -213,7 +211,7 @@ class PersonaController extends Controller {
             if (!$loguedUser->esAdministrador() && $persona->esMiUsuario($loguedUser))
                 throw new NotAllowedException();
 
-            $this->validate($persona);
+            $this->bind($persona);
             $this->em->persist($persona);
             $this->em->flush();
 
@@ -247,7 +245,7 @@ class PersonaController extends Controller {
      * valida los datos de una entidad persona para altas/modificaciones
      */
 
-    public function bind($entity = null) {
+    public function bind($persona = null) {
         try {
             /*             * ********** obtengo los datos del formulario********* */
             $id = $_POST['id'];
@@ -262,29 +260,25 @@ class PersonaController extends Controller {
 
             $tipoDocumento = $this->em->getRepository('Personas\Model\Entity\TipoDocumento')->find($idTipoDocumento);
             $estado = ($idEstado == '-1') ?
-            $this->em->getRepository('Administracion\Model\Entity\Estado')->finOneBy(array('nombre' => 'ACTIVO')):
-            $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
-            $idUsuario = $_POST['usuario'];
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO')) :
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
+            $idUsuario = isset($_POST['usuario']) ? $_POST['usuario'] : -1;
             $sexo = $this->em->getRepository('Personas\Model\Entity\Sexo')->find($idSexo);
-            $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idUsuario);                   
-            
+            $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idUsuario);
+
             if (is_null($usuario))
                 throw new \Librerias\NotFoundEntityException();
 
             /*             * *********** creo la nueva entidad y le paso los datos************ */
-            if ($entity)
-                $persona = $entity;
-            else
+            if (is_null($persona))
                 $persona = new Persona();
-
-            if ($id != '-1')
-                $persona->setId($id);
             $persona->setNombre($nombre);
             $persona->setApellido($apellido);
             $persona->setLugarNacimiento($lugarNacimiento);
             $persona->setFechaNacimiento($fechaNacimiento);
-            $persona->setNumDocumento($numDocumento);         
+            $persona->setNumDocumento($numDocumento);
             $persona->setTipoDocumento($tipoDocumento);
+            
             $persona->setUsuario($usuario);
             $persona->setEstado($estado);
             $persona->setSexo($sexo);

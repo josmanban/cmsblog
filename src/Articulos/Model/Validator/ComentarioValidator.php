@@ -29,6 +29,7 @@ class ComentarioValidator extends Validator {
         try {
             $this->validateEmptyFields();
             $this->validateSpecialFields();
+            $this->cleanFields();
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -41,6 +42,10 @@ class ComentarioValidator extends Validator {
 
     protected function validateSpecialFields() {
         $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto', 4));
+    }
+
+    public function cleanFields() {
+        $this->entity->setTexto(self::clean($this->entity->getTexto()));
     }
 
 }

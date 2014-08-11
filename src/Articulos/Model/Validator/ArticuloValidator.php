@@ -36,6 +36,10 @@ class ArticuloValidator extends PostValidator {
         }
         return false;
     }
+    
+    public function cleanFields() {
+        parent::cleanFields();
+    }
 
 }
 

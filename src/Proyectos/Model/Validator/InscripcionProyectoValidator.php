@@ -42,6 +42,7 @@ class InscripcionProyectoValidator extends Validator {
         try {
             $this->validateEmptyFields();
             $this->validateSpecialFields();
+            $this->cleanFields();
         } catch (Exception $ex) {
             throw $ex;
         }
@@ -60,6 +61,10 @@ class InscripcionProyectoValidator extends Validator {
             return 'Inscripci&oacute;n rechazada. La persona ya esta inscripta al proyecto.';
         }
         return false;
+    }
+
+    public function cleanFields() {
+        $this->entity->setDescripcionActividad(self::clean($this->entity->getDescripcionActividad()));
     }
 
 }

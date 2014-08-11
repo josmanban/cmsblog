@@ -13,6 +13,7 @@ use Administracion\Model\Entity\Estado;
 use Administracion\Model\Entity\Rol;
 use Administracion\Model\Entity\Usuario;
 use Administracion\Model\Validator\UsuarioValidator;
+use Administracion\Model\Entity\Perfil;
 use Librerias\InvalidFormDataException;
 use Librerias\Validator;
 
@@ -40,7 +41,11 @@ class UsuarioController extends Controller {
                 throw new NotAllowedException();
 
             $usuario = $this->bind();
+            $perfil= new Perfil();            
+            $usuario->setPerfil($perfil);
+            $perfil->setUsuario($usuario);            
             $this->em->persist($usuario);
+            $this->em->persist($perfil);
             $this->em->flush();
 
             if (isset($_GET['ajax']) || isset($_POST['ajayx'])) {
@@ -247,7 +252,7 @@ class UsuarioController extends Controller {
             $id = $_POST['id'];
             $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
             $email = isset($_POST['email']) ? $_POST['email'] : '';
-            if ($id == -1 || isset($_POST['password'])) {
+            if ($id == '-1' || isset($_POST['password'])) {
                 $password = isset($_POST['password']) ? $_POST['password'] : '';
                 $repetirPassword = isset($_POST['repetirPassword']) ? $_POST['repetirPassword'] : '';
             }
@@ -272,7 +277,7 @@ class UsuarioController extends Controller {
             //$usuario->setId($id);
             if (is_null($usuario->getId()) || !empty($email))
                 $usuario->setEmail($email);
-            if (is_null($usuario->getId() || !empty($password)))
+            if (is_null($usuario->getId()) || !empty($password))
                 $usuario->setPassword(md5($password));
             $usuario->setNombre($nombre);
             $usuario->setRoles($roles);

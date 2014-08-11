@@ -2,7 +2,7 @@
 	"require":{
 		"doctrine/orm":"2.4.*",
 		"symfony/yaml":"2.*",
-		"jbbcode/jbbcode": "dev-master"
+		"spekkionu/htmlpurifier": "dev-master"
                 
 	},
 	"autoload":{

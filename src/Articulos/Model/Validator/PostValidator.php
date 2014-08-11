@@ -17,7 +17,7 @@ use Librerias\InvalidFormDataException;
  */
 class PostValidator extends Validator {
 
-    function __construct($entity = null) {       
+    function __construct($entity = null) {
         $this->entity = $entity;
     }
 
@@ -31,7 +31,7 @@ class PostValidator extends Validator {
     protected function validateSpecialFields() {
         if (isset($_FILES['imagen']) && $_FILES['imagen']['name'] != '')
             $this->addError(self::validateImage('imagen', 'imagen', 90000));
-        $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto'));    
+        $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto'));
         $this->checkErrores();
     }
 
@@ -39,11 +39,17 @@ class PostValidator extends Validator {
         try {
             $this->validateEmptyFields();
             $this->validateSpecialFields();
+            $this->cleanFields();
         } catch (Exception $ex) {
             throw $ex;
         }
     }
 
+    public function cleanFields() {
+        $this->entity->setTitulo(self::clean($this->entity->getTitulo()));
+        $this->entity->setTexto(self::clean($this->entity->getTexto()));
+        $this->entity->setImagen(self::clean($this->entity->getImagen()));
+    }
 
 //put your code here
 }
