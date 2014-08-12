@@ -1,4 +1,4 @@
-<form role="form" method="POST" action="index.php?controller=usuario&action=create">
+<form role="form" method="POST" action="index.php?controller=usuario&action=create" enctype="multipart/form-data">
     <input
         type="hidden" name="id" value="-1"
         >

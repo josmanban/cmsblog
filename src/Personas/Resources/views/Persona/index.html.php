@@ -40,7 +40,7 @@ require_once CONTENT;
             <tr>
                 <td>
                     <img src="<?php 
-                    //echo $persona->getUsuario()->getPerfil()->getAvatar() ?>" class="img-rounded img-thumbnail img-responsive avatar-table" />
+                    echo $persona->getUsuario()->getPerfil()->getAvatar() ?>" class="img-rounded avatar-table" />
                 </td>
                 <td>
                     <?php echo $persona->getId(); ?>

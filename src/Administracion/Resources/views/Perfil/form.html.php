@@ -15,8 +15,8 @@
 
 <div class="form-group">
     <label>Descripcion</label>    
-    <textarea class="form-control" row="40" name="descripcion" value="<?php
+    <textarea class="form-control" row="40" name="descripcion" ><?php
     if (isset($perfil))
         echo $perfil->getDescripcion();
-    ?>" ></textarea>
+    ?></textarea>
 </div>

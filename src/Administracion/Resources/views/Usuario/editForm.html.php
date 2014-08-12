@@ -1,4 +1,4 @@
-<form role="form" method="POST" action="index.php?controller=usuario&action=update">
+<form role="form" method="POST" action="index.php?controller=usuario&action=update" enctype="multipart/form-data">
     <input
         type="hidden" name="id" value="<?php echo $usuario->getId() ?>"
         >

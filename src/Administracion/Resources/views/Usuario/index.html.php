@@ -10,6 +10,9 @@ require_once CONTENT_ONE_COLUMN;
         <th>
             Id
         </th>
+        <th>
+            Avatar
+        </th>
 
         <th>
             Nombre
@@ -36,6 +39,9 @@ require_once CONTENT_ONE_COLUMN;
             <tr>
                 <td>
                     <?php echo $usuario->getId(); ?>
+                </td>
+                <td><img class="img-rounded avatar-table" src="<?php echo $usuario->getPerfil()->getAvatar(); ?>"
+                         />
                 </td>
                 <td>
                     <?php echo $usuario->getNombre(); ?>

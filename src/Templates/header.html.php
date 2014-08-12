@@ -60,8 +60,8 @@
 
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="index.php?controller=perfil&action=show&id=<?php
-                                        //echo $_SESSION['usuario']->getPerfil()->getId();
+                                    <li><a href="index.php?controller=perfil&action=miPerfil&id=<?php
+                                        echo $_SESSION['usuario']->getId();
                                         ;
                                         ?>">Mi perfil</a></li>
                                     <li>
@@ -79,9 +79,6 @@
                                                 Completar datos personales</a>
                                         <?php endif; ?>
                                     </li>
-                                    <li><a href="index.php?controller=perfil&action=edit&id=<?php
-                                        echo $_SESSION['usuario']->getPerfil()->getId();
-                                        ?>">Editar perfil público</a></li>
                                     <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=pagina&action=admin">Staff</a>

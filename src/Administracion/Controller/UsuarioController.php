@@ -16,6 +16,7 @@ use Administracion\Model\Validator\UsuarioValidator;
 use Administracion\Model\Entity\Perfil;
 use Librerias\InvalidFormDataException;
 use Librerias\Validator;
+use Librerias\FuncionesVarias;
 
 /*
  * To change this template, choose Tools | Templates
@@ -39,11 +40,12 @@ class UsuarioController extends Controller {
         try {
             if (isset($_SESSION['usuario']) && !$_SESSION['usuario']->esAdministrador())
                 throw new NotAllowedException();
-
+            
             $usuario = $this->bind();
-            $perfil= new Perfil();            
+            $perfil = new Perfil();
+            $perfil->setAvatar(USER_DEFAULT_AVATAR);
             $usuario->setPerfil($perfil);
-            $perfil->setUsuario($usuario);            
+            $perfil->setUsuario($usuario);
             $this->em->persist($usuario);
             $this->em->persist($perfil);
             $this->em->flush();
@@ -212,14 +214,11 @@ class UsuarioController extends Controller {
                         $_SESSION['usuario'] = $usuario;
                         if (isset($_REQUEST['ajax'])) {
                             
-                        }
-                        else
+                        } else
                             header('Location: index.php');
-                    }
-                    else
+                    } else
                         throw new \Exception('Nombre de usuario o contraseña incorrecta');
-                }
-                else
+                } else
                     throw new \Exception('Nombre de usuario o contraseña incorrecta');
             }
         } catch (\Exception $ex) {
@@ -233,8 +232,7 @@ class UsuarioController extends Controller {
         }
         if (isset($_REQUEST['ajax'])) {
             
-        }
-        else
+        } else
             header('Location: index.php');
     }
 
@@ -273,8 +271,6 @@ class UsuarioController extends Controller {
                         ->findOneBy(array('nombre' => 'NORMAL'));
                 $roles[] = $rol;
             }
-
-            //$usuario->setId($id);
             if (is_null($usuario->getId()) || !empty($email))
                 $usuario->setEmail($email);
             if (is_null($usuario->getId()) || !empty($password))
@@ -285,6 +281,34 @@ class UsuarioController extends Controller {
 
             $validator = new UsuarioValidator($usuario, $password, $repetirPassword);
             $validator->validate();
+
+            //$usuario->setId($id);
+
+            if (!is_null($usuario->getId())) {
+
+                $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+                $perfil = $usuario->getPerfil();
+                $perfil->setDescripcion($descripcion);
+
+                $validator = new \Administracion\Model\Validator\PerfilValidator($perfil);
+                $validator->validate();
+
+                /*                 * *** actualizo la imagen de haberla********* */
+                if (!empty($_FILES['avatar']['name'])) {
+                    $temp = explode(".", $_FILES['avatar']["name"]);
+                    $extension = end($temp);
+                    if ($id == '-1')
+                        $nextId = $this->em->getRepository('Administracion\Model\Entity\Perfil')->finNextId();
+                    else
+                        $nextId = $perfil->getId();
+                    FuncionesVarias::saveImage(PERFIL_IMAGE_SAVE_PATH . 'perfil' . $nextId . '.' . $extension, 'avatar');
+                    $perfil->setAvatar(PERFIL_IMAGE_URL . 'perfil' . $nextId . '.' . $extension);
+                }
+                elseif (is_null($perfil->getId()) || is_null($perfil->getAvatar()) || empty($perfil->getAvatar())) {
+                    $perfil->setAvatar(USER_DEFAULT_AVATAR);
+                }
+            }
+
 
             return $usuario;
         } catch (Exception $ex) {
