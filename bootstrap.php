@@ -33,7 +33,7 @@ define('SITE_URL', 'http://localhost/sites/cmsblog');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'Consul011209');
+define('DB_PASSWORD', 'perro292');
 define('DB_DRIVER','pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);
@@ -76,6 +76,7 @@ define('PERFIL_EDIT_FORM', dirname(__FILE__) . '/src/Administracion/Resources/vi
 define('PERFIL_INDEX', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/index.html.php');
 define('PERFIL_SHOW', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/show.html.php');
 define('PERFIL_PAGE', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/page.html.php');
+define('PERFIL_FORM', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/form.html.php');
 define('MI_PERFIL', dirname(__FILE__) . '/src/Administracion/Resources/views/Perfil/miPerfil.html.php');
 
 

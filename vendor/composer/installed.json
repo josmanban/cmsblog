@@ -719,5 +719,48 @@
         ],
         "description": "HTML Purifier is a standards-compliant HTML filter library written in PHP.",
         "homepage": "http://htmlpurifier.org"
+    },
+    {
+        "name": "ckeditor/ckeditor",
+        "version": "dev-master",
+        "version_normalized": "9999999-dev",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ckeditor/ckeditor-releases.git",
+            "reference": "7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ckeditor/ckeditor-releases/zipball/7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f",
+            "reference": "7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f",
+            "shasum": ""
+        },
+        "time": "2014-07-15 15:06:48",
+        "type": "library",
+        "installation-source": "source",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "GPL-2.0+",
+            "LGPL-2.1+",
+            "MPL-1.1+"
+        ],
+        "authors": [
+            {
+                "name": "CKSource",
+                "homepage": "http://cksource.com"
+            }
+        ],
+        "description": "JavaScript WYSIWYG web text editor.",
+        "homepage": "http://ckeditor.com",
+        "keywords": [
+            "CKEditor",
+            "editor",
+            "fckeditor",
+            "html",
+            "javascript",
+            "richtext",
+            "text",
+            "wysiwyg"
+        ]
     }
 ]

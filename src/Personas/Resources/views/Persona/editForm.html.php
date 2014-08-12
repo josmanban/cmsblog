@@ -96,9 +96,10 @@
 
 
 
-        <div class="form-group">
-            <label>Usuario asignado:</label>
-            <?php if ($_SESSION['usuario']->esAdministrador()): ?>
+
+        <?php if ($_SESSION['usuario']->esAdministrador()): ?>
+            <div class="form-group">
+                <label>Usuario asignado:</label>
                 <select name="usuario" required>
                     <?php foreach ($usuarios as $usuario): ?>
                         <option value="<?php echo $usuario->getId(); ?>"
@@ -110,15 +111,14 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-            <?php else: ?>            
-                <input type="hidden" name="usuario" value="<?php
-                echo $_SESSION['usuario']->getId();
-                ?>">
-                <input class="form-control" type="text" readonly="true" value="<?php
-                echo $_SESSION['usuario']->getNombre();
-                ?>">
-                   <?php endif; ?>
-        </div>
+            </div>
+
+        <?php else: ?>            
+            <input type="hidden" name="usuario" value="<?php
+            echo $_SESSION['usuario']->getId();
+            ?>">
+           
+        <?php endif; ?>
 
 
         <button type="submit" class="btn btn-primary">Aceptar</button>

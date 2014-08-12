@@ -47,7 +47,7 @@
     </div>
     <div class="form-group">
         <label>Descripción actividad:</label>
-        <textarea class="form-control" type="text" name="descripcionActividad" required></textarea>          
+        <textarea class="ckeditor form-control" type="text" name="descripcionActividad" required></textarea>          
     </div>
 
     <div class="form-group">

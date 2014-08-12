@@ -6,7 +6,7 @@
     </div>   
     <div class="form-group">
         <label>Texto:</label>
-        <textarea row="40" class="form-control" type="text" name="texto" required></textarea>          
+        <textarea row="40" class="ckeditor form-control" type="text" name="texto" required></textarea>          
     </div>
      
     <div class="form-group">

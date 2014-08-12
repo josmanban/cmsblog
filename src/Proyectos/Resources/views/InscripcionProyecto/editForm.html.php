@@ -57,7 +57,7 @@
     </div>  
     <div class="form-group">
         <label>Descripción actividad:</label>
-        <textarea class="form-control" type="text" name="descripcionActividad" required><?php
+        <textarea class="ckeditor form-control" type="text" name="descripcionActividad" required><?php
             echo $inscripcionProyecto->getDescripcionActividad();
             ?></textarea>          
     </div>

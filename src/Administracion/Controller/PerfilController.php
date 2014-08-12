@@ -53,39 +53,7 @@ class PerfilController extends Controller {
     }
 
     public function indexAction() {
-        try {
-            if (isset($_SESSION['usuario']))
-                $usuario = $_SESSION['usuario'];
-            else
-                throw new NotLoggedException();
-            if (!$usuario->esAdministrador())
-                throw new NotAllowedException();
-            if (isset($_GET['page']))
-                $page = $_GET['page'];
-            else
-                $page = 1;
-
-            $numItems = $this->em->getRepository('Administracion\Model\Entity\Perfil')->contar(null);
-            $criteria = [];
-            $paginator = new Paginator('perfil', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
-
-
-            $perfiles = $this->em->getRepository('Administracion\Model\Entity\Perfil')->findBy(
-                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
-            );
-
-            if (isset($_REQUEST['ajax'])) {
-                
-            } else {
-                // require_once dirname(__FILE__) . '/../Views/Persona/index.html.php';
-                View::render(PERFIL_INDEX, array(
-                    'perfiles' => $perfiles,
-                    'paginator' => $paginator,
-                ));
-            }
-        } catch (\Exception $ex) {
-            View::render(ERROR, array('errores' => array($ex->getMessage())));
-        }
+        
     }
 
     public function newAction() {
@@ -96,30 +64,32 @@ class PerfilController extends Controller {
         
     }
 
-    public function miPerfil() {
-        try {
-            if (isset($_SESSION['usuario']))
-                $usuarioLogueado = $_SESSION['usuario'];
-            else
-                throw new NotLoggedException();
-            if (!isset($_GET['id']))
-                throw new MissingParametersException('id');
-            $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($_GET['id']);
-            if (is_null($usuario))
-                throw new NotFoundEntityException('Usuario');
-            if ($usuarioLogueado->esAdministrador() || $usuario->getId() == $usuarioLogueado->getId())
-                $perfilCompleto = true;
-            else
-                $perfilCompleto = false;
-            if (isset($_REQUEST['ajax'])) {
-                
-            } else {
-                View::render(MI_PERFIL, array('usuario' => $usuario));
-            }
-        } catch (\Exception $ex) {
-            View::render(ERROR, array('errores' => array($ex->getMessage())));
-        }
-    }
+    /*
+      public function miPerfil() {
+      try {
+      if (isset($_SESSION['usuario']))
+      $usuarioLogueado = $_SESSION['usuario'];
+      else
+      throw new NotLoggedException();
+      if (!isset($_GET['id']))
+      throw new MissingParametersException('id');
+      $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($_GET['id']);
+      if (is_null($usuario))
+      throw new NotFoundEntityException('Usuario');
+      if ($usuarioLogueado->esAdministrador() || $usuario->getId() == $usuarioLogueado->getId())
+      $perfilCompleto = true;
+      else
+      $perfilCompleto = false;
+      if (isset($_REQUEST['ajax'])) {
+
+      } else {
+      View::render(MI_PERFIL, array('usuario' => $usuario));
+      }
+      } catch (\Exception $ex) {
+      View::render(ERROR, array('errores' => array($ex->getMessage())));
+      }
+      }
+     */
 
     public function updateAction() {
         try {
@@ -139,6 +109,18 @@ class PerfilController extends Controller {
     public function bind($perfil = null) {
         try {
             $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+            if (is_null($perfil))
+                $perfil = new \Administracion\Model\Entity\Perfil();
+            if (is_null($perfil->getId())) {
+                $idUsuario = isset($_POST['idUsuario']) ? $_POST['idUsuario'] : -1;
+                $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idUsuario);
+                if (is_null($usuario))
+                    throw new NotFoundEntityException('Usuario');
+                $perfil->setUsuario($usuario);
+            }
+            $perfil->setDescripcion($descripcion);
+            $validator = new \Administracion\Model\Validator\PerfilValidator($perfil);
+            $validator->validate();
 
             /*             * *** actualizo la imagen de haberla********* */
             if (!empty($_FILES['avatar']['name'])) {
@@ -151,6 +133,9 @@ class PerfilController extends Controller {
                 FuncionesVarias::saveImage(PERFIL_IMAGE_SAVE_PATH . 'perfil' . $nextId . '.' . $extension, 'avatar');
                 $perfil->setAvatar(PERFIL_IMAGE_URL . 'perfil' . $nextId . '.' . $extension);
             }
+            elseif (is_null($perfil->getId())) {
+                $perfil->setAvatar(USER_DEFAULT_AVATAR);
+            }
             return $perfil;
         } catch (Exception $ex) {
             throw $ex;
@@ -158,5 +143,4 @@ class PerfilController extends Controller {
     }
 
 }
-
 ?>

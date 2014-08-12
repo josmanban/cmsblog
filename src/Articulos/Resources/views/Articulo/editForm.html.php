@@ -9,7 +9,7 @@
     </div>    
     <div class="form-group">
         <label>Texto:</label>
-        <textarea row="40" class="form-control" type="text" name="texto" required><?php echo $articulo->getTexto(); ?></textarea>          
+        <textarea row="40" class="ckeditor form-control" type="text" name="texto" required><?php echo $articulo->getTexto(); ?></textarea>          
     </div>
 
     <div class="form-group">

@@ -18,7 +18,15 @@
           <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
         <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
-        <script type="text/javascript" src="js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="js/bootstrap.min.js"></script>       
+        <script type="text/javascript" src="vendor/ckeditor/ckeditor/ckeditor.js" ></script>
+        <script type="text/javascript" src="vendor/ckeditor/ckeditor/config.js"></script>
+        
+        <script>
+            // Replace the <textarea id="editor1"> with a CKEditor
+            // instance, using default configuration.
+          //  CKEDITOR.replace('editor1');
+        </script>
 
     </head>
     <body>
@@ -42,7 +50,7 @@
                     <ul class="nav navbar-nav pull-right" id="dashboard-navbar-ul">  
                         <li>
                             <a href="index.php">Inicio</a>
-                                        </li>
+                        </li>
                         <?php if (isset($_SESSION['usuario'])): ?>
 
                             <?php if ($_SESSION['usuario']->esAdministrador()): ?>
@@ -73,7 +81,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministradorArticulo()||$_SESSION['usuario']->esPublicador()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministradorArticulo() || $_SESSION['usuario']->esPublicador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Articulos<b class="caret"></b></a>
@@ -87,7 +95,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministradorProyecto()||$_SESSION['usuario']->esPublicadorProyecto()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministradorProyecto() || $_SESSION['usuario']->esPublicadorProyecto()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Proyectos<b class="caret"></b></a>
@@ -124,8 +132,19 @@
                                         echo $_SESSION['usuario']->getId();
                                         ?>">Editar datos de la cuenta</a>
                                     </li>                                    
-                                    <li><a href="index.php?controller=persona&action=show">Editar datos personales</a></li>
-                                     <li><a href="index.php?controller=persona&action=show">Editar datos perfil público</a></li>
+                                    <li>
+                                        <?php if (!is_null($_SESSION['usuario']->getPersona())): ?>
+                                            <a href="index.php?controller=persona&action=edit&id=<?php
+                                            echo $_SESSION['usuario']->getPersona()->getId();
+                                            ?>">Editar datos personales</a>
+                                           <?php else: ?>
+                                            <a href="index.php?controller=persona&action=new">
+                                                Completar datos personales</a>
+                                        <?php endif; ?>
+                                    </li>
+                                    <li><a href="index.php?controller=perfil&action=edit&id=<?php
+                                        echo $_SESSION['usuario']->getPerfil()->getId();
+                                        ?>">Editar perfil público</a></li>
                                     <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=pagina&action=admin">Staff</a>
@@ -137,16 +156,14 @@
                                 </ul>
                             </li>
                             <li>
-                                <img class="avatar-navMenu img-rounded " src="<?php                                
-                                
+                                <img class="avatar-navMenu img-rounded " src="<?php
                                 if (!is_null($_SESSION['usuario']->getPerfil()))
                                     echo $_SESSION['usuario']->getPerfil()->getAvatar();
                                 else
                                     echo USER_DEFAULT_AVATAR;
-                                    
                                 ?>" alt="">
                             </li>                     
-                        <?php endif; ?>
+                                 <?php endif; ?>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->

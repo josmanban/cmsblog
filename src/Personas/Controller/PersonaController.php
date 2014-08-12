@@ -207,8 +207,8 @@ class PersonaController extends Controller {
             $id = $_POST['id'];
             $persona = $this->em->getRepository('Personas\Model\Entity\Persona')->find($id);
             if (is_null($persona))
-                throw new \Librerias\NotFoundEntityException();
-            if (!$loguedUser->esAdministrador() && $persona->esMiUsuario($loguedUser))
+                throw new NotFoundEntityException();
+            if (!$loguedUser->esAdministrador() && !$persona->esMiUsuario($loguedUser))
                 throw new NotAllowedException();
 
             $this->bind($persona);

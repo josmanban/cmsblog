@@ -8,7 +8,7 @@
     </div>
     <div class="form-group">
         <label>Descripci&oacute;n:</label>
-        <textarea class="form-control" type="text" name="texto" required                            
+        <textarea class="ckeditor form-control" type="text" name="texto" required                            
                   ><?php echo $proyecto->getTexto(); ?></textarea>          
     </div>
 

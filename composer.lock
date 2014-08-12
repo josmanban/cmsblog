@@ -4,8 +4,49 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "d45e33003586039ac207b81eee616e7b",
+    "hash": "860369d7371e6876d929b1e22e880d11",
     "packages": [
+        {
+            "name": "ckeditor/ckeditor",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ckeditor/ckeditor-releases.git",
+                "reference": "7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ckeditor/ckeditor-releases/zipball/7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f",
+                "reference": "7c4d8c1e91ba8d6d4e33574f59fc17586b10da1f",
+                "shasum": ""
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0+",
+                "LGPL-2.1+",
+                "MPL-1.1+"
+            ],
+            "authors": [
+                {
+                    "name": "CKSource",
+                    "homepage": "http://cksource.com"
+                }
+            ],
+            "description": "JavaScript WYSIWYG web text editor.",
+            "homepage": "http://ckeditor.com",
+            "keywords": [
+                "CKEditor",
+                "editor",
+                "fckeditor",
+                "html",
+                "javascript",
+                "richtext",
+                "text",
+                "wysiwyg"
+            ],
+            "time": "2014-07-15 15:06:48"
+        },
         {
             "name": "doctrine/annotations",
             "version": "v1.2.0",
@@ -714,7 +755,8 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "spekkionu/htmlpurifier": 20
+        "spekkionu/htmlpurifier": 20,
+        "ckeditor/ckeditor": 20
     },
     "prefer-stable": false,
     "platform": [
