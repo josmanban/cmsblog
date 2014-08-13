@@ -5,6 +5,7 @@ namespace Proyectos\Model\Entity;
 use Articulos\Model\Entity\Comentario;
 use Articulos\Model\Entity\Post;
 use Doctrine\Common\Collections\ArrayCollection;
+use Proyectos\Model\Entity\InscripcionProyecto;
 
 /**
  * @Entity (repositoryClass="Proyectos\Model\Entity\ProyectoRepository")
@@ -55,11 +56,11 @@ class Proyecto extends Post {
         return $this->inscripcionesProyecto;
     }
 
-    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto) {
+    public function setInscripcionesProyecto($inscripcionesProyecto) {
         $this->InscricionProyecto = $inscripcionesProyecto;
     }
 
-    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto) {
+    public function addInscripcionProyecto(InscripcionProyecto $inscripcionProyecto) {
         $this->inscripcionProyecto = $inscripcionProyecto;
     }
 
@@ -139,6 +140,8 @@ class Proyecto extends Post {
     }
 
     public function pertenece(\Administracion\Model\Entity\Usuario $u) {
+        if (is_null($u->getPersona()))
+            return false;
         foreach ($this->getInscripcionesProyecto() as $inscripcion) {
             if ($inscripcion->getPersona()->getId() == $u->getPersona()->getId())
                 return true;

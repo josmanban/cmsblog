@@ -14,6 +14,36 @@
         text-transform: uppercase;
     }
 </style>
+<script>
+    window.onload = function() {
+
+        var botonesInscripcion = document.getElementsByClassName('inscripcionAction');
+        for (var i = 0; i < botonesInscripcion.length; i++) {
+            botonesInscripcion[i].onclick = function() {
+                var idProyecto = this.id.split("@")[1];
+                $.ajax({
+                    url: "index.php?controller=inscripcionProyecto&action=create",
+                    method: 'POST',
+                    data: {
+                        proyecto: idProyecto
+                    },
+                    dataType: "JSON",
+                    error: function() {
+                        alert("Error en la solicitud.\nIntentalo mas tarde.");
+                    },
+                    success: function(data) {
+                        if (data.mensajes) {
+                            alert(data.mensajes);
+                        }
+                        if (data.errores) {
+                            alert(JSON.stringify(data.errores));
+                        }
+                    }
+                });
+            }
+        }
+    }
+</script>
 <article>  
     <header>
         <h3 class="pageProjectTitle"> <?php echo $proyecto->getTitulo(); ?></h3>
@@ -41,7 +71,7 @@
     <a class="btn btn-info" href="index.php?controller=inscripcionProyecto&action=archive&id=<?php
     echo $proyecto->getId();
     ?>">Participantes</a>
-    <a class="btn btn-success">Inscribirme</a> 
+    <a class="btn btn-success  inscripcionAction" id="proyecto@<?php echo $proyecto->getId(); ?>">Inscribirme</a> 
 </footer>
 
 </article>
@@ -60,14 +90,6 @@
             </h3>
         </header>    
         <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $proyecto)) ?>
-        <ul style="list-style: none" >
-            <?php foreach ($proyecto->getComentarios() as $comentario): ?>
-
-                <?php
-                if (is_null($comentario->getPadre()))
-                    require COMENTARIO_SHOW_TREE;
-                ?>
-            <?php endforeach; ?>
-        </ul>
+        <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios)); ?>
     </article>
 <?php endif; ?>

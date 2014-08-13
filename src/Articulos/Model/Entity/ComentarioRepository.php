@@ -28,6 +28,28 @@ class ComentarioRepository extends EntityRepository {
         }
     }
 
+    public function findCommentariosOrderByDate($idPost, $idPadre = -1) {
+        try {
+
+            $post = $this->_em->getRepository('Articulos\Model\Entity\Post')->find($idPost);
+            $padre = $this->_em->getRepository('Articulos\Model\Entity\Comentario')->find($idPadre);
+            if ($padre) {
+                $query = $this->_em->createQuery("SELECT c FROM Articulos\Model\Entity\Comentario c WHERE"
+                        . " c.post=:post AND c.padre=:padre ORDER BY c.fechaHora DESC");
+                $query->setParameter('padre', $padre);
+            } else {
+                $query = $this->_em->createQuery("SELECT c FROM Articulos\Model\Entity\Comentario c WHERE"
+                        . " c.post=:post AND c.padre IS NULL ORDER BY c.fechaHora DESC");
+            }
+            $query->setParameter('post', $post);
+
+
+            return $query->getResult();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
 }
 ?>
 

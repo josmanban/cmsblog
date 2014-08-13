@@ -65,10 +65,10 @@ class Persona {
     public function getInscripcionesProyecto(){
         return $inscripcionesProyecto;
     }
-    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto){
+    public function setInscripcionesProyecto($inscripcionesProyecto){
         $this->InscricionProyecto=$inscripcionesProyecto;
     }
-    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto){
+    public function addInscripcionProyecto(\Proyectos\Model\Entity\InscripcionProyecto  $inscripcionProyecto){
         $this->inscripcionProyecto= $inscripcionProyecto;
     }
 

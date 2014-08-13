@@ -18,7 +18,7 @@ use Administracion\Model\Entity\Rol;
 use Administracion\Model\Entity\Usuario;
 use Proyectos\Model\Entity\Proyecto;
 use Proyectos\Model\Entity\InscripcionProyecto;
-use Proyectos\Validator\InscripcionProyectoValidator;
+use Proyectos\Model\Validator\InscripcionProyectoValidator;
 
 /*
  * To change this template, choose Tools | Templates
@@ -48,13 +48,16 @@ class InscripcionProyectoController extends Controller {
             if (!$usuario->esAdministrador() && $usuario->esAdministradorProyecto() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
 
-            $inscripcionProyecto = $this->validate();
+            $inscripcionProyecto = $this->bind();
             $inscripcionProyecto->getProyecto()->addInscripcionProyecto($inscripcionProyecto);
             $this->em->persist($inscripcionProyecto);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
-                
+            if ($this->isAjax()) {
+                echo json_encode(array(
+                    'mensaje' => 'Inscripción registrada con exito'
+                ));
+                die();
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
                     'mensajeExito' => array('Inscripcion registrada con éxito'),
@@ -65,6 +68,10 @@ class InscripcionProyectoController extends Controller {
                 ));
             }
         } catch (InvalidFormDataException $ex) {
+            if ($this->isAjax()) {
+                echo json_encode(array('errores' => $ex->getErrores()));
+                die();
+            }
             View::render(INSCRIPCION_PROYECTO_NEW, array(
                 'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
                 'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
@@ -73,6 +80,13 @@ class InscripcionProyectoController extends Controller {
                 'errores' => $ex->getErrores(),
             ));
         } catch (\Exception $ex) {
+            if ($this->isAjax()) {
+                echo json_encode(array(
+                    'errores' => array(
+                        $ex->getMessage()
+                )));
+                die();
+            }
             View::render(ERROR, array(
                 'errores' => array($ex->getMessage()),
             ));
@@ -104,7 +118,7 @@ class InscripcionProyectoController extends Controller {
                     !($usuario->esPublicadorProyecto() && $proyecto->esAuthor($usuario)))
                 throw new NotAllowedException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
@@ -136,7 +150,7 @@ class InscripcionProyectoController extends Controller {
             else
                 $page = 1;
 
-            
+
             $criteria = [];
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->contar($criteria);
             $paginator = new Paginator('articulo', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
@@ -145,7 +159,7 @@ class InscripcionProyectoController extends Controller {
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_INDEX, array(
@@ -168,7 +182,7 @@ class InscripcionProyectoController extends Controller {
                 throw new NotLoggedException();
             if (!$usuario->esAdministrador() && $usuario->esAdministradorProyecto() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
@@ -207,10 +221,9 @@ class InscripcionProyectoController extends Controller {
                     !($usuario->esPublicadorProyecto() && $inscripcionProyecto->getProyecto()->esAutor($usuario)) &&
                     !$inscripcionProyecto->getPersona->getUsuario()->getId() == $usuario->getId())
                 throw new NotAllowedException();
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
-            }
-            else
+            } else
                 View::render(INSCRIPCION_PROYECTO_SHOW, array(
                     'inscripcionProyecto' => $inscripcionProyecto,
                 ));
@@ -229,10 +242,9 @@ class InscripcionProyectoController extends Controller {
             else
                 $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findAll();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
-            }
-            else
+            } else
                 View::render(INSCRIPCION_PROYECTO_ARCHIVE, array(
                     'inscripcionesProyecto' => $inscripcionesProyecto,
                 ));
@@ -250,7 +262,7 @@ class InscripcionProyectoController extends Controller {
             else
                 throw new NotLoggedException();
             if (!isset($_POST['id']))
-                throw new NotFoundEntityException();
+                throw new NotFoundEntityException('Inscripcion Proyecto');
             $id = $_POST['id'];
             $inscripcionProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->find($id);
             $proyecto = $inscripcionProyecto->getProyecto();
@@ -263,11 +275,11 @@ class InscripcionProyectoController extends Controller {
                 throw new NotAllowedException();
 
 
-            $this->validate($inscripcionProyecto);
-            $this->persist($inscripcionProyecto);
-            $this->flush();
+            $this->bind($inscripcionProyecto);
+            $this->em->persist($inscripcionProyecto);
+            $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
@@ -300,7 +312,6 @@ class InscripcionProyectoController extends Controller {
             if (is_null($inscripcionProyecto))
                 $inscripcionProyecto = new InscripcionProyecto();
 
-            $id = $_POST['id'];
             $descripcionActividad = isset($_POST['descripcionActividad']) ? $_POST['descripcionActividad'] : '';
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : -1;
             $idRolProyecto = isset($_POST['rol']) ? $_POST['rol'] : -1;
@@ -309,15 +320,28 @@ class InscripcionProyectoController extends Controller {
             $idProyecto = isset($_POST['proyecto']) ? $_POST['proyecto'] : -1;
 
 
-            $rolProyecto = $this->em->getRepository('Administracion\Model\Entity\Rol')->find($idRolProyecto);
+            $rolProyecto = $idRolProyecto != -1 ? $this->em->getRepository('Administracion\Model\Entity\Rol')->find($idRolProyecto) :
+                    $this->em->getRepository('Administracion\Model\Entity\Rol')->findOneBy(array(
+                        'nombre' => 'participante',
+                        'ambito' => 'proyecto'
+            ));
             $persona = $this->em->getRepository('Personas\Model\Entity\Persona')->find($idPersona);
-            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($idProyecto);
-            $estado = $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado);
+            if (is_null($persona) && is_null($_SESSION['usuario']->getPersona())) {
+                throw new \Exception('Completa tus datos personales');
+            } else if (is_null($persona) && !is_null($_SESSION['usuario']->getPersona())) {
+                $persona = $_SESSION['usuario']->getPersona();
+            }
 
-            /*if ($id != '-1')
-                $inscripcionProyecto->setId($id);*/
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($idProyecto);
+            if (is_null($proyecto))
+                throw new NotFoundEntityException('Proyecto');
+            $estado = $idEstado != -1 ? $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado) :
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'pendiente'));
+
+            /* if ($id != '-1')
+              $inscripcionProyecto->setId($id); */
             $inscripcionProyecto->setProyecto($proyecto);
-            if ($inscripcionProyecto->getId() == -1)
+            if (is_null($inscripcionProyecto->getId()))
                 $inscripcionProyecto->setFechaInscripcion(new \DateTime());
             $inscripcionProyecto->setEstado($estado);
             $inscripcionProyecto->setPersona($persona);

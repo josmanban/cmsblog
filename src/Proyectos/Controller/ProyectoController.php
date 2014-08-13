@@ -48,7 +48,7 @@ class ProyectoController extends Controller {
             $this->em->persist($proyecto);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_NEW, array(
@@ -90,7 +90,7 @@ class ProyectoController extends Controller {
                     !($usuario->esPublicadorProyecto() && $proyecto->esAutor($usuario)))
                 throw new NotAllowedException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_EDIT, array(
@@ -128,7 +128,7 @@ class ProyectoController extends Controller {
             );
 
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_INDEX, array(
@@ -152,7 +152,7 @@ class ProyectoController extends Controller {
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorProyecto() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_NEW, array(
@@ -176,7 +176,7 @@ class ProyectoController extends Controller {
             $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($id);
             if (is_null($proyecto))
                 throw new NotFoundEntityException();
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_SHOW, array(
@@ -209,7 +209,7 @@ class ProyectoController extends Controller {
             $this->em->persist($proyecto);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_EDIT, array(
@@ -252,7 +252,7 @@ class ProyectoController extends Controller {
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PROYECTO_ARCHIVE, array(
@@ -273,7 +273,7 @@ class ProyectoController extends Controller {
             if (is_null($proyecto))
                 $proyecto = new Proyecto();
 
-            $id = $_POST['id'];
+            
             $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
             $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';

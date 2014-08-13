@@ -1,7 +1,9 @@
 <?php
 
 namespace Administracion\Model\Entity;
+
 use \Doctrine\Common\Collections\ArrayCollection;
+
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
@@ -14,13 +16,12 @@ use \Doctrine\Common\Collections\ArrayCollection;
  * @Entity (repositoryClass="Administracion\Model\Entity\RolRepository")
  */
 class Rol {
-
     //put your code here
 
     /**
-      * @Id
-      * @GeneratedValue(strategy="AUTO")
-      * @Column(type="integer") */
+     * @Id
+     * @GeneratedValue(strategy="AUTO")
+     * @Column(type="integer") */
     private $id;
 
     /** @Column(length=150,unique=true) */
@@ -28,16 +29,16 @@ class Rol {
 
     /** @Column(length=400,nullable=true) */
     private $descripcion;
+
     /** @Column(length=150) */
     private $ambito;
 
     /**
-      *
-      * @ManyToMany(targetEntity="Usuario",mappedBy="roles")
-      *
-      **/
+     *
+     * @ManyToMany(targetEntity="Usuario",mappedBy="roles")
+     *
+     * */
     private $usuarios;
-
 
     /**
      * @OneToMany(targetEntity="\Proyectos\Model\Entity\InscripcionProyecto",mappedBy="persona")
@@ -45,18 +46,21 @@ class Rol {
     private $inscripcionesProyecto;
 
     public function __construct() {
-        $this->usuarios= new ArrayCollection();
-        $this->inscripcionesProyecto=new ArrayCollection();
+        $this->usuarios = new ArrayCollection();
+        $this->inscripcionesProyecto = new ArrayCollection();
     }
 
-    public function getInscripcionesProyecto(){
+    public function getInscripcionesProyecto() {
         return $inscripcionesProyecto;
     }
-    public function setInscripcionesProyecto(InscricionProyecto $inscripcionesProyecto){
-        $this->InscricionProyecto=$inscripcionesProyecto;
+
+   
+    public function setInscripcionesProyecto($inscripcionesProyecto) {
+        $this->InscricionProyecto = $inscripcionesProyecto;
     }
-    public function addInscripcionProyecto(InscricionProyecto $inscripcionProyecto){
-        $this->inscripcionProyecto= $inscripcionProyecto;
+
+    public function addInscripcionProyecto(\Proyectos\Model\Entity\InscripcionProyecto $inscripcionProyecto) {
+        $this->inscripcionProyecto = $inscripcionProyecto;
     }
 
     public function getId() {
@@ -82,7 +86,7 @@ class Rol {
     public function setDescripcion($descripcion) {
         $this->descripcion = $descripcion;
     }
-    
+
     public function getAmbito() {
         return $this->ambito;
     }
@@ -99,12 +103,10 @@ class Rol {
         $this->usuarios = $usuarios;
     }
 
-        
-    public function addUsuario(Usuario $usuario){
-        $this->usuarios[]=$usuario;
+    public function addUsuario(Usuario $usuario) {
+        $this->usuarios[] = $usuario;
     }
 
-    
     public function __toString() {
         
     }

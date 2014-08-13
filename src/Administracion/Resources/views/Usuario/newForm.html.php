@@ -26,7 +26,7 @@
         <input class="form-control" type="email" name="email" required>
 
     </div>
-    <?php require_once PERFIL_FORM; ?>
+    <?php //require_once PERFIL_FORM; ?>
     <?php if (isset($_SESSION['usuario']) && $_SESSION['usuario']->esAdministrador()): ?>
         <div class="form-group">
             <label>Rol:</label>

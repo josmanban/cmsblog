@@ -32,9 +32,7 @@ class InscripcionProyectoValidator extends Validator {
         $this->addError(parent::validateNullProperty($this->entity->getEstado(), 'estado'));
         $this->addError(parent::validateNullProperty($this->entity->getRol(), 'rol'));
         $this->checkErrores();
-        $this->addError(self::validateRepeatedInscripcionProyecto($this->entity->getId(),
-                $this->entity->getProyecto()->getId(),
-                $this->entity->getPersona()->getId()));
+        $this->addError(self::validateRepeatedInscripcionProyecto($this->entity->getId(), $this->entity->getProyecto()->getId(), $this->entity->getPersona()->getId()));
         $this->checkErrores();
     }
 
@@ -49,17 +47,18 @@ class InscripcionProyectoValidator extends Validator {
     }
 
     public static function validateRepeatedInscripcionProyecto($idInscripcion, $idProyecto, $idPersona) {
-        
+
         $em = Conexion::getEntityManager();
         $inscripcionProyecto = $em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findOneBy(
                 array(
                     'proyecto' => $idProyecto,
                     'persona' => $idPersona,
-                ));
+        ));
 
         if (!is_null($inscripcionProyecto) && $inscripcionProyecto->getId() != $idInscripcion) {
             return 'Inscripci&oacute;n rechazada. La persona ya esta inscripta al proyecto.';
         }
+
         return false;
     }
 

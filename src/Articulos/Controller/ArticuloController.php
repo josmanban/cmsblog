@@ -48,7 +48,7 @@ class ArticuloController extends Controller {
             $this->em->persist($articulo);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(ARTICULO_NEW, array(
@@ -91,7 +91,7 @@ class ArticuloController extends Controller {
             if (!($usuario->esPublicador() && $articulo->esAutor($usuario)) && !$usuario->esAdministrador() && !$usuario->esAdministradorArticulo())
                 throw new NotAllowedException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(ARTICULO_EDIT, array(
@@ -130,7 +130,7 @@ class ArticuloController extends Controller {
             );
 
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(ARTICULO_INDEX, array(
@@ -176,15 +176,17 @@ class ArticuloController extends Controller {
                 throw new NotFoundEntityException();
             $idArticulo = $_GET['id'];
             $articulo = $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($idArticulo);
-
+            $comentarios = $this->em->getRepository('Articulos\Model\Entity\Comentario')->findCommentariosOrderByDate(
+                    $articulo->getId());
             if (is_null($articulo))
                 throw new NotFoundEntityException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(ARTICULO_SHOW, array(
                     'articulo' => $articulo,
+                    'comentarios' => $comentarios
                 ));
             }
         } catch (\Exception $ex) {
@@ -215,7 +217,7 @@ class ArticuloController extends Controller {
             $this->em->persist($articulo);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(ARTICULO_EDIT, array(
@@ -301,7 +303,7 @@ class ArticuloController extends Controller {
 
 
             if (is_null($articulo->getId())) {
-                           
+
                 $articulo->setFechaHoraPublicacion(new \DateTime());
                 $articulo->setAutor($_SESSION['usuario']);
             }

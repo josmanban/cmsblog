@@ -40,7 +40,7 @@ class UsuarioController extends Controller {
         try {
             if (isset($_SESSION['usuario']) && !$_SESSION['usuario']->esAdministrador())
                 throw new NotAllowedException();
-            
+
             $usuario = $this->bind();
             $perfil = new Perfil();
             $perfil->setAvatar(USER_DEFAULT_AVATAR);
@@ -50,7 +50,7 @@ class UsuarioController extends Controller {
             $this->em->persist($perfil);
             $this->em->flush();
 
-            if (isset($_GET['ajax']) || isset($_POST['ajayx'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(USUARIO_NEW, array(
@@ -89,7 +89,7 @@ class UsuarioController extends Controller {
             if (is_null($usuario))
                 throw new \Librerias\NotFoundEntityException();
 
-            if (isset($_REQUEST['ajayx'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(USUARIO_EDIT, array(
@@ -124,7 +124,7 @@ class UsuarioController extends Controller {
                     $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(USUARIO_INDEX, array(
@@ -142,7 +142,7 @@ class UsuarioController extends Controller {
             if (isset($_SESSION['usuario']) && !$_SESSION['usuario']->esAdministrador())
                 throw new NotAllowedException();
 
-            if (isset($_GET['ajax']) || isset($_POST['ajayx'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(USUARIO_NEW, array(
@@ -178,7 +178,7 @@ class UsuarioController extends Controller {
 
             $_SESSION['usuario'] = $this->em->getRepository('Administracion\Model\Entity\Usuario')
                     ->find($_SESSION['usuario']->getId());
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(USUARIO_EDIT, array(
@@ -212,7 +212,7 @@ class UsuarioController extends Controller {
                     $usuario = $this->em->getRepository('Administracion\Model\Entity\Usuario')->findOneBy(array('nombre' => $nombre, 'password' => $password));
                     if ($usuario != null) {
                         $_SESSION['usuario'] = $usuario;
-                        if (isset($_REQUEST['ajax'])) {
+                        if ($this->isAjax()) {
                             
                         } else
                             header('Location: index.php');
@@ -230,7 +230,7 @@ class UsuarioController extends Controller {
         if (isset($_SESSION['usuario'])) {
             unset($_SESSION['usuario']);
         }
-        if (isset($_REQUEST['ajax'])) {
+        if ($this->isAjax()) {
             
         } else
             header('Location: index.php');

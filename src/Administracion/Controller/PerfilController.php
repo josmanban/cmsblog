@@ -79,7 +79,7 @@ class PerfilController extends Controller {
                 $perfilCompleto = true;
             else
                 $perfilCompleto = false;
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(MI_PERFIL, array('usuario' => $usuario,'perfilCompleto'=>$perfilCompleto));

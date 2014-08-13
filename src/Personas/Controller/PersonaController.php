@@ -55,7 +55,7 @@ class PersonaController extends Controller {
             $this->em->persist($persona);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             }
 
@@ -98,7 +98,7 @@ class PersonaController extends Controller {
             if (!$loguedUser->esAdministrador() && !$persona->esMiUsuario($loguedUser))
                 throw new NotAllowedException();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
 
@@ -135,7 +135,7 @@ class PersonaController extends Controller {
                     $filters, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 // require_once dirname(__FILE__) . '/../Views/Persona/index.html.php';
@@ -188,7 +188,7 @@ class PersonaController extends Controller {
                 throw new NotFoundEntityException('persona');
             if (!$usuario->esAdministrador() && !$persona->esMiUsuario($usuario))
                 throw new NotAllowedException();
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(PERSONA_SHOW, array('persona' => $persona));
@@ -215,7 +215,7 @@ class PersonaController extends Controller {
             $this->em->persist($persona);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             }
             View::render(PERSONA_EDIT, array(
@@ -248,7 +248,7 @@ class PersonaController extends Controller {
     public function bind($persona = null) {
         try {
             /*             * ********** obtengo los datos del formulario********* */
-            $id = $_POST['id'];
+           
             $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
             $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : '';
             $lugarNacimiento = isset($_POST['lugarNacimiento']) ? $_POST['lugarNacimiento'] : '';

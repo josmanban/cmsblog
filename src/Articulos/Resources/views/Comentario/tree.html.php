@@ -1,11 +1,14 @@
-<li>    
-    <?php
-    require COMENTARIO_SHOW;
-    ?>
-    <ul>
-        <?php foreach ($comentario->getHijos() as $comentario): ?>
+
+<ul>
+    <?php foreach ($comentarios as $comentario): ?>
+        <li>
             <?php require COMENTARIO_SHOW; ?>
-        <?php endforeach; ?>
-    </ul>
-</li>
+            <?php Librerias\View::render(
+                    COMENTARIO_TREE,array(
+                        'comentarios'=>$comentario->getHijos()
+                    ));?>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
 

@@ -18,6 +18,8 @@ class PostRepository extends EntityRepository {
             throw $ex;
         }
     }
+    
+    
 
     public function contar($filters = null) {
         try {

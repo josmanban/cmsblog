@@ -43,14 +43,6 @@
         </h3>
     </header>
     <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $articulo)) ?>
-    <ul style="list-style: none" >
-        <?php foreach ($articulo->getComentarios() as $comentario): ?>
-
-            <?php
-            if (is_null($comentario->getPadre()))
-                require COMENTARIO_SHOW_TREE;
-            ?>
-<?php endforeach; ?>
-    </ul>
+    <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios)); ?>
 </article>
 

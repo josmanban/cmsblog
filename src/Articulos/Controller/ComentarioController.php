@@ -48,7 +48,7 @@ class ComentarioController extends Controller {
             $usuario->addComentario($comentario);
             $this->em->flush();
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 
             } else {
                 View::render(COMENTARIO_NEW, array(
@@ -91,7 +91,7 @@ class ComentarioController extends Controller {
                     $this->em->getRepository('Articulos\Model\Entity\Comentario')->find($_GET['padre']) :
                     null;
 
-            if (isset($_REQUEST['ajax'])) {
+            if ($this->isAjax()) {
                 View::render(COMENTARIO_NEW_FORM, array(
                     'autor' => $usuario,
                     'post' => $post,

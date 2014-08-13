@@ -1,30 +1,31 @@
 <?php
+
 // bootstrap.php
 require_once "vendor/autoload.php";
 
-/*use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
+/* use Doctrine\ORM\Tools\Setup;
+  use Doctrine\ORM\EntityManager;
 
-$paths = array(
-	__DIR__."/src/Administracion/Model/Entity",
-	__DIR__."/src/Personas/Model/Entity",
-	__DIR__."/src/Articulos/Model/Entity",
-	__DIR__."/src/Proyectos/Model/Entity",
-	);
-$isDevMode = true;
+  $paths = array(
+  __DIR__."/src/Administracion/Model/Entity",
+  __DIR__."/src/Personas/Model/Entity",
+  __DIR__."/src/Articulos/Model/Entity",
+  __DIR__."/src/Proyectos/Model/Entity",
+  );
+  $isDevMode = true;
 
-// the connection configuration
-$dbParams = array(
-    'driver'   => 'pdo_mysql',
-    'user'     => 'root',
-    'password' => 'perro292',
-    'dbname'   => 'cmsblog',
-);
+  // the connection configuration
+  $dbParams = array(
+  'driver'   => 'pdo_mysql',
+  'user'     => 'root',
+  'password' => 'perro292',
+  'dbname'   => 'cmsblog',
+  );
 
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-$entityManager = EntityManager::create($dbParams, $config);
+  $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+  $entityManager = EntityManager::create($dbParams, $config);
 
-*/
+ */
 
 define('SITE_NAME', 'Fundasoft');
 define('SITE_SLOGAN', 'barrilete barrilete');
@@ -34,14 +35,14 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
 define('DB_PASSWORD', 'Consul011209');
-define('DB_DRIVER','pdo_mysql');
+define('DB_DRIVER', 'pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);
-define('ITEMS_X_PAGE_INDEX',10 );
-define('ITEMS_X_PAGE_VIEWS',10 );
+define('ITEMS_X_PAGE_INDEX', 10);
+define('ITEMS_X_PAGE_VIEWS', 10);
 
 
-/**** Paths donde se guardan imagenes ***/
+/* * ** Paths donde se guardan imagenes ** */
 
 define('POST_IMAGE_URL', SITE_URL . '/img/post/');
 define('POST_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/post/');
@@ -49,7 +50,7 @@ define('PERFIL_IMAGE_URL', SITE_URL . '/img/perfil/');
 define('PERFIL_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/perfil/');
 define('USER_DEFAULT_AVATAR', SITE_URL . '/img/user-image-default.jpg');
 
-/*****************************************************/
+/* * ************************************************** */
 
 /* * ********** PATH DE VISTAS************************** */
 
@@ -101,6 +102,7 @@ define('COMENTARIO_NEW_REPLY', dirname(__FILE__) . '/src/Articulos/Resources/vie
 define('COMENTARIO_NEW_REPLY_FORM', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/newReplyForm.html.php');
 define('COMENTARIO_SHOW', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/show.html.php');
 define('COMENTARIO_SHOW_TREE', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/showTree.html.php');
+define('COMENTARIO_TREE', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/tree.html.php');
 
 define('PROYECTO_NEW', dirname(__FILE__) . '/src/Proyectos/Resources/views/Proyecto/new.html.php');
 define('PROYECTO_NEW_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/Proyecto/newForm.html.php');
@@ -115,9 +117,8 @@ define('PROYECTO_PAGE', dirname(__FILE__) . '/src/Proyectos/Resources/views/Proy
 
 
 define('INSCRIPCION_PROYECTO_NEW', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/new.html.php');
-define('INSCRIPCION_PROYECTO_NEW_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/newForm.html.php');
 define('INSCRIPCION_PROYECTO_EDIT', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/edit.html.php');
-define('INSCRIPCION_PROYECTO_EDIT_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/editForm.html.php');
+define('INSCRIPCION_PROYECTO_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/form.html.php');
 define('INSCRIPCION_PROYECTO_INDEX', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/index.html.php');
 define('INSCRIPCION_PROYECTO_SHOW', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/show.html.php');
 define('INSCRIPCION_PROYECTO_ARCHIVE', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/archive.html.php');
