@@ -257,7 +257,7 @@ class ArticuloController extends Controller {
                 $paginator = new Paginator('articulo', 'portada', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
                 $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
-                        $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+                        $criteria, array('fechaHoraPublicacion' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
                 );
 
                 view::render(ARTICULO_PORTADA, array(

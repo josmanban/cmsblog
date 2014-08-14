@@ -18,7 +18,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <script type="text/javascript">
-    window.onload = function() {
+    $(document).ready(function() {
 
         document.getElementById('newCommentForm').onsubmit = function() {
             var post = this.post.value;
@@ -34,7 +34,7 @@
         CKEDITOR.replace('responderComentarioTexto');
         recargarEventosArbolComentarios();
 
-    };
+    });
 
     function recargarEventosArbolComentarios() {
         var btnRespuestaComentario = document.getElementsByClassName('btnResponderComentario');

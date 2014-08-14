@@ -27,21 +27,28 @@
             <file>file:/home/joseppp/Proyectos/cmsblog/config.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Entity/Persona.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/HTMLPurifier.auto.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/ComentarioRepository.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Validator/InscripcionProyectoValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/composer.json</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/ValidacionesVarias.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/ArticuloRepository.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/page.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/Comentario.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Controller/PersonaController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/FuncionesVarias.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/View.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/HTMLPurifier.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/edit.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Resources/views/Perfil/form.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Articulo/editForm.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/show.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Entity/Sexo.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/archive.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/NotFoundEntityException.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Resources/views/Perfil/new.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/CategoriaArticulo.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/_showTree.html.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/minimal.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Articulo/minimal.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/Paginator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/newForm.html.php</file>
@@ -55,19 +62,23 @@
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Resources/views/Persona/index.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Model/Entity/TipoDocumento.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Controller/ComentarioController.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/new.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/HTMLPurifier.autoload.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/Controller.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/NotAllowedException.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Controller/ArticuloController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Validator/ProyectoValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Controller/InscripcionProyectoController.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/index.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/Proyecto/page.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/Articulo.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Model/Entity/Rol.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Resources/views/Usuario/newForm.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/Proyecto/minimal.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Articulo/page.html.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Entity/ProyectoRepository.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Model/Entity/InscripcionProyecto.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/_tree.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/HTMLPurifier/Bootstrap.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Templates/header.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Resources/views/Persona/page.html.php</file>
@@ -77,9 +88,11 @@
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Comentario/tree.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/index.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/HTMLPurifier.composer.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/PostRepository.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/FrontController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Librerias/MissingParametersException.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Model/Validator/UsuarioValidator.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Proyectos/Resources/views/InscripcionProyecto/form.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Validator/PostValidator.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/css/main.css</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Resources/views/Usuario/editForm.html.php</file>
@@ -87,6 +100,7 @@
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Administracion/Controller/UsuarioController.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Model/Entity/Post.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/src/Personas/Resources/views/Persona/editForm.html.php</file>
+            <file>file:/home/joseppp/Proyectos/cmsblog/src/Articulos/Resources/views/Articulo/newForm.html.php</file>
             <file>file:/home/joseppp/Proyectos/cmsblog/vendor/spekkionu/htmlpurifier/composer.json</file>
         </group>
     </open-files>

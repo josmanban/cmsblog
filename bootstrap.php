@@ -34,7 +34,7 @@ define('SITE_URL', 'http://localhost/sites/cmsblog');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'perro292');
+define('DB_PASSWORD', 'Consul011209');
 define('DB_DRIVER', 'pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);

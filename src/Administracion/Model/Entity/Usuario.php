@@ -74,14 +74,46 @@ class Usuario {
      */
     protected $comentarios;
 
+    /**
+     *
+     * @OneToMany(targetEntity="Mensaje",mappedBy="receptor")
+     * 
+     */
+    protected $mensajesRecibidos;
+
+    /**
+     *
+     * @OneToMany(targetEntity="Mensaje",mappedBy="emisor")
+     * 
+     */
+    protected $mensajesEnviados;
+
     function __construct() {
         $this->roles = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->comentarios = new ArrayCollection();
+        $this->mensajesRecibidos = new ArrayCollection();
+        $this->mensajesEnviados = new ArrayCollection();
     }
 
     public function getNombre() {
         return $this->nombre;
+    }
+
+    public function getMensajesRecibidos() {
+        return $this->mensajesRecibidos;
+    }
+
+    public function getMensajesEnviados() {
+        return $this->mensajesEnviados;
+    }
+
+    public function setMensajesRecibidos($mensajesRecibidos) {
+        $this->mensajesRecibidos = $mensajesRecibidos;
+    }
+
+    public function setMensajesEnviados($mensajesEnviados) {
+        $this->mensajesEnviados = $mensajesEnviados;
     }
 
     public function getComentarios() {
@@ -169,6 +201,14 @@ class Usuario {
         $this->roles[] = $rol;
     }
 
+    public function addMensajeEnviado(Mensaje $mensajeEnviado) {
+        $this->mensajesEnviados[] = $mensajeEnviado;
+    }
+
+    public function addMensajeRecibido(Mensaje $mensajeRecibido) {
+        $this->mensajesRecibidos[] = $mensajeRecibido;
+    }
+
     public function __toString() {
         return $this->nombre;
     }
@@ -212,7 +252,6 @@ class Usuario {
         }
         return false;
     }
-    
 
 }
 

@@ -15,7 +15,7 @@
     }
 </style>
 <script>
-    window.onload = function() {
+    $(document).ready(function() {
 
         var botonesInscripcion = document.getElementsByClassName('inscripcionAction');
         for (var i = 0; i < botonesInscripcion.length; i++) {
@@ -33,16 +33,16 @@
                     },
                     success: function(data) {
                         if (data.mensaje) {
-                            alert(data.mensajes);
+                            alert(JSON.stringify(data.mensaje));
                         }
-                        if (data.errores) {
+                        if (data.errores) {                           
                             alert(JSON.stringify(data.errores));
                         }
                     }
                 });
             }
         }
-    }
+    });
 </script>
 <article>  
     <header>
