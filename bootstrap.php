@@ -34,7 +34,7 @@ define('SITE_URL', 'http://localhost/sites/cmsblog');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'Consul011209');
+define('DB_PASSWORD', 'perro292');
 define('DB_DRIVER', 'pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);
@@ -103,6 +103,7 @@ define('COMENTARIO_NEW_REPLY_FORM', dirname(__FILE__) . '/src/Articulos/Resource
 define('COMENTARIO_SHOW', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/show.html.php');
 define('COMENTARIO_SHOW_TREE', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/showTree.html.php');
 define('COMENTARIO_TREE', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/tree.html.php');
+define('COMENTARIO_AJAX', dirname(__FILE__) . '/src/Articulos/Resources/views/Comentario/ajax.html.php');
 
 define('PROYECTO_NEW', dirname(__FILE__) . '/src/Proyectos/Resources/views/Proyecto/new.html.php');
 define('PROYECTO_NEW_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/Proyecto/newForm.html.php');

@@ -32,7 +32,7 @@
                         alert("Error en la solicitud.\nIntentalo mas tarde.");
                     },
                     success: function(data) {
-                        if (data.mensajes) {
+                        if (data.mensaje) {
                             alert(data.mensajes);
                         }
                         if (data.errores) {
@@ -90,6 +90,8 @@
             </h3>
         </header>    
         <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $proyecto)) ?>
-        <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios)); ?>
+        <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios, 'conId' => true)); ?>
+        <?php require_once COMENTARIO_AJAX; ?>
+
     </article>
 <?php endif; ?>

@@ -41,8 +41,11 @@
         <h3>
             Comentarios:
         </h3>
-    </header>
-    <?php \Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $articulo)) ?>
-    <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios)); ?>
+    </header>    
+    <?php Librerias\View::render(COMENTARIO_NEW_FORM, array('post' => $articulo)) ?>  
+    <?php Librerias\View::render(COMENTARIO_TREE, array('comentarios' => $comentarios, 'conId' => true)); ?>
+    <?php require_once COMENTARIO_AJAX; ?>
+
+
 </article>
 

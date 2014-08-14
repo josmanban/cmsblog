@@ -49,14 +49,29 @@ class ComentarioController extends Controller {
             $this->em->flush();
 
             if ($this->isAjax()) {
-                
+                echo json_encode(array(
+                    'mensaje' => 'Comentario agregado¡¡'
+                ));
+                die();
             } else {
                 View::render(COMENTARIO_NEW, array(
                     'mensajesExito' => array('Comentario creado con exito'),
                     'post' => $post,
                 ));
             }
+        } catch (\Librerias\InvalidFormDataException $ex) {
+            if ($this->isAjax()) {
+                echo json_encode(array('errores' => $ex->getErrores()));
+                die();
+            }
+            View::render(ERROR, array(
+                'errores' => array($ex->getMessage()),
+            ));
         } catch (\Exception $ex) {
+            if ($this->isAjax()) {
+                echo json_encode(array('errores' => $ex->getMessage()));
+                die();
+            }
             View::render(ERROR, array(
                 'errores' => array($ex->getMessage()),
             ));
@@ -73,6 +88,27 @@ class ComentarioController extends Controller {
 
     public function indexAction() {
         
+    }
+
+    public function treeAction() {
+        try {
+            if (!isset($_GET['id']))
+                throw new NotFoundEntityException('Post');
+            $comentarios = $this->em->getRepository('Articulos\Model\Entity\Comentario')->findCommentariosOrderByDate(
+                    $_GET['id']);
+
+            if ($this->isAjax()) {
+                View::render(COMENTARIO_TREE, array(
+                    'comentarios' => $comentarios,
+                    'conId' => true,
+                ));
+            }
+            return;
+        } catch (\Exception $ex) {
+            View::render(ERROR, array(
+                'errores' => array($ex->getMessage()),
+            ));
+        }
     }
 
     public function newAction() {
@@ -121,7 +157,7 @@ class ComentarioController extends Controller {
     public function bind($comentario = null) {
         if (is_null($comentario))
             $comentario = new Comentario();
-        $id = $_POST['id'];
+        //$id = $_POST['id'];
         $idPost = isset($_POST['post']) ? $_POST['post'] : -1;
         $idPadre = isset($_POST['padre']) ? $_POST['padre'] : -1;
 
@@ -132,11 +168,10 @@ class ComentarioController extends Controller {
 
         $estadoActivo = $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO'));
 
-        //$comentario->setId($id);
         $comentario->setTexto($texto);
         $comentario->setPadre($padre);
         $comentario->setPost($post);
-        if ($id == '-1') {
+        if (is_null($comentario->getId())) {
             $comentario->setFechaHora(new \DateTime());
             $comentario->setAutor($_SESSION['usuario']);
         }

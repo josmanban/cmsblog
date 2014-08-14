@@ -174,13 +174,17 @@ class ProyectoController extends Controller {
                 throw new MissingParametersException('id proyecto');
             $id = $_GET['id'];
             $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($id);
+            $comentarios = $this->em->getRepository('Articulos\Model\Entity\Comentario')->findCommentariosOrderByDate(
+                    $proyecto->getId());
             if (is_null($proyecto))
                 throw new NotFoundEntityException();
             if ($this->isAjax()) {
                 
-            } else {
+            } 
+            else {
                 View::render(PROYECTO_SHOW, array(
-                'proyecto' => $proyecto,
+                    'proyecto' => $proyecto,
+                    'comentarios'=>$comentarios
                 ));
             }
         } catch (\Exception $ex) {
@@ -273,7 +277,7 @@ class ProyectoController extends Controller {
             if (is_null($proyecto))
                 $proyecto = new Proyecto();
 
-            
+
             $titulo = isset($_POST['titulo']) ? $_POST['titulo'] : '';
             $texto = isset($_POST['texto']) ? $_POST['texto'] : '';
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : '-1';

@@ -23,9 +23,11 @@
 
         <?php if (isset($_SESSION['usuario'])): ?>
             <?php if ($_SESSION['usuario']->esNormal()): ?>
-                <div><a style="float:right"href="index.php?controller=comentario&action=new&post=<?php echo $comentario->getPost()->getId() ?>&padre=<?php
-                    echo $comentario->getId();
-                    ?>" class="btn btn-default">Responder</a></div>
+                <div><a
+                        id="<?php echo $comentario->getPost()->getId() . "@" . $comentario->getId(); ?>"
+                        style="float:right"href="index.php?controller=comentario&action=new&post=<?php echo $comentario->getPost()->getId() ?>&padre=<?php
+                        echo $comentario->getId();
+                        ?>" class="btn btn-default btnResponderComentario">Responder</a></div>
                 <?php endif; ?><?php endif; ?>
     </div>
 </div>
