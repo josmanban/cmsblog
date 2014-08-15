@@ -3,30 +3,6 @@
 // bootstrap.php
 require_once "vendor/autoload.php";
 
-/* use Doctrine\ORM\Tools\Setup;
-  use Doctrine\ORM\EntityManager;
-
-  $paths = array(
-  __DIR__."/src/Administracion/Model/Entity",
-  __DIR__."/src/Personas/Model/Entity",
-  __DIR__."/src/Articulos/Model/Entity",
-  __DIR__."/src/Proyectos/Model/Entity",
-  );
-  $isDevMode = true;
-
-  // the connection configuration
-  $dbParams = array(
-  'driver'   => 'pdo_mysql',
-  'user'     => 'root',
-  'password' => 'perro292',
-  'dbname'   => 'cmsblog',
-  );
-
-  $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-  $entityManager = EntityManager::create($dbParams, $config);
-
- */
-
 define('SITE_NAME', 'Fundasoft');
 define('SITE_SLOGAN', 'barrilete barrilete');
 define('SITE_URL', 'http://localhost/sites/cmsblog');
@@ -128,6 +104,7 @@ define('INSCRIPCION_PROYECTO_NEW', dirname(__FILE__) . '/src/Proyectos/Resources
 define('INSCRIPCION_PROYECTO_EDIT', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/edit.html.php');
 define('INSCRIPCION_PROYECTO_FORM', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/form.html.php');
 define('INSCRIPCION_PROYECTO_INDEX', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/index.html.php');
+define('INSCRIPCION_PROYECTO_MIS_INSCRIPCIONES', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/misInscripciones.html.php');
 define('INSCRIPCION_PROYECTO_SHOW', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/show.html.php');
 define('INSCRIPCION_PROYECTO_ARCHIVE', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/archive.html.php');
 define('INSCRIPCION_PROYECTO_MINIMAL', dirname(__FILE__) . '/src/Proyectos/Resources/views/InscripcionProyecto/minimal.html.php');

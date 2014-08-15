@@ -174,6 +174,44 @@ class InscripcionProyectoController extends Controller {
         }
     }
 
+    public function misInscripcionesAction() {
+        try {
+            if (isset($_SESSION['usuario']))
+                $usuario = $_SESSION['usuario'];
+            else
+                throw new NotLoggedException();
+            if (is_null($usuario->getPersona()))
+                throw new \Exception('Completa tus datos personales.');
+
+            if (isset($_GET['page']))
+                $page = $_GET['page'];
+            else
+                $page = 1;
+
+
+            $criteria = ['persona' => $usuario->getPersona()->getId()];
+            $numItems = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->contar($criteria);
+            $paginator = new Paginator('inscripcionProyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+            $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
+                    $criteria, array('fechaInscripcion' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+            );
+
+            if ($this->isAjax()) {
+                
+            } else {
+                View::render(INSCRIPCION_PROYECTO_MIS_INSCRIPCIONES, array(
+                    'inscripcionesProyecto' => $inscripcionesProyecto,
+                    'paginator' => $paginator,
+                ));
+            }
+        } catch (\Exception $ex) {
+            View::render(ERROR, array(
+                'errores' => array($ex->getMessage()),
+            ));
+        }
+    }
+
     public function newAction() {
         try {
             if (isset($_SESSION['usuario']))
@@ -223,7 +261,8 @@ class InscripcionProyectoController extends Controller {
                 throw new NotAllowedException();
             if ($this->isAjax()) {
                 
-            } else
+            }
+            else
                 View::render(INSCRIPCION_PROYECTO_SHOW, array(
                     'inscripcionProyecto' => $inscripcionProyecto,
                 ));
@@ -244,7 +283,8 @@ class InscripcionProyectoController extends Controller {
 
             if ($this->isAjax()) {
                 
-            } else
+            }
+            else
                 View::render(INSCRIPCION_PROYECTO_ARCHIVE, array(
                     'inscripcionesProyecto' => $inscripcionesProyecto,
                 ));

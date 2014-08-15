@@ -5,6 +5,7 @@ require_once CONTENT_ONE_COLUMN;
 ?>
 <div>
     <h2>Usuarios</h2>
+    <?php require_once MENSAJES;?>
     <table class="table table-hover table-responsive table-striped table-condensed">
         <thead class="">
         <th>
@@ -81,6 +82,6 @@ require_once CONTENT_ONE_COLUMN;
 
 <?php
 require_once PAGINATOR;
-require_once MENSAJES;
+
 require_once FOOTER_ONE_COLUMN;
 ?>

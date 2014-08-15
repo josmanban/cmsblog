@@ -180,11 +180,10 @@ class ProyectoController extends Controller {
                 throw new NotFoundEntityException();
             if ($this->isAjax()) {
                 
-            } 
-            else {
+            } else {
                 View::render(PROYECTO_SHOW, array(
                     'proyecto' => $proyecto,
-                    'comentarios'=>$comentarios
+                    'comentarios' => $comentarios
                 ));
             }
         } catch (\Exception $ex) {
@@ -246,14 +245,18 @@ class ProyectoController extends Controller {
 
 
             $criteria = [];
-            if (isset($_REQUEST['tipo'])) {
-                $criteria['tipo'] = $_REQUEST['tipo'];
+            $tipo = isset($_GET['tipo']) ? $_GET['tipo'] : "";
+            if (!empty($tipo)) {
+                $tipoProyecto = $this->em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findOneBy(
+                        array('nombre' => $tipo));
+                if (!is_null($tipoProyecto))
+                    $criteria['tipo'] = $tipoProyecto->getId();
             }
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->contar($criteria);
-            $paginator = new Paginator('proyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('proyecto', 'archive', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $proyectos = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findBy(
-                    $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
+                    $criteria, array('fechaHoraPublicacion' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
             );
 
             if ($this->isAjax()) {

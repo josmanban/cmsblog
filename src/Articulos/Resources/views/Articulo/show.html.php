@@ -5,10 +5,12 @@ require_once CONTENT;
 
 
 <div>
-    <?php require ARTICULO_PAGE; ?>
+    <?php
+    require_once MENSAJES;
+    require ARTICULO_PAGE;
+    ?>
 </div>
 <?php
-require_once MENSAJES;
 require_once ASIDE;
 require_once FOOTER;
 ?>

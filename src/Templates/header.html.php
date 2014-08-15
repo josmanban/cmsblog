@@ -24,7 +24,7 @@
         <script>
             // Replace the <textarea id="editor1"> with a CKEditor
             // instance, using default configuration.
-          //  CKEDITOR.replace('editor1');
+            //  CKEDITOR.replace('editor1');
         </script>
     </head>
     <body>   
@@ -46,13 +46,24 @@
                     <ul class="nav navbar-nav pull-right ">
                         <li><a href="index.php">Inicio</a></li>
                         <li><a href="index.php?controller=articulo&action=portada">Blog</a></li>
-                        <li><a href="index.php?controller=proyecto&action=archive&tipoProyecto=desarrollo">Proyecto/Desarrollo</a></li>
-                        <li><a href="index.php?controller=proyecto&action=archive&tipoProyecto=charla">Charlas</a></li>
-                        <li><a href="index.php?controller=proyecto&action=archive&tipoProyecto=curso">Cursos</a></li>
+                        <li><a href="index.php?controller=proyecto&action=archive&tipo=desarrollo">Proyecto/Desarrollo</a></li>
+                        <li><a href="index.php?controller=proyecto&action=archive&tipo=charla">Charlas</a></li>
+                        <li><a href="index.php?controller=proyecto&action=archive&tipo=curso">Cursos</a></li>
                         <li><a href="index.php?controller=pagina&action=galeria">Galeria</a></li>
                         <li><a href="index.php?controller=pagina&action=nosotros">Nosotros</a></li>
                         <li><a href="index.php?controller=pagina&action=contacto">Contacto</a></li>   
                         <?php if (isset($_SESSION['usuario'])): ?>
+                            <li>
+                                <a href="index.php?controller=mensaje&action=recibidos">
+                                    <span class="glyphicon glyphicon-comment"></span> 
+                                    <?php
+                                    $numMensajesNoLeidos = (new \Administracion\Controller\MensajeController())->getNumeroMensajesNoLeidos();
+                                    if ($numMensajesNoLeidos > 0):
+                                        ?>
+                                        <span class="badge"><?php echo $numMensajesNoLeidos; ?></span>                               
+                                    <?php endif; ?>
+                                </a>
+                            </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
 
@@ -78,6 +89,9 @@
                                             <a href="index.php?controller=persona&action=new">
                                                 Completar datos personales</a>
                                         <?php endif; ?>
+                                    </li>
+                                    <li>
+                                        <a href="index.php?controller=inscripcionProyecto&action=misInscripciones">Mis Inscripciones</a>
                                     </li>
                                     <li class="divider"></li>                                    
                                     <li>

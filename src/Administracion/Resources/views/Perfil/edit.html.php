@@ -6,6 +6,7 @@ require_once CONTENT;
 <div>
     <h2>Editar datos cuenta</h2>
     <?php
+    require_once MENSAJES;
     require_once PERFIL_EDIT_FORM;
     ?>
 </div>

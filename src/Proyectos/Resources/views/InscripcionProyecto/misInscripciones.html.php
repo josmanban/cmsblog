@@ -1,5 +1,5 @@
 <?php
-require_once HEADER_ADMIN;
+require_once HEADER;
 require_once CONTENT;
 ?>
 <div>
@@ -31,7 +31,7 @@ require_once CONTENT;
             Estado
         </th>
         <th>
-            Acción
+
         </th>      
         </thead>
 
@@ -60,12 +60,9 @@ require_once CONTENT;
                 <td>
                     <?php echo $inscripcionProyecto->getEstado()->getNombre(); ?>
                 </td>
-                <td>
-                    <a class="btn btn-success" href="index.php?controller=inscripcionProyecto&action=edit&id=<?php echo $inscripcionProyecto->getId(); ?>">
-                        Editar
-                    </a>
+                <td>              
                     <a class="btn btn-danger" href="#">
-                        Eliminar
+                        Cancelar
                     </a>
                 </td>
 

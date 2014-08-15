@@ -5,6 +5,7 @@ require_once CONTENT_ONE_COLUMN;
 ?>
 <div>
     <h2>Perfiles</h2>
+    <?php require_once MENSAJES;?>
     <table class="table table-hover table-responsive table-striped table-condensed">
         <thead class="">
         <th>

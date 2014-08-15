@@ -5,6 +5,7 @@ require_once CONTENT;
 ?>
 <div>
     <h2>Articulos</h2>
+    <?php require_once MENSAJES;?>
     <table class="table table-hover table-responsive table-striped table-condensed">
         <thead class="">
         <th>
@@ -85,7 +86,7 @@ require_once CONTENT;
 
 <?php
 require_once PAGINATOR;
-require_once MENSAJES;
+
 require_once ASIDE;
 require_once FOOTER;
 ?>

@@ -21,11 +21,11 @@
         <script type="text/javascript" src="js/bootstrap.min.js"></script>       
         <script type="text/javascript" src="vendor/ckeditor/ckeditor/ckeditor.js" ></script>
         <script type="text/javascript" src="vendor/ckeditor/ckeditor/config.js"></script>
-        
+
         <script>
             // Replace the <textarea id="editor1"> with a CKEditor
             // instance, using default configuration.
-          //  CKEDITOR.replace('editor1');
+            //  CKEDITOR.replace('editor1');
         </script>
 
     </head>
@@ -141,7 +141,10 @@
                                             <a href="index.php?controller=persona&action=new">
                                                 Completar datos personales</a>
                                         <?php endif; ?>
-                                    </li>                                   
+                                    </li> 
+                                    <li>
+                                        <a href="index.php?controller=inscripcionProyecto&action=misInscripciones">Mis Inscripciones</a>
+                                    </li>
                                     <li class="divider"></li>                                    
                                     <li>
                                         <a href="index.php?controller=pagina&action=admin">Staff</a>
@@ -160,7 +163,7 @@
                                     echo USER_DEFAULT_AVATAR;
                                 ?>" alt="">
                             </li>                     
-                                 <?php endif; ?>
+                        <?php endif; ?>
                     </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->

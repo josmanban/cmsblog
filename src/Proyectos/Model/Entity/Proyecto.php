@@ -143,7 +143,7 @@ class Proyecto extends Post {
         if (is_null($u->getPersona()))
             return false;
         foreach ($this->getInscripcionesProyecto() as $inscripcion) {
-            if ($inscripcion->getPersona()->getId() == $u->getPersona()->getId())
+            if ($inscripcion->getPersona()->getId() == $u->getPersona()->getId() && strtoupper($inscripcion->getEstado()->getNombre()) != 'PENDIENTE' && strtoupper($inscripcion->getEstado()->getNombre()) != 'DESHABILITADO' && strtoupper($inscripcion->getEstado()->getNombre()) != 'ELIMINADO' && strtoupper($inscripcion->getEstado()->getNombre()) != 'RECHAZADO')
                 return true;
         }
         return false;

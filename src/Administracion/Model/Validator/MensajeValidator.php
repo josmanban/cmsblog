@@ -34,19 +34,21 @@ class MensajeValidator extends Validator {
     }
 
     protected function validateEmptyFields() {
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['name'] != '')
-            $this->addError(self::validateImage('avatar', 'avatar', 90000));
+        $this->addError(self::validateEmptyField($this->entity->getAsunto(), 'asunto'));
+        $this->addError(self::validateEmptyField($this->entity->getTexto(), 'mensaje'));
         $this->checkErrores();
     }
 
     protected function validateSpecialFields() {
-        $this->addError($this->validateNullProperty($this->entity->getUsuario(), 'usuario'));
+        $this->addError($this->validateNullProperty($this->entity->getEmisor(), 'emisor'));
+        $this->addError($this->validateNullProperty($this->entity->getReceptor(), 'receptor'));
+        $this->addError($this->validateNullProperty($this->entity->getEstado(), 'estado'));
         $this->checkErrores();
     }
 
     public function cleanFields() {
-        $this->entity->setAvatar(self::clean($this->entity->getAvatar()));
-        $this->entity->getDescripcion(self::clean($this->entity->getDescripcion()));
+        $this->entity->setAvatar(self::clean($this->entity->getAsunto()));
+        $this->entity->getDescripcion(self::clean($this->entity->getTexto()));
     }
 
 }

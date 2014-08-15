@@ -1,14 +1,18 @@
 <?php
 
-namespace Administracion\Model\Controller;
+namespace Administracion\Controller;
 
 use Librerias\Controller;
 use Librerias\InvalidFormDataException;
 use Librerias\NotAllowedException;
+use Librerias\NotLoggedException;
 use Librerias\NotFoundEntityException;
 use Librerias\Conexion;
 use Librerias\MissingParametersException;
 use Librerias\Paginator;
+use Librerias\View;
+use Administracion\Model\Entity\Mensaje;
+use Administracion\Model\Validator\MensajeValidator;
 
 /*
  * To change this template, choose Tools | Templates
@@ -33,7 +37,7 @@ class MensajeController extends Controller {
             if (is_null($entity))
                 $entity = new Mensaje();
 
-            $idReceptor = isset($_POST['receptor']) ? $_POST['receptor'] : -1;
+            $nombreReceptor = isset($_POST['receptor']) ? $_POST['receptor'] : "";
             $idEmisor = isset($_POST['emisor']) ? $_POST['emisor'] : -1;
 
             $idEstado = isset($_POST['estado']) ? $_POST['estado'] : -1;
@@ -43,8 +47,10 @@ class MensajeController extends Controller {
 
             $idPadre = isset($_POST['padre']) ? $_POST['padre'] : -1;
 
-            $emisor = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idReceptor);
-            $receptor = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idEmisor);
+            $emisor = $this->em->getRepository('Administracion\Model\Entity\Usuario')->find($idEmisor);
+            $receptor = $this->em->getRepository('Administracion\Model\Entity\Usuario')->findOneBy(array(
+                'nombre' => $nombreReceptor
+            ));
             $estado = $idEstado != -1 ? $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado) :
                     $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'ACTIVO'));
             $padre = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->find($idPadre);
@@ -60,8 +66,8 @@ class MensajeController extends Controller {
             $entity->setPadre($padre);
             $entity->setEstado($estado);
 
-            /* $validator = new \Administracion\Model\Validator\MensajeValidator($entity);
-              $validator->validate(); */
+            $validator = new MensajeValidator($entity);
+            $validator->validate();
             return $entity;
         } catch (\Exception $ex) {
             throw $ex;
@@ -71,7 +77,9 @@ class MensajeController extends Controller {
     public function createAction() {
         try {
             if (isset($_SESSION['usuario']))
-                throw new NotAllowedException();
+                $usuario = $_SESSION['usuario'];
+            else
+                throw new NotLoggedException();
 
             $mensaje = $this->bind();
             $this->em->persist($mensaje);
@@ -88,6 +96,7 @@ class MensajeController extends Controller {
             }
         } catch (InvalidFormDataException $ex) {
             View::render(MENSAJE_NEW, array(
+                'padre' => $this->em->getRepository('Administracion\Model\Entity\Mensaje')->find($_POST['padre']),
                 'errores' => $ex->getErrores(),
                 'estado' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(
                         array('nombre' => 'ACTIVO')
@@ -124,7 +133,7 @@ class MensajeController extends Controller {
             $filters = ['emisor' => $usuario->getId(),
                 'estado' => $desactivo->getId()];
 
-            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensajes')->contar($filters);
+            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
             $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
@@ -134,8 +143,9 @@ class MensajeController extends Controller {
                 
             } else {
                 View::render(MENSAJE_MAIL, array(
-                    'usuarios' => $mensajes,
+                    'mensajes' => $mensajes,
                     'paginator' => $paginator,
+                    'tab' => 'papelera'
                 ));
             }
         } catch (\Exception $ex) {
@@ -162,7 +172,7 @@ class MensajeController extends Controller {
             $filters = ['receptor' => $usuario->getId(),
                 'estado' => $activo->getId()];
 
-            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensajes')->contar($filters);
+            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
             $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
@@ -174,6 +184,7 @@ class MensajeController extends Controller {
                 View::render(MENSAJE_MAIL, array(
                     'mensajes' => $mensajes,
                     'paginator' => $paginator,
+                    'tab' => 'recibidos'
                 ));
             }
         } catch (\Exception $ex) {
@@ -181,7 +192,7 @@ class MensajeController extends Controller {
         }
     }
 
-    public function enviadosActions() {
+    public function enviadosAction() {
         try {
             if (isset($_SESSION['usuario']))
                 $usuario = $_SESSION['usuario'];
@@ -200,7 +211,7 @@ class MensajeController extends Controller {
             $filters = ['emisor' => $usuario->getId(),
                 'estado' => $activo->getId()];
 
-            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensajes')->contar($filters);
+            $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
             $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
@@ -212,6 +223,7 @@ class MensajeController extends Controller {
                 View::render(MENSAJE_MAIL, array(
                     'mensajes' => $mensajes,
                     'paginator' => $paginator,
+                    'tab' => 'enviados'
                 ));
             }
         } catch (\Exception $ex) {
@@ -222,12 +234,21 @@ class MensajeController extends Controller {
     public function newAction() {
         try {
             if (isset($_SESSION['usuario']))
-                throw new NotAllowedException();
+                $usuario = $_SESSION['usuario'];
+            else
+                throw new NotLoggedException();
+
+            $idPadre = isset($_GET['res']) ? $_GET['res'] : -1;
+            $padre = $this->em->getRepository(
+                            'Administracion\Model\Entity\Mensaje')->find($idPadre);
+
+
 
             if ($this->isAjax()) {
                 
             } else {
                 View::render(MENSAJE_NEW, array(
+                    'padre' => $padre,
                     'estado' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(
                             array('nombre' => 'ACTIVO')
                 )));
@@ -272,6 +293,30 @@ class MensajeController extends Controller {
 
     public function setPapelera() {
         
+    }
+
+    public function getNumeroMensajesNoLeidos() {
+        try {
+            if (isset($_SESSION['usuario']))
+                $usuario = $_SESSION['usuario'];
+            else
+                throw new NotLoggedException();
+
+            return $this->em->getRepository('Administracion\Model\Entity\Mensaje')->countMensajesNoLeidos(
+                            $usuario);
+
+            if ($this->isAjax()) {
+                
+            } else {
+                View::render(MENSAJE_MAIL, array(
+                    'mensajes' => $mensajes,
+                    'paginator' => $paginator,
+                    'tab' => 'enviados'
+                ));
+            }
+        } catch (\Exception $ex) {
+            //View::render(ERROR, array('errores' => array($ex->getMessage())));
+        }
     }
 
 }

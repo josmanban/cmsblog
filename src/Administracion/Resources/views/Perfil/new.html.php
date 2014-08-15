@@ -9,13 +9,14 @@ require_once CONTENT;
 
     </h2>
     <?php
+    require_once MENSAJES;
     require_once PERFIL_NEW_FORM;
     ?>
 </div>
 
 
 <?php
-require_once MENSAJES;
+
 require_once ASIDE;
 require_once FOOTER;
 ?>

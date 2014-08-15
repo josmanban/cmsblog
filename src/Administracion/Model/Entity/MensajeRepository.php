@@ -16,6 +16,18 @@ class MensajeRepository extends EntityRepository {
         }
     }
 
+    public function countMensajesNoLeidos($usuario) {
+        try {
+            $query = $this->_em->createQuery("SELECT COUNT(m.id) FROM Administracion\Model\Entity\Mensaje m 
+                WHERE m.leido=:leido AND m.receptor=:receptor");
+            $query->setParameter('leido', false);
+            $query->setParameter('receptor', $usuario);
+            return $query->getSingleScalarResult();
+        } catch (\Exception $ex) {
+            throw $ex;
+        }
+    }
+
 }
 
 ?>
