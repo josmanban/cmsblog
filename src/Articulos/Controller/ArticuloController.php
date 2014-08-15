@@ -53,14 +53,14 @@ class ArticuloController extends Controller {
             } else {
                 View::render(ARTICULO_NEW, array(
                     'mensajesExito' => array('Articulo creado con éxito.'),
-                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(ARTICULO_NEW, array(
                 'errores' => $ex->getErrores(),
-                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                 'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
             ));
         } catch (\Exception $ex) {
@@ -95,7 +95,7 @@ class ArticuloController extends Controller {
                 
             } else {
                 View::render(ARTICULO_EDIT, array(
-                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'articulo' => $articulo,
                 ));
@@ -113,7 +113,7 @@ class ArticuloController extends Controller {
                 $usuario = $_SESSION['usuario'];
             else
                 throw new NotLoggedException();
-            if (!$usuario->esAdministradorArticulo() && !$usuario->esPublicador())
+            if (!$usuario->esAdministrador() && !$usuario->esAdministradorArticulo() && !$usuario->esPublicador())
                 throw new NotAllowedException();
             if (isset($_GET['page']))
                 $page = $_GET['page'];
@@ -158,7 +158,7 @@ class ArticuloController extends Controller {
                 
             } else {
                 View::render(ARTICULO_NEW, array(
-                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 ));
             }
@@ -222,7 +222,7 @@ class ArticuloController extends Controller {
             } else {
                 View::render(ARTICULO_EDIT, array(
                     'mensajesExito' => array('Articulo editado con éxito.'),
-                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                    'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                     'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                     'articulo' => $articulo,
                 ));
@@ -230,7 +230,7 @@ class ArticuloController extends Controller {
         } catch (InvalidFormDataException $ex) {
             View::render(ARTICULO_EDIT, array(
                 'errores' => $ex->getErrores(),
-                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findActivos(),
+                'categorias' => $this->em->getRepository('Articulos\Model\Entity\CategoriaArticulo')->findAll(),
                 'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
                 'articulo' => $this->em->getRepository('Articulos\Model\Entity\Articulo')->find($_POST['id']),
             ));

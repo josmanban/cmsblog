@@ -58,23 +58,19 @@ class PaginaController extends Controller {
         try {
             if (!isset($_SESSION['usuario']))
                 throw new NotLoggedException();
-            $usuario = $_SESSION['usuario'];      
-            //$usuario = Conexion::getEntityManager()->getRepository(
-              //              'Administracion\Model\Entity\Usuario')->find($_SESSION['usuario']->getId());
-            /* $b= $a->getRoles();
-              $c= 0;
-              foreach ($b as $rol){
-              $c++;
-              } */
-
+            $usuario = $_SESSION['usuario'];
             if (!$usuario->esAdministrador() && !$usuario->esAdministradorArticulo() && !$usuario->esAdministradorProyecto() && !$usuario->esPublicador() && !$usuario->esPublicadorProyecto())
                 throw new NotAllowedException();
-            View::render(PAGINA_ADMIN, array(
-                'usuario'=>$usuario
-            ));
+            $_SESSION['admin'] = true;
+            View::render(PAGINA_ADMIN, array());
         } catch (\Exception $ex) {
             View::render(ERROR, array('errores' => array($ex->getMessage())));
         }
+    }
+
+    public function closeAdminAction() {
+        $_SESSION['admin'] = false;
+        header('Location: index.php');
     }
 
     public function nosotrosAction() {

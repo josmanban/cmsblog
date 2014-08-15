@@ -32,10 +32,7 @@ class CategoriaArticulo {
      */
     private $articulos;
 
-    /**
-     * @ManyToOne(targetEntity="\Administracion\Model\Entity\Estado",inversedBy="categoriasArticulo")
-     */
-    private $estado;
+   
 
     public function __construct() {
         $this->articulos=new ArrayCollection();   

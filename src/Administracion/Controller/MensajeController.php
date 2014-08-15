@@ -134,7 +134,7 @@ class MensajeController extends Controller {
                 'estado' => $desactivo->getId()];
 
             $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
-            $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
+            $paginator = new Paginator('mensaje', 'papelera', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
             );
@@ -173,7 +173,7 @@ class MensajeController extends Controller {
                 'estado' => $activo->getId()];
 
             $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
-            $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
+            $paginator = new Paginator('mensaje', 'recibidos', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
             );
@@ -212,7 +212,7 @@ class MensajeController extends Controller {
                 'estado' => $activo->getId()];
 
             $numItems = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->contar($filters);
-            $paginator = new Paginator('mensaje', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
+            $paginator = new Paginator('mensaje', 'enviados', $page, ITEMS_X_PAGE_INDEX, $numItems, $filters);
             $mensajes = $this->em->getRepository('Administracion\Model\Entity\Mensaje')->findBy(
                     $filters, array('fechaHora' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()
             );

@@ -81,7 +81,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministradorArticulo() || $_SESSION['usuario']->esPublicador()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministrador() ||$_SESSION['usuario']->esAdministradorArticulo() || $_SESSION['usuario']->esPublicador()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Articulos<b class="caret"></b></a>
@@ -95,7 +95,7 @@
                                     </ul>                                        
                                 </li>
                             <?php endif; ?>
-                            <?php if ($_SESSION['usuario']->esAdministradorProyecto() || $_SESSION['usuario']->esPublicadorProyecto()): ?>
+                            <?php if ($_SESSION['usuario']->esAdministrador() ||$_SESSION['usuario']->esAdministradorProyecto() || $_SESSION['usuario']->esPublicadorProyecto()): ?>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                         Proyectos<b class="caret"></b></a>
@@ -147,7 +147,7 @@
                                     </li>
                                     <li class="divider"></li>                                    
                                     <li>
-                                        <a href="index.php?controller=pagina&action=admin">Staff</a>
+                                        <a href="index.php?controller=pagina&action=closeAdmin">Cerrar Admin</a>
                                     </li>
                                     <li class="divider"></li>                                    
                                     <li>

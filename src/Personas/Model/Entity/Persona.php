@@ -173,7 +173,7 @@ class Persona {
     }
 
     public function __toString() {
-        
+        return $this->apellido.', '.$this->nombre;
     }
 
 }

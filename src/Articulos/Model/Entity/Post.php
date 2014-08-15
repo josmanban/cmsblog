@@ -61,7 +61,7 @@ class Post {
     protected $estado;
 
     /**
-     * @OneToMany(targetEntity="Comentario",mappedBy="post")
+     * @OneToMany(targetEntity="Comentario",mappedBy="post",cascade={"persist"})
      */
     protected $comentarios;
 

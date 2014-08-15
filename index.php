@@ -6,10 +6,14 @@ require_once __DIR__ . '/bootstrap.php';
 
 use Librerias\Conexion;
 
+//require_once __DIR__ . '/DbDatosIniciales.php';
+//require_once __DIR__ . '/DbDatosDePrueba.php';
+
+
 try {
-    //$usuarioController = new UsuarioController();
+
     session_start();
-    //ValidacionesVarias::my_session_start();
+//ValidacionesVarias::my_session_start();
     if (isset($_SESSION['usuario'])) { //&& $_SESSION['usuario'] instanceof Usuario) {
         $em = Librerias\Conexion::getEntityManager();
         $usuario = $_SESSION['usuario'];
@@ -17,8 +21,9 @@ try {
         $usuario = $em->merge($usuario);
         $_SESSION['usuario'] = $usuario;
     }
+
     $frontController = new Librerias\FrontController();
     $frontController->run();
 } catch (Exception $ex) {
     echo $ex->getMessage();
-} 
+}

@@ -1,6 +1,5 @@
 <?php
-
-isset($_SESSION['usuario'])&& $_SESSION['usuario']->esAdministrador()?require_once HEADER_ADMIN:  require_once HEADER;
+isset($_SESSION['admin']) && $_SESSION['admin'] == true ? require_once HEADER_ADMIN : require_once HEADER;
 require_once CONTENT;
 ?>
 <div>
@@ -16,7 +15,6 @@ require_once CONTENT;
 
 
 <?php
-
 require_once ASIDE;
 require_once FOOTER;
 ?>

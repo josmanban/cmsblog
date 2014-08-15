@@ -214,11 +214,14 @@ class UsuarioController extends Controller {
                         $_SESSION['usuario'] = $usuario;
                         if ($this->isAjax()) {
                             
-                        } else
+                        }
+                        else
                             header('Location: index.php');
-                    } else
+                    }
+                    else
                         throw new \Exception('Nombre de usuario o contraseña incorrecta');
-                } else
+                }
+                else
                     throw new \Exception('Nombre de usuario o contraseña incorrecta');
             }
         } catch (\Exception $ex) {
@@ -227,13 +230,15 @@ class UsuarioController extends Controller {
     }
 
     public function logoutAction() {
-        if (isset($_SESSION['usuario'])) {
-            unset($_SESSION['usuario']);
-        }
-        if ($this->isAjax()) {
-            
-        } else
-            header('Location: index.php');
+        /* if (isset($_SESSION['usuario'])) {
+          unset($_SESSION['usuario']);
+
+          }
+          if ($this->isAjax()) {
+
+          } else */
+        session_destroy();
+        header('Location: index.php');
     }
 
     /*

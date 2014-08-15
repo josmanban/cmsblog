@@ -25,6 +25,7 @@ define('POST_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/post/');
 define('PERFIL_IMAGE_URL', SITE_URL . '/img/perfil/');
 define('PERFIL_IMAGE_SAVE_PATH', dirname(__FILE__) . '/img/perfil/');
 define('USER_DEFAULT_AVATAR', SITE_URL . '/img/user-image-default.jpg');
+define('ARTICLE_DEFAULT_IMAGE', SITE_URL . '/img/article-image-default.jpg');
 
 /* * ************************************************** */
 

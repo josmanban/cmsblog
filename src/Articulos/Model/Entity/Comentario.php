@@ -128,7 +128,7 @@ class Comentario {
     }
 
     public function __toString() {
-        
+        return $this->texto;
     }
  
 

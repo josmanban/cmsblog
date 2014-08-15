@@ -1,7 +1,7 @@
 <?php
 
 namespace Personas\Model\Entity;
-use Doctrine\Common\Collection\ArrayCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity 

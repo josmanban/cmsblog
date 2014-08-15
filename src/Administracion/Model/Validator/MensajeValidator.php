@@ -47,8 +47,8 @@ class MensajeValidator extends Validator {
     }
 
     public function cleanFields() {
-        $this->entity->setAvatar(self::clean($this->entity->getAsunto()));
-        $this->entity->getDescripcion(self::clean($this->entity->getTexto()));
+        $this->entity->getAsunto(self::clean($this->entity->getAsunto()));
+        $this->entity->getTexto(self::clean($this->entity->getTexto()));
     }
 
 }

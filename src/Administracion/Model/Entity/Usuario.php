@@ -53,13 +53,13 @@ class Usuario {
 
     /**
      *
-     * @OneToOne(targetEntity="Perfil",mappedBy="usuario")
+     * @OneToOne(targetEntity="Perfil",mappedBy="usuario",cascade={"persist"})
      *
      * */
     protected $perfil;
 
     /**
-     * @OneToOne(targetEntity="\Personas\Model\Entity\Persona",mappedBy="usuario")
+     * @OneToOne(targetEntity="\Personas\Model\Entity\Persona",mappedBy="usuario",cascade={"persist"})
      *
      * */
     protected $persona;
@@ -197,7 +197,7 @@ class Usuario {
     }
 
     public function addRol(Rol $rol) {
-        $this->roles->addUsuario($this);
+        $rol->addUsuario($this);
         $this->roles[] = $rol;
     }
 
@@ -252,6 +252,15 @@ class Usuario {
         }
         return false;
     }
+    public function setPersona($persona) {
+        $this->persona = $persona;
+    }
+
+    public function setPosts($posts) {
+        $this->posts = $posts;
+    }
+
+
 
 }
 

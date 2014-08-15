@@ -61,10 +61,10 @@ class InscripcionProyectoController extends Controller {
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
                     'mensajeExito' => array('Inscripcion registrada con éxito'),
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                     'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                     'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                 ));
             }
         } catch (InvalidFormDataException $ex) {
@@ -73,10 +73,10 @@ class InscripcionProyectoController extends Controller {
                 die();
             }
             View::render(INSCRIPCION_PROYECTO_NEW, array(
-                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                 'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                 'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                 'errores' => $ex->getErrores(),
             ));
         } catch (\Exception $ex) {
@@ -123,10 +123,10 @@ class InscripcionProyectoController extends Controller {
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
                     'inscripcionProyecto' => $inscripcionProyecto,
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                     'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                     'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                 ));
             }
         } catch (\Exception $ex) {
@@ -224,10 +224,10 @@ class InscripcionProyectoController extends Controller {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_NEW, array(
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                     'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                     'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                 ));
             }
         } catch (\Exception $ex) {
@@ -275,11 +275,20 @@ class InscripcionProyectoController extends Controller {
 
     public function archiveAction() {
         try {
+
+            $estado = $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array(
+                'nombre' => 'aceptado',
+                'ambito' => 'INSCRIPCIONPROYECTO'
+            ));
+
             if (isset($_REQUEST['id']))
                 $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findBy(
-                        array('proyecto' => $_REQUEST['id']));
+                        array('proyecto' => $_REQUEST['id'],
+                            'estado' => $estado->getId()));
             else
-                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findAll();
+                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findBy(
+                        array(
+                            'estado' => $estado->getId()));
 
             if ($this->isAjax()) {
                 
@@ -323,20 +332,20 @@ class InscripcionProyectoController extends Controller {
                 
             } else {
                 View::render(INSCRIPCION_PROYECTO_EDIT, array(
-                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                    'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                     'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                     'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                    'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                     'mensajesExito' => array('Datos actualizada con exito.'),
                     'inscripcionProyecto' => $inscripcionProyecto,
                 ));
             }
         } catch (InvalidFormDataException $ex) {
             View::render(INSCRIPCION_PROYECTO_EDIT, array(
-                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findAll(),
+                'roles' => $this->em->getRepository('Administracion\Model\Entity\Rol')->findBy(array('ambito' => 'proyecto')),
                 'personas' => $this->em->getRepository('Personas\Model\Entity\Persona')->findActivos(),
                 'proyectos' => $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->findActivos(),
-                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findAll(),
+                'estados' => $this->em->getRepository('Administracion\Model\Entity\Estado')->findBy(array('ambito' => 'INSCRIPCIONPROYECTO')),
                 'errores' => $ex->getErrores(),
                 'inscripcionProyecto' => $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->find($_POST['id']),
             ));
@@ -376,7 +385,7 @@ class InscripcionProyectoController extends Controller {
             if (is_null($proyecto))
                 throw new NotFoundEntityException('Proyecto');
             $estado = $idEstado != -1 ? $this->em->getRepository('Administracion\Model\Entity\Estado')->find($idEstado) :
-                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'pendiente'));
+                    $this->em->getRepository('Administracion\Model\Entity\Estado')->findOneBy(array('nombre' => 'PENDIENTE', 'ambito' => 'INSCRIPCIONPROYECTO'));
 
             /* if ($id != '-1')
               $inscripcionProyecto->setId($id); */
