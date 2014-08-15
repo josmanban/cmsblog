@@ -15,7 +15,7 @@ use Librerias\Conexion;
  *
  * @author jose
  */
-class PerfilValidator extends Validator {
+class MensajeValidator extends Validator {
 
     //put your code here
 

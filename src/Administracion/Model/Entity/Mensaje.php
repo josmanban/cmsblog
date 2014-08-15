@@ -42,6 +42,11 @@ class Mensaje {
     private $emisor;
 
     /**
+     * @Column(type="boolean")
+     */
+    private $leido;
+
+    /**
      *
      * @ManyToOne(targetEntity="Usuario",inversedBy="mensajesRecividos")
      * 
@@ -60,7 +65,16 @@ class Mensaje {
      * 
      */
     private $padre;
+    
+    public function getLeido() {
+        return $this->leido;
+    }
 
+    public function setLeido($leido) {
+        $this->leido = $leido;
+    }
+
+        
     public function getId() {
         return $this->id;
     }

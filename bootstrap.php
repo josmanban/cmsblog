@@ -34,7 +34,7 @@ define('SITE_URL', 'http://localhost/sites/cmsblog');
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'cmsblog');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'Consul011209');
+define('DB_PASSWORD', 'perro292');
 define('DB_DRIVER', 'pdo_mysql');
 
 define('ARTICULOS_LEVEL_COMMENTS', 3);
@@ -61,6 +61,13 @@ define('USUARIO_EDIT_FORM', dirname(__FILE__) . '/src/Administracion/Resources/v
 define('USUARIO_INDEX', dirname(__FILE__) . '/src/Administracion/Resources/views/Usuario/index.html.php');
 define('USUARIO_SHOW', dirname(__FILE__) . '/src/Administracion/Resources/views/Usuario/show.html.php');
 define('USUARIO_LOGIN', dirname(__FILE__) . '/src/Administracion/Resources/views/Usuario/login.html.php');
+
+define('MENSAJE_NEW', dirname(__FILE__) . '/src/Administracion/Resources/views/Mensaje/new.html.php');
+define('MENSAJE_FORM', dirname(__FILE__) . '/src/Administracion/Resources/views/Mensaje/form.html.php');
+define('MENSAJE_MAIL', dirname(__FILE__) . '/src/Administracion/Resources/views/Mensaje/mail.html.php');
+define('MENSAJE_SHOW', dirname(__FILE__) . '/src/Administracion/Resources/views/Mensaje/show.html.php');
+
+
 
 
 define('PERSONA_NEW', dirname(__FILE__) . '/src/Personas/Resources/views/Persona/new.html.php');

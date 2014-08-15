@@ -29,6 +29,7 @@ class ValidacionesVarias {
             case 'Estado':
             case 'Rol':
             case 'Perfil':
+            case 'Mensaje':
             case 'Usuario':
                 return 'Administracion\\Controller\\' . $controller . 'Controller';
             case 'Persona':
