@@ -191,7 +191,7 @@ class InscripcionProyectoController extends Controller {
 
             $criteria = ['persona' => $usuario->getPersona()->getId()];
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->contar($criteria);
-            $paginator = new Paginator('inscripcionProyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('inscripcionProyecto', 'misInscripciones', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
                     $criteria, array('fechaInscripcion' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
@@ -281,22 +281,24 @@ class InscripcionProyectoController extends Controller {
                 'ambito' => 'INSCRIPCIONPROYECTO'
             ));
 
-            if (isset($_REQUEST['id']))
-                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findBy(
-                        array('proyecto' => $_REQUEST['id'],
+            $proyecto = $this->em->getRepository('Proyectos\Model\Entity\Proyecto')->find($_GET['id']);
+
+            if (!is_null($proyecto)) {
+                $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
+                        array('proyecto' => $proyecto->getId(),
                             'estado' => $estado->getId()));
-            else
-                $inscripcionesProyecto = $this->em->getRepository('Proyecto\Model\Entity\InscripcionProyecto')->findBy(
+            } else {
+                $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
                         array(
                             'estado' => $estado->getId()));
-
+            }
             if ($this->isAjax()) {
                 
-            }
-            else
+            } else {
                 View::render(INSCRIPCION_PROYECTO_ARCHIVE, array(
                     'inscripcionesProyecto' => $inscripcionesProyecto,
                 ));
+            }
         } catch (\Exception $ex) {
             View::render(ERROR, array(
                 'errorres' => array($ex->getMessage()),

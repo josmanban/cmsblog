@@ -194,6 +194,8 @@ try {
 
     $tiposDesarrollo = $em->getRepository('Proyectos\Model\Entity\TipoProyecto')->findAll();
 
+    $usuarios = $em->getRepository('Administracion\Model\Entity\Usuario')->findAll();
+
     foreach ($tiposDesarrollo as $tipo) {
         for ($i = 0; $i < 20; $i++) {
             $proyecto = new Proyectos\Model\Entity\Proyecto();
@@ -229,6 +231,7 @@ try {
                 $inscripcionProyecto->setPersona($usuario->getPersona());
                 $inscripcionProyecto->setProyecto($proyecto);
                 $inscripcionProyecto->setRol($rolParticipante);
+                $em->persist($inscripcionProyecto);
 
                 $proyecto->addInscripcionProyecto($inscripcionProyecto);
             }
@@ -239,6 +242,53 @@ try {
 
 
     $em->flush();
+
+
+    $receptor = $em->getRepository('Administracion\Model\Entity\Usuario')->findOneBy(array('nombre' => 'josmanban'));
+
+    foreach ($usuarios as $usuario) {
+        $mensaje = new Administracion\Model\Entity\Mensaje();
+
+        $mensaje->setAsunto('Lorem ipsum dolor sit amet');
+        $mensaje->setEmisor($usuario);
+        $mensaje->setEstado($estadoActivo);
+        $mensaje->setFechaHora(new \DateTime());
+        $mensaje->setLeido(false);
+        $mensaje->setReceptor($receptor);
+        $mensaje->setTexto("<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean velit quam, pellentesque ac volutpat adipiscing, pharetra quis mauris. Donec ullamcorper enim non massa tempus varius. Nunc aliquam ornare lectus. Etiam porta lacinia orci dignissim cursus. Duis risus orci, viverra at iaculis a, consectetur in augue. Nullam a lobortis felis, a semper massa. In at condimentum nisi. Praesent sed risus nisl. Phasellus est nulla, egestas eget erat ut, molestie sagittis dolor. Cras nec ullamcorper odio, a porta tellus.</p>
+
+<p>Duis eget libero et sem pretium tempor nec in leo. Nullam in consequat massa, non vulputate tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac habitasse platea dictumst. Morbi interdum, felis sed vestibulum bibendum, dui tellus ultrices lacus, sit amet sodales neque ipsum in ligula. Vestibulum quam ipsum, interdum non urna eget, ullamcorper commodo nisi. Vestibulum aliquam, velit quis ullamcorper laoreet, mi nibh rhoncus eros, et ultrices velit tellus non orci. Sed pellentesque sed tellus nec fermentum. Duis consectetur orci nibh, id adipiscing dui blandit vitae. Donec lacinia euismod dui eget vestibulum.</p>
+
+<p>Sed laoreet hendrerit elit. Etiam eros augue, placerat bibendum mauris ac, malesuada pretium nulla. Sed nulla dolor, vestibulum ac enim id, porttitor laoreet magna. Vivamus dignissim dui id lectus cursus, ut dignissim turpis consequat. Vivamus feugiat, tellus at tincidunt faucibus, lorem sapien ullamcorper lacus, sed blandit urna turpis id elit. Praesent dignissim purus tempor nibh pulvinar tincidunt. Sed vitae volutpat felis, varius pharetra ipsum. Integer vehicula ipsum massa, porta venenatis lectus blandit sit amet.</p>
+
+<p>Donec a nulla lobortis, porta risus a, pellentesque dolor. Aenean feugiat, felis in condimentum placerat, diam purus volutpat dui, quis sodales eros dolor id turpis. Suspendisse quam quam, lacinia molestie orci sit amet, mollis porta libero. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec vehicula volutpat dolor et placerat. Nulla vulputate, mauris et feugiat tempus, augue magna iaculis orci, ut convallis turpis mi sit amet odio. Duis id neque odio. Aliquam semper dolor nec enim vestibulum suscipit. Vestibulum placerat nulla pharetra porta volutpat. Donec porttitor nec diam eu mattis. Praesent sed urna et lectus blandit vehicula elementum quis massa. Maecenas vulputate velit sed pellentesque malesuada. Nullam pretium est et nunc pellentesque fermentum. Integer consectetur elit elementum congue ultrices. Curabitur ac neque leo.</p>
+
+<p>Nulla facilisi. Sed ornare dolor sit amet justo interdum ullamcorper. Nulla facilisi. Ut pellentesque convallis nisi, ac euismod nisl congue vitae. Fusce luctus viverra tempus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lobortis non sem ut porttitor. Aliquam vel hendrerit nisi, et venenatis odio. Vivamus id lacinia ligula, in varius velit. Fusce sed hendrerit velit. Cras commodo, sapien vel commodo dignissim, risus erat mollis felis, nec sagittis urna dui eget magna. Sed facilisis nulla tellus, auctor auctor urna porta nec. Donec varius, tellus vel suscipit sollicitudin, nulla orci egestas leo, at venenatis nisl tellus sit amet ligula. Donec in luctus mi, ac consectetur tortor.</p>
+");
+        $em->persist($mensaje);
+
+        $mensaje2 = new Administracion\Model\Entity\Mensaje();
+        $mensaje2->setAsunto('Lorem ipsum dolor sit amet');
+        $mensaje2->setEmisor($receptor);
+        $mensaje2->setEstado($estadoActivo);
+        $mensaje2->setFechaHora(new \DateTime());
+        $mensaje2->setLeido(false);
+        $mensaje2->setReceptor($usuario);
+        $mensaje2->setTexto("<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean velit quam, pellentesque ac volutpat adipiscing, pharetra quis mauris. Donec ullamcorper enim non massa tempus varius. Nunc aliquam ornare lectus. Etiam porta lacinia orci dignissim cursus. Duis risus orci, viverra at iaculis a, consectetur in augue. Nullam a lobortis felis, a semper massa. In at condimentum nisi. Praesent sed risus nisl. Phasellus est nulla, egestas eget erat ut, molestie sagittis dolor. Cras nec ullamcorper odio, a porta tellus.</p>
+
+<p>Duis eget libero et sem pretium tempor nec in leo. Nullam in consequat massa, non vulputate tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. In hac habitasse platea dictumst. Morbi interdum, felis sed vestibulum bibendum, dui tellus ultrices lacus, sit amet sodales neque ipsum in ligula. Vestibulum quam ipsum, interdum non urna eget, ullamcorper commodo nisi. Vestibulum aliquam, velit quis ullamcorper laoreet, mi nibh rhoncus eros, et ultrices velit tellus non orci. Sed pellentesque sed tellus nec fermentum. Duis consectetur orci nibh, id adipiscing dui blandit vitae. Donec lacinia euismod dui eget vestibulum.</p>
+
+<p>Sed laoreet hendrerit elit. Etiam eros augue, placerat bibendum mauris ac, malesuada pretium nulla. Sed nulla dolor, vestibulum ac enim id, porttitor laoreet magna. Vivamus dignissim dui id lectus cursus, ut dignissim turpis consequat. Vivamus feugiat, tellus at tincidunt faucibus, lorem sapien ullamcorper lacus, sed blandit urna turpis id elit. Praesent dignissim purus tempor nibh pulvinar tincidunt. Sed vitae volutpat felis, varius pharetra ipsum. Integer vehicula ipsum massa, porta venenatis lectus blandit sit amet.</p>
+
+<p>Donec a nulla lobortis, porta risus a, pellentesque dolor. Aenean feugiat, felis in condimentum placerat, diam purus volutpat dui, quis sodales eros dolor id turpis. Suspendisse quam quam, lacinia molestie orci sit amet, mollis porta libero. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Donec vehicula volutpat dolor et placerat. Nulla vulputate, mauris et feugiat tempus, augue magna iaculis orci, ut convallis turpis mi sit amet odio. Duis id neque odio. Aliquam semper dolor nec enim vestibulum suscipit. Vestibulum placerat nulla pharetra porta volutpat. Donec porttitor nec diam eu mattis. Praesent sed urna et lectus blandit vehicula elementum quis massa. Maecenas vulputate velit sed pellentesque malesuada. Nullam pretium est et nunc pellentesque fermentum. Integer consectetur elit elementum congue ultrices. Curabitur ac neque leo.</p>
+
+<p>Nulla facilisi. Sed ornare dolor sit amet justo interdum ullamcorper. Nulla facilisi. Ut pellentesque convallis nisi, ac euismod nisl congue vitae. Fusce luctus viverra tempus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Vestibulum lobortis non sem ut porttitor. Aliquam vel hendrerit nisi, et venenatis odio. Vivamus id lacinia ligula, in varius velit. Fusce sed hendrerit velit. Cras commodo, sapien vel commodo dignissim, risus erat mollis felis, nec sagittis urna dui eget magna. Sed facilisis nulla tellus, auctor auctor urna porta nec. Donec varius, tellus vel suscipit sollicitudin, nulla orci egestas leo, at venenatis nisl tellus sit amet ligula. Donec in luctus mi, ac consectetur tortor.</p>
+");
+        $em->persist($mensaje2);
+    }
+
+    $em->flush();
+
     $em->getConnection()->commit();
 } catch (Exception $e) {
     $em->getConnection()->rollback();

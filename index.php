@@ -11,7 +11,6 @@ use Librerias\Conexion;
 
 
 try {
-
     session_start();
 //ValidacionesVarias::my_session_start();
     if (isset($_SESSION['usuario'])) { //&& $_SESSION['usuario'] instanceof Usuario) {
