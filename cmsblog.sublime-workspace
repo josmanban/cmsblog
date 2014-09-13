@@ -43,7 +43,7 @@
 			"file": "src/Administracion/Controller/UsuarioController.php",
 			"settings":
 			{
-				"buffer_size": 12468,
+				"buffer_size": 12604,
 				"line_ending": "Unix"
 			}
 		}
@@ -310,7 +310,7 @@
 					"file": "src/Administracion/Controller/UsuarioController.php",
 					"settings":
 					{
-						"buffer_size": 12468,
+						"buffer_size": 12604,
 						"regions":
 						{
 						},

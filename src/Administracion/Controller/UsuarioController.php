@@ -72,7 +72,8 @@ class UsuarioController extends Controller {
     }
 
     public function deleteAction() {
-        
+        header('HTTP/1.0 404 Not Found');
+        echo 'jose';
     }
 
     public function editAction() {

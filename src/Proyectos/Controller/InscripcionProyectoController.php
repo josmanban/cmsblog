@@ -153,7 +153,7 @@ class InscripcionProyectoController extends Controller {
 
             $criteria = [];
             $numItems = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->contar($criteria);
-            $paginator = new Paginator('articulo', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+            $paginator = new Paginator('inscripcionProyecto', 'index', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
             $inscripcionesProyecto = $this->em->getRepository('Proyectos\Model\Entity\InscripcionProyecto')->findBy(
                     $criteria, array('id' => 'ASC'), $paginator->getLimit(), $paginator->getOffset()
