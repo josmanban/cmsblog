@@ -30,7 +30,7 @@ class PostValidator extends Validator {
 
     protected function validateSpecialFields() {
         if (isset($_FILES['imagen']) && $_FILES['imagen']['name'] != '')
-            $this->addError(self::validateImage('imagen', 'imagen', 90000));
+            $this->addError(self::validateImage('imagen', 'imagen', 900000));
         $this->addError(self::validateStringLength($this->entity->getTexto(), 'texto'));
         $this->checkErrores();
     }

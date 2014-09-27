@@ -45,7 +45,7 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
                     <ul class="nav navbar-nav pull-right ">
                         <li><a href="index.php">Inicio</a></li>
-                        <li><a href="index.php?controller=articulo&action=portada">Blog</a></li>
+                        <li><a href="index.php?controller=articulo&action=blog">Noticias</a></li>
                         <li><a href="index.php?controller=proyecto&action=archive&tipo=desarrollo">Proyecto/Desarrollo</a></li>
                         <li><a href="index.php?controller=proyecto&action=archive&tipo=charla">Charlas</a></li>
                         <li><a href="index.php?controller=proyecto&action=archive&tipo=curso">Cursos</a></li>

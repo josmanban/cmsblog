@@ -241,7 +241,7 @@ class ArticuloController extends Controller {
         }
     }
 
-    public function portadaAction() {
+    public function blogAction() {
         try {
             if (isset($_GET['ajax'])) {
                 //respuesta ajax
@@ -251,10 +251,14 @@ class ArticuloController extends Controller {
                     $page = $_GET['page'];
                 else
                     $page = 1;
+                if(isset($_GET['category']))
+                    $id_category=$_GET['category']
+                //$category= $this->em->getRepository('Articulos\Model\CategoriaArticulo')->find($id_category);
 
                 $numItems = $this->em->getRepository('Articulos\Model\Entity\Articulo')->contar(null);
                 $criteria = [];
-                $paginator = new Paginator('articulo', 'portada', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
+
+                $paginator = new Paginator('articulo', 'blog', $page, ITEMS_X_PAGE_INDEX, $numItems, $criteria);
 
                 $articulos = $this->em->getRepository('Articulos\Model\Entity\Articulo')->findBy(
                         $criteria, array('fechaHoraPublicacion' => 'DESC'), $paginator->getLimit(), $paginator->getOffset()

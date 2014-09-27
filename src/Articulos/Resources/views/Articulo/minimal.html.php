@@ -3,16 +3,14 @@
 <article class="">
     <header>
         <h3>
-            <a href="index.php?controller=articulo&action=show&id=<?php echo $articulo->getId(); ?>">
+            <a class="text-uppercase" href="index.php?controller=articulo&action=show&id=<?php echo $articulo->getId(); ?>">
                 <?php echo $articulo->getTitulo(); ?></a><br><small><i>por </i> <strong><?php echo $articulo->getAutor()->getNombre(); ?></strong> <i>, el 
                     <?php echo $articulo->getFechaHoraPublicacion()->format('d-m-Y'); ?></i> </small></h3>
 
     </header>
     <div style="text-align: center;">
         <img class="img-rounded img-responsive img-thumbnail" src="<?php echo $articulo->getImagen(); ?>" alt="..."/>
-    </div>
-    <p>
-
+    </div>   
         <?php echo $articulo->getResumen(); ?>    </p>
     <footer>
 
