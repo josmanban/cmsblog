@@ -252,7 +252,7 @@ class ArticuloController extends Controller {
                 else
                     $page = 1;
                 if(isset($_GET['category']))
-                    $id_category=$_GET['category']
+                    $id_category=$_GET['category'];
                 //$category= $this->em->getRepository('Articulos\Model\CategoriaArticulo')->find($id_category);
 
                 $numItems = $this->em->getRepository('Articulos\Model\Entity\Articulo')->contar(null);
